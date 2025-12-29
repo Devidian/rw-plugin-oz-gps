@@ -77,8 +77,7 @@ public class TeleportOverlay extends OZUIElement {
         actionsPanel.addChild(panelFooter);
 
         panelFooter.addChild(setupCancelButton(player));
-        if (!((marker.getType() == MarkerType.GLOBAL && !player.isAdmin())
-                && !(marker.getPlayerId() != player.getDbID() && !player.isAdmin())))
+        if(player.isAdmin() || marker.getPlayerId() == player.getDbID())
             panelFooter.addChild(setupRemoveButton(player));
         panelFooter.addChild(setupTeleportButton(player));
     }
