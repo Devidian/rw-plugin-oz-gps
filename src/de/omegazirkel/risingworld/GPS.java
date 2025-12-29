@@ -2,23 +2,31 @@ package de.omegazirkel.risingworld;
 
 import java.nio.file.Path;
 
-import de.omegazirkel.risingworld.template.PluginGUI;
-import de.omegazirkel.risingworld.template.PluginSettings;
+import de.omegazirkel.risingworld.gps.GPSDatabase;
+import de.omegazirkel.risingworld.gps.PluginGUI;
+import de.omegazirkel.risingworld.gps.DiscordConnect;
+import de.omegazirkel.risingworld.gps.PluginSettings;
+import de.omegazirkel.risingworld.gps.ui.GPSGridOverlay;
 import de.omegazirkel.risingworld.tools.Colors;
 import de.omegazirkel.risingworld.tools.FileChangeListener;
 import de.omegazirkel.risingworld.tools.I18n;
 import de.omegazirkel.risingworld.tools.OZLogger;
+import de.omegazirkel.risingworld.tools.db.SQLite;
 import de.omegazirkel.risingworld.tools.ui.AssetManager;
+import de.omegazirkel.risingworld.tools.ui.CursorManager;
 import de.omegazirkel.risingworld.tools.ui.MenuItem;
+import de.omegazirkel.risingworld.tools.ui.OZUIElement;
 import de.omegazirkel.risingworld.tools.ui.PluginMenuManager;
 import net.risingworld.api.Plugin;
 import net.risingworld.api.events.EventMethod;
 import net.risingworld.api.events.Listener;
 import net.risingworld.api.events.player.PlayerCommandEvent;
+import net.risingworld.api.events.player.PlayerDeathEvent;
+import net.risingworld.api.events.player.PlayerSpawnEvent;
 import net.risingworld.api.objects.Player;
 
-public class MavenTemplate extends Plugin implements Listener, FileChangeListener {
-	static final String pluginCMD = "mt";
+public class GPS extends Plugin implements Listener, FileChangeListener {
+	static final String pluginCMD = "gps";
 	static final Colors c = Colors.getInstance();
 	private static I18n t = null;
 	private static PluginSettings s = null;
@@ -26,7 +34,7 @@ public class MavenTemplate extends Plugin implements Listener, FileChangeListene
 	public static String name;
 
 	public static OZLogger logger() {
-		return OZLogger.getInstance("MavenTemplate");
+		return OZLogger.getInstance("OZ.GPS");
 	}
 
 	@Override
@@ -36,14 +44,16 @@ public class MavenTemplate extends Plugin implements Listener, FileChangeListene
 		t = I18n.getInstance(this);
 		registerEventListener(this);
 		s.initSettings();
+		GPSDatabase.getInstance(new SQLite(this));
 		gui = PluginGUI.getInstance(this);
 		// Load Plugin Menu into Main Plugin Menu
 		PluginMenuManager
-				// FIXME rename template stuff
 				.registerPluginMenu(
-						new MenuItem(AssetManager.getIcon("template-icon"), "Template Plugin", (Player p) -> {
+						new MenuItem(AssetManager.getIcon("icon-ki-gps-plugin"), "GPS", (Player p) -> {
 							gui.openMainMenu(p);
 						}));
+		// connect plugins
+		DiscordConnect.init(this);
 		logger().info("✅ " + this.getName() + " Plugin is enabled version:" + this.getDescription("version"));
 	}
 
@@ -83,18 +93,46 @@ public class MavenTemplate extends Plugin implements Listener, FileChangeListene
 							.replace("PH_LANG_AVAILABLE", c.warning + t.getLanguageAvailable() + c.endTag);
 					player.sendTextMessage(c.okay + this.getName() + ":> " + c.text + statusMessage);
 					break;
-                case "help":
-                    String helpMessage = t.get("TC_CMD_HELP", player).replaceAll("PH_PLUGIN_CMD", pluginCMD);
-                    player.sendTextMessage(c.okay + this.getName() + ":> " + c.endTag + helpMessage);
-                    break;
+				case "help":
+					String helpMessage = t.get("TC_CMD_HELP", player).replaceAll("PH_PLUGIN_CMD", pluginCMD);
+					player.sendTextMessage(c.okay + this.getName() + ":> " + c.endTag + helpMessage);
+					break;
 				case "open":
 					gui.openMainMenu(player);
+					break;
+				case "opengrid":
+					OZUIElement overlay = new GPSGridOverlay(player);
+					player.setAttribute("gps-ui-overlay", overlay);
+					CursorManager.show(player);
+					player.addUIElement(overlay);
+
 					break;
 				default:
 					player.sendTextMessage(t.get("TC_ERR_CMD_UNKNOWN").replace("PH_PLUGIN_CMD", pluginCMD));
 					break;
 			}
 		}
+	}
+
+	@EventMethod
+	public void onPlayerSpawnEvent(PlayerSpawnEvent event) {
+		Player player = event.getPlayer();
+
+		if (s.enableWelcomeMessage) {
+			// Player player = event.getPlayer();
+			String lang = player.getSystemLanguage();
+			player.sendTextMessage(t.get("TC_MSG_PLUGIN_WELCOME", lang)
+					.replace("PH_PLUGIN_NAME", getDescription("name"))
+					.replace("PH_PLUGIN_CMD", pluginCMD)
+					.replace("PH_PLUGIN_VERSION", getDescription("version")));
+		}
+	}
+
+	@EventMethod
+	public void onPlayerDeathEvent(PlayerDeathEvent event) {
+		Player player = event.getPlayer();
+
+		player.setAttribute("death-location", event.getDeathPosition());
 	}
 
 }
