@@ -11,6 +11,7 @@ import de.omegazirkel.risingworld.tools.Colors;
 import de.omegazirkel.risingworld.tools.FileChangeListener;
 import de.omegazirkel.risingworld.tools.I18n;
 import de.omegazirkel.risingworld.tools.OZLogger;
+import de.omegazirkel.risingworld.tools.PlayerSettings;
 import de.omegazirkel.risingworld.tools.db.SQLite;
 import de.omegazirkel.risingworld.tools.ui.AssetManager;
 import de.omegazirkel.risingworld.tools.ui.CursorManager;
@@ -32,6 +33,8 @@ public class GPS extends Plugin implements Listener, FileChangeListener {
 	private static PluginSettings s = null;
 	private static PluginGUI gui;
 	public static String name;
+	public static SQLite db;
+	public static PlayerSettings ps;
 
 	public static OZLogger logger() {
 		return OZLogger.getInstance("OZ.GPS");
@@ -44,7 +47,9 @@ public class GPS extends Plugin implements Listener, FileChangeListener {
 		t = I18n.getInstance(this);
 		registerEventListener(this);
 		s.initSettings();
-		GPSDatabase.getInstance(new SQLite(this));
+		db = new SQLite(this);
+		ps = new PlayerSettings(db.getConnection());// .
+		GPSDatabase.getInstance(db);
 		gui = PluginGUI.getInstance(this);
 		// Load Plugin Menu into Main Plugin Menu
 		PluginMenuManager
@@ -105,7 +110,18 @@ public class GPS extends Plugin implements Listener, FileChangeListener {
 					player.setAttribute("gps-ui-overlay", overlay);
 					CursorManager.show(player);
 					player.addUIElement(overlay);
-
+					break;
+				case "sortasc":
+					player.setAttribute("gps.sort-order", "ASC");
+					ps.setString(player.getDbID(), "gps.sort-order", "ASC");
+					player.sendTextMessage(
+							t.get("TC_MSG_SORT_ORDER_CHANGED", player).replace("PH_SORT_ORDER", "ASC"));
+					break;
+				case "sortdesc":
+					player.setAttribute("gps.sort-order", "DESC");
+					ps.setString(player.getDbID(), "gps.sort-order", "DESC");
+					player.sendTextMessage(
+							t.get("TC_MSG_SORT_ORDER_CHANGED", player).replace("PH_SORT_ORDER", "DESC"));
 					break;
 				default:
 					player.sendTextMessage(t.get("TC_ERR_CMD_UNKNOWN").replace("PH_PLUGIN_CMD", pluginCMD));
@@ -117,6 +133,11 @@ public class GPS extends Plugin implements Listener, FileChangeListener {
 	@EventMethod
 	public void onPlayerSpawnEvent(PlayerSpawnEvent event) {
 		Player player = event.getPlayer();
+		Integer dbId = player.getDbID();
+
+		if (!player.hasAttribute("gps.sort-order"))
+			player.setAttribute("gps.sort-order", ps.getString(dbId, "gps.sort-order").orElse("DESC"));
+		player.setAttribute("gps.sort-order", player);
 
 		if (s.enableWelcomeMessage) {
 			// Player player = event.getPlayer();

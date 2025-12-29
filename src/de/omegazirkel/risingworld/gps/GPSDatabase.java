@@ -117,25 +117,37 @@ public class GPSDatabase {
     // --- List Queries ------------------------------------------------------
 
     public List<Marker> getPrivateMarker(int playerId, int page, int pageSize) {
+        return getPrivateMarker(playerId, page, pageSize, "DESC");
+    }
+
+    public List<Marker> getPrivateMarker(int playerId, int page, int pageSize, String orderBy) {
         String sql = "SELECT * FROM " + tableName + " WHERE type=" + q(MarkerType.PRIVATE.toString())
                 + " AND player_id=" + playerId
-                + " ORDER BY created_at DESC"
+                + " ORDER BY created_at " + orderBy
                 + " LIMIT " + pageSize + " OFFSET " + (page * pageSize) + ";";
         return executeListQuery(sql);
     }
 
     public List<Marker> getGroupMarker(String groupName, int page, int pageSize) {
+        return getGroupMarker(groupName, page, pageSize, "DESC");
+    }
+
+    public List<Marker> getGroupMarker(String groupName, int page, int pageSize, String orderBy) {
         return executeListQuery(
                 "SELECT * FROM " + tableName + " WHERE type=" + q(MarkerType.GROUP.toString())
                         + " AND group_name=" + q(groupName)
-                        + " ORDER BY created_at DESC"
+                        + " ORDER BY created_at " + orderBy
                         + " LIMIT " + pageSize + " OFFSET " + (page * pageSize) + ";");
     }
 
     public List<Marker> getGlobalMarker(int page, int pageSize) {
+        return getGlobalMarker(page, pageSize, "DESC");
+    }
+
+    public List<Marker> getGlobalMarker(int page, int pageSize, String orderBy) {
         return executeListQuery(
                 "SELECT * FROM " + tableName + " WHERE type=" + q(MarkerType.GLOBAL.toString())
-                        + " ORDER BY created_at DESC"
+                        + " ORDER BY created_at " + orderBy
                         + " LIMIT " + pageSize + " OFFSET " + (page * pageSize) + ";");
     }
 

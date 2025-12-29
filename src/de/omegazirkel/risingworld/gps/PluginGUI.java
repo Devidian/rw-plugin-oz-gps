@@ -174,7 +174,8 @@ public class PluginGUI {
         List<MenuItem> menuItems = new ArrayList<>();
         Callback<Player> onBackReopen = (Player player) -> openPrivateTeleportMenu(player, level, onBack);
         // Get markers from db
-        List<Marker> markers = GPSDatabase.getInstance().getPrivateMarker(uiPlayer.getDbID(), level, markersPerPage);
+        String orderBy = uiPlayer.getAttribute("gps.sort-order").toString();
+        List<Marker> markers = GPSDatabase.getInstance().getPrivateMarker(uiPlayer.getDbID(), level, markersPerPage, orderBy);
 
         // Add marker menu item
         menuItems.add(
@@ -304,8 +305,9 @@ public class PluginGUI {
         List<MenuItem> menuItems = new ArrayList<>();
         Callback<Player> onBackReopen = (Player player) -> openGroupTeleportMenu(player, level, onBack);
         // Get markers from db
+        String orderBy = uiPlayer.getAttribute("gps.sort-order").toString();
         List<Marker> markers = GPSDatabase.getInstance().getGroupMarker(uiPlayer.getPermissionGroup(), level,
-                markersPerPage);
+                markersPerPage, orderBy);
 
         // Add marker menu item
         menuItems
@@ -359,7 +361,8 @@ public class PluginGUI {
         List<MenuItem> menuItems = new ArrayList<>();
         Callback<Player> onBackReopen = (Player player) -> openGlobalTeleportMenu(player, level, onBack);
         // Get markers from db
-        List<Marker> markers = GPSDatabase.getInstance().getGlobalMarker(level, markersPerPage);
+        String orderBy = uiPlayer.getAttribute("gps.sort-order").toString();
+        List<Marker> markers = GPSDatabase.getInstance().getGlobalMarker(level, markersPerPage, orderBy);
 
         // Add marker menu item
         if (uiPlayer.isAdmin())

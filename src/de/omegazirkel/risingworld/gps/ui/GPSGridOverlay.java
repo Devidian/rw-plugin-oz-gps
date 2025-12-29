@@ -192,16 +192,17 @@ public class GPSGridOverlay extends OZUIElement {
         Vector3f tertiarySpawnPos = uiPlayer.getSpawnPosition(SpawnPointType.Tertiary);
         Vector3f quaternarySpawnPos = uiPlayer.getSpawnPosition(SpawnPointType.Quaternary);
         Vector3f defaultSpawnPos = uiPlayer.getSpawnPosition(SpawnPointType.Default);
+        String orderBy = uiPlayer.getAttribute("gps.sort-order").toString();
 
         switch (type) {
             case PRIVATE:
-                markers = GPSDatabase.getInstance().getPrivateMarker(uiPlayer.getDbID(), page, markerPerPage);
+                markers = GPSDatabase.getInstance().getPrivateMarker(uiPlayer.getDbID(), page, markerPerPage, orderBy);
                 break;
             case GROUP:
-                markers = GPSDatabase.getInstance().getGroupMarker(uiPlayer.getPermissionGroup(), page, markerPerPage);
+                markers = GPSDatabase.getInstance().getGroupMarker(uiPlayer.getPermissionGroup(), page, markerPerPage, orderBy);
                 break;
             case GLOBAL:
-                markers = GPSDatabase.getInstance().getGlobalMarker(page, markerPerPage);
+                markers = GPSDatabase.getInstance().getGlobalMarker(page, markerPerPage, orderBy);
                 break;
             case STATIC:
                 if (primarySpawnPos != null)

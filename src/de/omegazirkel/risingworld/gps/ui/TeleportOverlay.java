@@ -4,7 +4,6 @@ import de.omegazirkel.risingworld.GPS;
 import de.omegazirkel.risingworld.discordconnect.PluginSettings;
 import de.omegazirkel.risingworld.gps.GPSDatabase;
 import de.omegazirkel.risingworld.gps.Marker;
-import de.omegazirkel.risingworld.gps.MarkerType;
 import de.omegazirkel.risingworld.tools.I18n;
 import de.omegazirkel.risingworld.tools.ui.BaseButton;
 import de.omegazirkel.risingworld.tools.ui.ButtonFactory;
