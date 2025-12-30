@@ -6,7 +6,7 @@
 
 ## [0.2.0] - 2025-12-28 | Change sort order
 
-- feat: marker sort order can be cahnged with  `/gps asc` or `/gps desc` [0.2.0]
+- feat: marker sort order can be cahnged with  `/gps sortasc` or `/gps sortdesc` [0.2.0]
 - fix: delete button was shown in radial view for global markers (for non admins) [0.1.2]
 
 ## [0.1.0] - 2025-12-28 | Initial release
