@@ -121,7 +121,8 @@ public class GPSDatabase {
     }
 
     public List<Marker> getPrivateMarker(int playerId, int page, int pageSize, String orderBy) {
-        if(!orderBy.equals("ASC") && !orderBy.equals("DESC")) {
+        if (!orderBy.equals("ASC") && !orderBy.equals("DESC")) {
+            GPS.logger().warn("Invalid value for orderBy: " + orderBy);
             orderBy = "DESC";
         }
         String sql = "SELECT * FROM " + tableName + " WHERE type=" + q(MarkerType.PRIVATE.toString())
@@ -136,7 +137,8 @@ public class GPSDatabase {
     }
 
     public List<Marker> getGroupMarker(String groupName, int page, int pageSize, String orderBy) {
-        if(!orderBy.equals("ASC") && !orderBy.equals("DESC")) {
+        if (!orderBy.equals("ASC") && !orderBy.equals("DESC")) {
+            GPS.logger().warn("Invalid value for orderBy: " + orderBy);
             orderBy = "DESC";
         }
         return executeListQuery(
@@ -151,7 +153,8 @@ public class GPSDatabase {
     }
 
     public List<Marker> getGlobalMarker(int page, int pageSize, String orderBy) {
-        if(!orderBy.equals("ASC") && !orderBy.equals("DESC")) {
+        if (!orderBy.equals("ASC") && !orderBy.equals("DESC")) {
+            GPS.logger().warn("Invalid value for orderBy: " + orderBy);
             orderBy = "DESC";
         }
         return executeListQuery(

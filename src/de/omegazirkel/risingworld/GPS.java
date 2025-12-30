@@ -137,7 +137,6 @@ public class GPS extends Plugin implements Listener, FileChangeListener {
 
 		if (!player.hasAttribute("gps.sort-order"))
 			player.setAttribute("gps.sort-order", ps.getString(dbId, "gps.sort-order").orElse("DESC"));
-		player.setAttribute("gps.sort-order", player);
 
 		if (s.enableWelcomeMessage) {
 			// Player player = event.getPlayer();
