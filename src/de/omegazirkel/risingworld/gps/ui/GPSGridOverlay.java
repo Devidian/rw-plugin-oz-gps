@@ -192,7 +192,7 @@ public class GPSGridOverlay extends OZUIElement {
         Vector3f tertiarySpawnPos = uiPlayer.getSpawnPosition(SpawnPointType.Tertiary);
         Vector3f quaternarySpawnPos = uiPlayer.getSpawnPosition(SpawnPointType.Quaternary);
         Vector3f defaultSpawnPos = uiPlayer.getSpawnPosition(SpawnPointType.Default);
-        String orderBy = uiPlayer.getAttribute("gps.sort-order").toString();
+        String orderBy = uiPlayer.getAttribute("oz.gps.sort-order").toString();
 
         switch (type) {
             case PRIVATE:

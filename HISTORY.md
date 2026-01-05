@@ -4,6 +4,10 @@
 
 ## [unreleased]
 
+## [0.3.0] - 2026-01-05 | Player plugin settings implemented
+
+- feat: player plugin settings implemented (gui to change stuff like sortorder)
+
 ## [0.2.0] - 2025-12-28 | Change sort order
 
 - feat: marker sort order can be cahnged with  `/gps sortasc` or `/gps sortdesc` [0.2.0]
