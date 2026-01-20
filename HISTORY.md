@@ -4,6 +4,8 @@
 
 ## [unreleased]
 
+- fix: invalid import path for PluginSettings
+
 ## [0.3.0] - 2026-01-05 | Player plugin settings implemented
 
 - feat: player plugin settings implemented (gui to change stuff like sortorder)

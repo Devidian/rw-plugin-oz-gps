@@ -1,7 +1,7 @@
 package de.omegazirkel.risingworld.gps.ui;
 
 import de.omegazirkel.risingworld.GPS;
-import de.omegazirkel.risingworld.discordconnect.PluginSettings;
+import de.omegazirkel.risingworld.gps.PluginSettings;
 import de.omegazirkel.risingworld.gps.GPSDatabase;
 import de.omegazirkel.risingworld.gps.Marker;
 import de.omegazirkel.risingworld.tools.I18n;
