@@ -199,7 +199,8 @@ public class GPSGridOverlay extends OZUIElement {
                 markers = GPSDatabase.getInstance().getPrivateMarker(uiPlayer.getDbID(), page, markerPerPage, orderBy);
                 break;
             case GROUP:
-                markers = GPSDatabase.getInstance().getGroupMarker(uiPlayer.getPermissionGroup(), page, markerPerPage, orderBy);
+                markers = GPSDatabase.getInstance().getGroupMarker(uiPlayer.getPermissionGroup(), page, markerPerPage,
+                        orderBy);
                 break;
             case GLOBAL:
                 markers = GPSDatabase.getInstance().getGlobalMarker(page, markerPerPage, orderBy);
@@ -208,50 +209,40 @@ public class GPSGridOverlay extends OZUIElement {
                 if (primarySpawnPos != null)
                     iconGrid.addChild(createMarkerCard(uiPlayer, t().get("TC_MENU_STATIC_PRIMARY_SPAWN", uiPlayer),
                             AssetManager.getIcon("icon-ki-sleep-01"), null, onTeleport -> {
-                                uiPlayer.setAttribute("pre-port-location", uiPlayer.getPosition());
-                                uiPlayer.setPosition(primarySpawnPos);// .
-                                GPSEventUtils.onStaticGPSEvent(uiPlayer,
-                                        t().get("TC_MENU_STATIC_PRIMARY_SPAWN", uiPlayer), primarySpawnPos);
+                                GPSEventUtils.executeTeleport(uiPlayer, primarySpawnPos,
+                                        t().get("TC_MENU_STATIC_PRIMARY_SPAWN", uiPlayer), MarkerType.STATIC);
                                 CursorManager.hide(uiPlayer);
                                 uiPlayer.removeUIElement(this);
                             }));
                 if (secondarySpawnPos != null)
                     iconGrid.addChild(createMarkerCard(uiPlayer, t().get("TC_MENU_STATIC_SECONDARY_SPAWN", uiPlayer),
                             AssetManager.getIcon("icon-ki-sleep-02"), null, onTeleport -> {
-                                uiPlayer.setAttribute("pre-port-location", uiPlayer.getPosition());
-                                uiPlayer.setPosition(secondarySpawnPos);// .
-                                GPSEventUtils.onStaticGPSEvent(uiPlayer,
-                                        t().get("TC_MENU_STATIC_SECONDARY_SPAWN", uiPlayer), secondarySpawnPos);
+                                GPSEventUtils.executeTeleport(uiPlayer, secondarySpawnPos,
+                                        t().get("TC_MENU_STATIC_SECONDARY_SPAWN", uiPlayer), MarkerType.STATIC);
                                 CursorManager.hide(uiPlayer);
                                 uiPlayer.removeUIElement(this);
                             }));
                 if (tertiarySpawnPos != null)
                     iconGrid.addChild(createMarkerCard(uiPlayer, t().get("TC_MENU_STATIC_TERTIARY_SPAWN", uiPlayer),
                             AssetManager.getIcon("icon-ki-sleep-03"), null, onTeleport -> {
-                                uiPlayer.setAttribute("pre-port-location", uiPlayer.getPosition());
-                                uiPlayer.setPosition(tertiarySpawnPos);// .
-                                GPSEventUtils.onStaticGPSEvent(uiPlayer,
-                                        t().get("TC_MENU_STATIC_TERTIARY_SPAWN", uiPlayer), tertiarySpawnPos);
+                                GPSEventUtils.executeTeleport(uiPlayer, tertiarySpawnPos,
+                                        t().get("TC_MENU_STATIC_TERTIARY_SPAWN", uiPlayer), MarkerType.STATIC);
                                 CursorManager.hide(uiPlayer);
                                 uiPlayer.removeUIElement(this);
                             }));
                 if (quaternarySpawnPos != null)
                     iconGrid.addChild(createMarkerCard(uiPlayer, t().get("TC_MENU_STATIC_QUATERNARY_SPAWN", uiPlayer),
                             AssetManager.getIcon("icon-ki-sleep-04"), null, onTeleport -> {
-                                uiPlayer.setAttribute("pre-port-location", uiPlayer.getPosition());
-                                uiPlayer.setPosition(quaternarySpawnPos);// .
-                                GPSEventUtils.onStaticGPSEvent(uiPlayer,
-                                        t().get("TC_MENU_STATIC_QUATERNARY_SPAWN", uiPlayer), quaternarySpawnPos);
+                                GPSEventUtils.executeTeleport(uiPlayer, quaternarySpawnPos,
+                                        t().get("TC_MENU_STATIC_QUATERNARY_SPAWN", uiPlayer), MarkerType.STATIC);
                                 CursorManager.hide(uiPlayer);
                                 uiPlayer.removeUIElement(this);
                             }));
                 if (defaultSpawnPos != null)
                     iconGrid.addChild(createMarkerCard(uiPlayer, t().get("TC_MENU_STATIC_DEFAULT_SPAWN", uiPlayer),
                             AssetManager.getIcon("icon-ki-coast-01"), null, onTeleport -> {
-                                uiPlayer.setAttribute("pre-port-location", uiPlayer.getPosition());
-                                uiPlayer.setPosition(defaultSpawnPos);// .
-                                GPSEventUtils.onStaticGPSEvent(uiPlayer,
-                                        t().get("TC_MENU_STATIC_DEFAULT_SPAWN", uiPlayer), defaultSpawnPos);
+                                GPSEventUtils.executeTeleport(uiPlayer, defaultSpawnPos,
+                                        t().get("TC_MENU_STATIC_DEFAULT_SPAWN", uiPlayer), MarkerType.STATIC);
                                 CursorManager.hide(uiPlayer);
                                 uiPlayer.removeUIElement(this);
                             }));
@@ -259,11 +250,9 @@ public class GPSGridOverlay extends OZUIElement {
                     iconGrid.addChild(
                             createMarkerCard(uiPlayer, t().get("TC_MENU_STATIC_DEATHPORT", uiPlayer),
                                     AssetManager.getIcon("icon-ki-death-skull"), null, onTeleport -> {
-                                        uiPlayer.setAttribute("icon-ki-sleep-05", uiPlayer.getPosition());
-                                        uiPlayer.setPosition(lastDeathPosition);// .
-                                        GPSEventUtils.onStaticGPSEvent(uiPlayer,
-                                                t().get("TC_MENU_STATIC_DEATHPORT", uiPlayer),
-                                                lastDeathPosition);
+                                        GPSEventUtils.executeTeleport(uiPlayer, lastDeathPosition,
+                                                t().get("TC_MENU_STATIC_DEATHPORT", uiPlayer), MarkerType.STATIC,
+                                                false);
                                         CursorManager.hide(uiPlayer);
                                         uiPlayer.removeUIElement(this);
                                     }));
@@ -271,11 +260,8 @@ public class GPSGridOverlay extends OZUIElement {
                     iconGrid.addChild(createMarkerCard(uiPlayer,
                             t().get("TC_MENU_STATIC_BACKPORT", uiPlayer),
                             AssetManager.getIcon("icon-ki-special-01"), null, onTeleport -> {
-                                uiPlayer.setAttribute("pre-port-location", uiPlayer.getPosition());
-                                uiPlayer.setPosition(lastPositionBeforePort);// .
-                                GPSEventUtils.onStaticGPSEvent(uiPlayer,
-                                        t().get("TC_MENU_STATIC_BACKPORT", uiPlayer),
-                                        lastPositionBeforePort);
+                                GPSEventUtils.executeTeleport(uiPlayer, lastPositionBeforePort,
+                                        t().get("TC_MENU_STATIC_BACKPORT", uiPlayer), MarkerType.STATIC, false);
                                 CursorManager.hide(uiPlayer);
                                 uiPlayer.removeUIElement(this);
                             }));
@@ -384,22 +370,8 @@ public class GPSGridOverlay extends OZUIElement {
         }
         return createMarkerCard(player, marker.getName(), AssetManager.getIcon(marker.getIcon()), onDeleteCallback,
                 onTeleport -> {
-                    player.setAttribute("pre-port-location", player.getPosition());
-                    player.setPosition(marker.getPosition());
-                    switch (marker.getType()) {
-                        case PRIVATE:
-                            GPSEventUtils.onPrivateGPSEvent(player, marker.getName(), marker.getPosition());
-                            break;
-                        case GROUP:
-                            GPSEventUtils.onGroupGPSEvent(player, marker.getName(), marker.getPosition());
-                            break;
-                        case GLOBAL:
-                            GPSEventUtils.onGlobalGPSEvent(player, marker.getName(), marker.getPosition());
-                            break;
-                        case STATIC:
-                            GPSEventUtils.onStaticGPSEvent(player, marker.getName(), marker.getPosition());
-                            break;
-                    }
+                    GPSEventUtils.executeTeleport(player, marker.getPosition(),
+                            marker.getName(), marker.getType());
                     CursorManager.hide(player);
                     player.removeUIElement(this);
                 });

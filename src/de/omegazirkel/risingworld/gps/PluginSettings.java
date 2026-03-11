@@ -17,7 +17,7 @@ public class PluginSettings {
 	private static GPS plugin;
 
 	private static OZLogger logger() {
-		return OZLogger.getInstance("OZ.GPS.Settings");
+		return GPS.logger();
 	}
 
 	// Settings

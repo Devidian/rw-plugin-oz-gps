@@ -12,6 +12,40 @@ public class GPSEventUtils {
         return I18n.getInstance(GPS.name);
     }
 
+    public static void executeTeleport(Player uiPlayer, Vector3f pos, String label, MarkerType type) {
+        executeTeleport(uiPlayer, pos, label, type, true);
+    }
+
+    public static void executeTeleport(Player uiPlayer, Vector3f pos, String label, MarkerType type,
+            boolean saveLastPosition) {
+        boolean canLeaveArea = (boolean) uiPlayer.getPermissionValue("area_canleave", true);
+
+        if (!canLeaveArea) {
+            uiPlayer.sendTextMessage(t().get("TC_GPS_CANT_LEAVE", uiPlayer));
+            return;
+        }
+        if (saveLastPosition)
+            uiPlayer.setAttribute("pre-port-location", uiPlayer.getPosition());
+        uiPlayer.setPosition(pos);
+
+        switch (type) {
+            case GLOBAL:
+                GPSEventUtils.onGlobalGPSEvent(uiPlayer, label, pos);
+                break;
+            case GROUP:
+                GPSEventUtils.onGroupGPSEvent(uiPlayer, label, pos);
+                break;
+            case PRIVATE:
+                GPSEventUtils.onPrivateGPSEvent(uiPlayer, label, pos);
+                break;
+            case STATIC:
+                GPSEventUtils.onStaticGPSEvent(uiPlayer, label, pos);
+                break;
+            default:
+                break;
+        }
+    }
+
     public static void onStaticGPSEvent(Player p, String gpsName, Vector3f targetPos) {
         p.sendTextMessage(t().get("TC_GPS_STATIC", p).replace("PH_GPS_NAME", gpsName));
         String staticMsgKey = "TC_DISCORD_GPS_STATIC_EVENT";

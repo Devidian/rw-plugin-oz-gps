@@ -4,6 +4,10 @@
 
 ## [unreleased]
 
+- docs: standardize agent prompts, PR checklist, and runtime smoke-test guidance
+- build: add API verification helper and stricter CI/release validation flow
+- build: package only `README.md` and `HISTORY.md` into release artifacts
+
 - fix: invalid import path for PluginSettings
 
 ## [0.3.0] - 2026-01-05 | Player plugin settings implemented

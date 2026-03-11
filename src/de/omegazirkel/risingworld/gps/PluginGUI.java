@@ -97,21 +97,7 @@ public class PluginGUI {
                             onTeleportAborted.onCall(true);
                             return;
                         }
-                        p.setPosition(marker.getPosition());
-                        switch (marker.getType()) {
-                            case PRIVATE:
-                                GPSEventUtils.onPrivateGPSEvent(p, marker.getName(), marker.getPosition());
-                                break;
-                            case GROUP:
-                                GPSEventUtils.onGroupGPSEvent(p, marker.getName(), marker.getPosition());
-                                break;
-                            case GLOBAL:
-                                GPSEventUtils.onGlobalGPSEvent(p, marker.getName(), marker.getPosition());
-                                break;
-                            case STATIC:
-                                GPSEventUtils.onStaticGPSEvent(p, marker.getName(), marker.getPosition());
-                                break;
-                        }
+                        GPSEventUtils.executeTeleport(p, marker.getPosition(), marker.getName(), marker.getType());
                     });
                     p.setAttribute("gps-ui-overlay", to);
 
@@ -175,7 +161,8 @@ public class PluginGUI {
         Callback<Player> onBackReopen = (Player player) -> openPrivateTeleportMenu(player, level, onBack);
         // Get markers from db
         String orderBy = uiPlayer.getAttribute("oz.gps.sort-order").toString();
-        List<Marker> markers = GPSDatabase.getInstance().getPrivateMarker(uiPlayer.getDbID(), level, markersPerPage, orderBy);
+        List<Marker> markers = GPSDatabase.getInstance().getPrivateMarker(uiPlayer.getDbID(), level, markersPerPage,
+                orderBy);
 
         // Add marker menu item
         menuItems.add(
@@ -240,9 +227,7 @@ public class PluginGUI {
 
         BiFunction<Vector3f, String, Callback<Player>> teleportAction = (Vector3f pos,
                 String label) -> (Player player) -> {
-                    player.setAttribute("pre-port-location", player.getPosition());
-                    player.setPosition(pos);// .
-                    GPSEventUtils.onStaticGPSEvent(uiPlayer, label, pos);
+                    GPSEventUtils.executeTeleport(player, pos, label, MarkerType.GLOBAL);
                     player.hideRadialMenu(false);
                 };
 
@@ -275,9 +260,8 @@ public class PluginGUI {
                     new MenuItem(AssetManager.getIcon("icon-ki-special-01"),
                             t().get("TC_MENU_STATIC_BACKPORT", uiPlayer),
                             (Player p) -> {
-                                p.setPosition(lastPositionBeforePort);// .
-                                GPSEventUtils.onStaticGPSEvent(uiPlayer, t().get("TC_MENU_STATIC_BACKPORT", uiPlayer),
-                                        lastPositionBeforePort);
+                                GPSEventUtils.executeTeleport(uiPlayer, lastPositionBeforePort,
+                                        t().get("TC_MENU_STATIC_BACKPORT", uiPlayer), MarkerType.STATIC, false);
                                 p.hideRadialMenu(false);
                             }));
         if (lastDeathPosition != null)
@@ -285,9 +269,8 @@ public class PluginGUI {
                     new MenuItem(AssetManager.getIcon("icon-ki-sleep-05"),
                             t().get("TC_MENU_STATIC_DEATHPORT", uiPlayer),
                             (Player p) -> {
-                                p.setPosition(lastDeathPosition);// .
-                                GPSEventUtils.onStaticGPSEvent(uiPlayer, t().get("TC_MENU_STATIC_DEATHPORT", uiPlayer),
-                                        lastPositionBeforePort);
+                                GPSEventUtils.executeTeleport(uiPlayer, lastDeathPosition,
+                                        t().get("TC_MENU_STATIC_DEATHPORT", uiPlayer), MarkerType.STATIC, false);
                                 p.hideRadialMenu(false);
                             }));
 

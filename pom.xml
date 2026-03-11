@@ -8,7 +8,7 @@
 
     <groupId>com.github.devidian</groupId>
     <artifactId>rw-plugin-oz-gps</artifactId>
-    <version>0.3.0</version>
+    <version>0.3.2</version>
 
     <name>OZGPS</name>
     <description>No description yet</description>
@@ -209,7 +209,8 @@
                                 <resource>
                                     <directory>${basedir}</directory>
                                     <includes>
-                                        <include>*.md</include>
+                                        <include>README.md</include>
+                                        <include>HISTORY.md</include>
                                     </includes>
                                 </resource>
                             </resources>
