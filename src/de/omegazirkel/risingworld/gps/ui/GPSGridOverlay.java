@@ -36,6 +36,12 @@ import net.risingworld.api.utils.Vector3f;
 public class GPSGridOverlay extends OZUIElement {
 
     private static final PluginSettings s = PluginSettings.getInstance();
+    private static final float PANEL_ALPHA = 0.86f;
+    private static final float BODY_ALPHA = 0.55f;
+    private static final float CARD_ALPHA = 0.92f;
+    private static final float GOLD_R = 0.95f;
+    private static final float GOLD_G = 0.75f;
+    private static final float GOLD_B = 0.25f;
 
     private static I18n t() {
         return I18n.getInstance(GPS.name);
@@ -66,9 +72,10 @@ public class GPSGridOverlay extends OZUIElement {
         mainViewPanel.setSize(75, 75, true);
         mainViewPanel.setPivot(Pivot.MiddleCenter);
         mainViewPanel.setPosition(50, 50, true);
-        mainViewPanel.setBackgroundColor(0, 0, 0, 0.85f);
-        mainViewPanel.setBorderColor(1, 1, 1, 0.4f);
-        mainViewPanel.setBorder(2);
+        mainViewPanel.setBackgroundColor(0, 0, 0, PANEL_ALPHA);
+        mainViewPanel.setBorderColor(GOLD_R, GOLD_G, GOLD_B, 0.6f);
+        mainViewPanel.setBorder(3);
+        mainViewPanel.setBorderEdgeRadius(6, false);
         mainViewPanel.addChild(setupTabSelectionHeader(player));
         mainViewPanel.addChild(setupGridScrollView(player));
         addChild(mainViewPanel);
@@ -160,7 +167,8 @@ public class GPSGridOverlay extends OZUIElement {
         gridScrollView.setSize(100, 90, true);
         gridScrollView.setPivot(Pivot.UpperLeft);
         gridScrollView.setPosition(0, 10, true);
-        gridScrollView.setBorderColor(1, 1, 1, 0.4f);
+        gridScrollView.setBackgroundColor(0.08f, 0.08f, 0.08f, BODY_ALPHA);
+        gridScrollView.setBorderColor(GOLD_R, GOLD_G, GOLD_B, 0.48f);
         gridScrollView.style.borderTopWidth.set(2);
         return gridScrollView;
     }
@@ -179,7 +187,7 @@ public class GPSGridOverlay extends OZUIElement {
         iconGrid.style.display.set(DisplayStyle.Flex);
         iconGrid.style.flexDirection.set(FlexDirection.Row);
         iconGrid.style.flexWrap.set(Wrap.Wrap);
-        iconGrid.style.justifyContent.set(Justify.Center);
+        iconGrid.style.justifyContent.set(Justify.FlexStart);
 
         gridScrollView.addChild(iconGrid);
 
@@ -383,8 +391,10 @@ public class GPSGridOverlay extends OZUIElement {
         UIElement card = new UIElement();
         card.setSize(250 * scaleFactor, 300 * scaleFactor, false);
         card.setPivot(Pivot.UpperLeft);
+        card.setBackgroundColor(0.14f, 0.13f, 0.12f, CARD_ALPHA);
         card.setBorder(1);
-        card.setBorderColor(1, 1, 1, 0.2f);
+        card.setBorderColor(GOLD_R, GOLD_G, GOLD_B, 0.26f);
+        card.setBorderEdgeRadius(6, false);
         int margin = cardMargin;
         card.style.marginBottom.set(margin, Unit.Pixel);
         card.style.marginTop.set(margin, Unit.Pixel);
@@ -413,7 +423,7 @@ public class GPSGridOverlay extends OZUIElement {
             deleteButton.setPosition(245 * scaleFactor, 295 * scaleFactor, false);
             deleteButton.setBorderEdgeRadius(5, false);
             deleteButton.setBorder(1);
-            deleteButton.setBorderColor(1, 1, 1, 0.2f);
+            deleteButton.setBorderColor(GOLD_R, GOLD_G, GOLD_B, 0.32f);
             deleteButton.style.paddingBottom.set(5);
             deleteButton.style.paddingTop.set(5);
             deleteButton.style.paddingLeft.set(5);
@@ -427,7 +437,7 @@ public class GPSGridOverlay extends OZUIElement {
         UILabel markerLabel = new UILabel(name);
         markerLabel.setSize(210 * scaleFactor, 40 * scaleFactor, false);
         markerLabel.setFontSize(14 * scaleFactor);
-        markerLabel.setTextAlign(TextAnchor.UpperCenter);
+        markerLabel.setTextAlign(TextAnchor.UpperLeft);
         markerLabel.setPivot(Pivot.LowerLeft);
         markerLabel.setPosition(5 * scaleFactor, 295 * scaleFactor, false);
         markerLabel.setTextWrap(true);
@@ -451,8 +461,10 @@ public class GPSGridOverlay extends OZUIElement {
         OZUIElement card = new OZUIElement();
         card.setSize(250 * scaleFactor, 300 * scaleFactor, false);
         card.setPivot(Pivot.UpperLeft);
+        card.setBackgroundColor(0.14f, 0.13f, 0.12f, CARD_ALPHA);
         card.setBorder(1);
-        card.setBorderColor(1, 1, 1, 0.2f);
+        card.setBorderColor(GOLD_R, GOLD_G, GOLD_B, 0.26f);
+        card.setBorderEdgeRadius(6, false);
         int margin = cardMargin;
         card.style.marginBottom.set(margin, Unit.Pixel);
         card.style.marginTop.set(margin, Unit.Pixel);
@@ -476,7 +488,7 @@ public class GPSGridOverlay extends OZUIElement {
         UILabel nextLabel = new UILabel(t().get(cardLabel, player));
         nextLabel.setSize(210 * scaleFactor, 40 * scaleFactor, false);
         nextLabel.setFontSize(14 * scaleFactor);
-        nextLabel.setTextAlign(TextAnchor.UpperCenter);
+        nextLabel.setTextAlign(TextAnchor.UpperLeft);
         nextLabel.setPivot(Pivot.LowerLeft);
         nextLabel.setPosition(5 * scaleFactor, 295 * scaleFactor, false);
         nextLabel.setTextWrap(true);
@@ -488,8 +500,10 @@ public class GPSGridOverlay extends OZUIElement {
         OZUIElement card = new OZUIElement();
         card.setSize(250 * scaleFactor, 300 * scaleFactor, false);
         card.setPivot(Pivot.UpperLeft);
+        card.setBackgroundColor(0.14f, 0.13f, 0.12f, CARD_ALPHA);
         card.setBorder(1);
-        card.setBorderColor(1, 1, 1, 0.2f);
+        card.setBorderColor(GOLD_R, GOLD_G, GOLD_B, 0.26f);
+        card.setBorderEdgeRadius(6, false);
         int margin = cardMargin;
         card.style.marginBottom.set(margin, Unit.Pixel);
         card.style.marginTop.set(margin, Unit.Pixel);
@@ -512,7 +526,7 @@ public class GPSGridOverlay extends OZUIElement {
         UILabel addLabel = new UILabel(labelText);
         addLabel.setSize(210 * scaleFactor, 40 * scaleFactor, false);
         addLabel.setFontSize(14 * scaleFactor);
-        addLabel.setTextAlign(TextAnchor.UpperCenter);
+        addLabel.setTextAlign(TextAnchor.UpperLeft);
         addLabel.setPivot(Pivot.LowerLeft);
         addLabel.setPosition(5 * scaleFactor, 295 * scaleFactor, false);
         addLabel.setTextWrap(true);

@@ -9,8 +9,9 @@ import net.risingworld.api.objects.Player;
 
 public class GPSPlayerPluginSettings extends PlayerPluginSettings {
 
-    public GPSPlayerPluginSettings() {
+    public GPSPlayerPluginSettings(String pluginVersion) {
         this.pluginLabel = GPS.name;
+        this.pluginVersion = pluginVersion;
     }
 
     private final I18n t() {

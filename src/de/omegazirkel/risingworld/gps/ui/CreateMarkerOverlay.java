@@ -15,6 +15,10 @@ import net.risingworld.api.ui.style.Pivot;
 
 public class CreateMarkerOverlay extends OZUIElement {
 
+    private static final float GOLD_R = 0.95f;
+    private static final float GOLD_G = 0.75f;
+    private static final float GOLD_B = 0.25f;
+
     private static I18n t() {
         return I18n.getInstance(GPS.name);
     }
@@ -68,10 +72,11 @@ public class CreateMarkerOverlay extends OZUIElement {
         OZUIElement actionsPanel = new OZUIElement();
         actionsPanel.setSize(25, 5, true);
         actionsPanel.setPivot(Pivot.UpperCenter);
-        actionsPanel.setPosition(55, 30, true);
-        actionsPanel.setBackgroundColor(0, 0, 0, 0.85f);
-        actionsPanel.setBorderColor(1, 1, 1, 0.4f);
-        actionsPanel.setBorder(2);
+        actionsPanel.setPosition(67, 30, true);
+        actionsPanel.setBackgroundColor(0, 0, 0, 0.86f);
+        actionsPanel.setBorderColor(GOLD_R, GOLD_G, GOLD_B, 0.6f);
+        actionsPanel.setBorder(1);
+        actionsPanel.setBorderEdgeRadius(6, false);
 
         actionsPanel.addChild(setupCreateButton(player));
         actionsPanel.addChild(setupCancelButton(player));
@@ -105,6 +110,7 @@ public class CreateMarkerOverlay extends OZUIElement {
 
         createButton.setPivot(Pivot.MiddleLeft);
         createButton.setPosition(51, 50, true);
+        createButton.setBorderEdgeRadius(4, false);
         return createButton;
     }
 
@@ -115,6 +121,7 @@ public class CreateMarkerOverlay extends OZUIElement {
         });
         cancelButton.setPivot(Pivot.MiddleRight);
         cancelButton.setPosition(49, 50, true);
+        cancelButton.setBorderEdgeRadius(4, false);
         return cancelButton;
     }
 

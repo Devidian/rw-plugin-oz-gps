@@ -13,6 +13,10 @@ import net.risingworld.api.ui.style.TextAnchor;
 
 public class SetMarkerNamePanel extends OZUIElement {
 
+    private static final float GOLD_R = 0.95f;
+    private static final float GOLD_G = 0.75f;
+    private static final float GOLD_B = 0.25f;
+
     private static I18n t() {
         return I18n.getInstance(GPS.name);
     }
@@ -28,10 +32,11 @@ public class SetMarkerNamePanel extends OZUIElement {
         super();
         this.setSize(25, 10, true);
         this.setPivot(Pivot.UpperCenter);
-        this.setPosition(55, 15, true);
-        this.setBackgroundColor(0, 0, 0, 0.85f);
-        this.setBorderColor(1, 1, 1, 0.4f);
-        this.setBorder(2);
+        this.setPosition(67, 15, true);
+        this.setBackgroundColor(0, 0, 0, 0.86f);
+        this.setBorderColor(GOLD_R, GOLD_G, GOLD_B, 0.6f);
+        this.setBorder(1);
+        this.setBorderEdgeRadius(6, false);
         this.style.paddingBottom.set(5);
         this.style.paddingTop.set(5);
         this.style.paddingLeft.set(5);
@@ -59,6 +64,10 @@ public class SetMarkerNamePanel extends OZUIElement {
         input.setReadOnly(false);
         input.setPivot(Pivot.LowerLeft);
         input.setPosition(5, 95, true);
+        input.setBackgroundColor(0.02f, 0.02f, 0.02f, 0.78f);
+        input.setBorder(1);
+        input.setBorderColor(GOLD_R, GOLD_G, GOLD_B, 0.46f);
+        input.setBorderEdgeRadius(4, false);
 
         this.addChild(input);
     }

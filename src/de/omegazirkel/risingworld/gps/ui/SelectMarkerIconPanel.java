@@ -19,6 +19,10 @@ import net.risingworld.api.ui.style.Wrap;
 
 public class SelectMarkerIconPanel extends OZUIElement {
 
+    private static final float GOLD_R = 0.95f;
+    private static final float GOLD_G = 0.75f;
+    private static final float GOLD_B = 0.25f;
+
     private static I18n t() {
         return I18n.getInstance(GPS.name);
     }
@@ -34,12 +38,13 @@ public class SelectMarkerIconPanel extends OZUIElement {
 
     public SelectMarkerIconPanel(Player uiPlayer, String selectedKey) {
         super();
-        this.setSize(25, 70, true);
+        this.setSize(35, 70, true);
         this.setPivot(Pivot.MiddleCenter);
-        this.setPosition(25, 50, true);
-        this.setBackgroundColor(0, 0, 0, 0.85f);
-        this.setBorderColor(1, 1, 1, 0.4f);
-        this.setBorder(2);
+        this.setPosition(30, 50, true);
+        this.setBackgroundColor(0, 0, 0, 0.86f);
+        this.setBorderColor(GOLD_R, GOLD_G, GOLD_B, 0.6f);
+        this.setBorder(1);
+        this.setBorderEdgeRadius(6, false);
         this.style.paddingBottom.set(5);
         this.style.paddingTop.set(5);
         this.style.paddingLeft.set(5);
@@ -86,7 +91,7 @@ public class SelectMarkerIconPanel extends OZUIElement {
         iconGrid.style.display.set(DisplayStyle.Flex);
         iconGrid.style.flexDirection.set(FlexDirection.Row);
         iconGrid.style.flexWrap.set(Wrap.Wrap);
-        iconGrid.style.justifyContent.set(Justify.Center);
+        iconGrid.style.justifyContent.set(Justify.FlexStart);
 
         for (String key : PluginGUI.markerKeys) {
             MarkerIconButton iconBtn = new MarkerIconButton(key);

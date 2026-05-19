@@ -39,7 +39,17 @@ public class PluginGUI {
             "icon-ki-sleep-01", "icon-ki-sleep-02", "icon-ki-sleep-03", "icon-ki-sleep-04", "icon-ki-sleep-05",
             "icon-ki-village-01", "icon-ki-village-02", "icon-ki-village-03", "icon-ki-village-04",
             "icon-ki-village-05",
-            "icon-ki-special-01");
+            "icon-ki-special-01",
+
+            "icon-ki-alcatraz",
+            "icon-ki-alpine-pasture",
+            "icon-ki-animal-farm",
+            "icon-ki-corn-fields",
+            "icon-ki-factory-modern",
+            "icon-ki-farm",
+            "icon-ki-factory-old",
+            "icon-ki-space-station",
+            "icon-ki-train-station");
 
     private static I18n t() {
         return I18n.getInstance(GPS.name);
@@ -61,6 +71,7 @@ public class PluginGUI {
         AssetManager.loadIconFromPlugin(p, "icon-ki-gps-static");
         AssetManager.loadIconFromPlugin(p, "icon-ki-gps-grid-view");
         AssetManager.loadIconFromPlugin(p, "icon-gpt-exit");
+        AssetManager.loadIconFromPlugin(p, "icon-ki-gps-coin");
 
         AssetManager.loadIconFromPlugin(p, "trash-xmark");
 

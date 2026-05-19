@@ -7,6 +7,7 @@ import de.omegazirkel.risingworld.gps.GPSDatabase;
 import de.omegazirkel.risingworld.gps.PluginGUI;
 import de.omegazirkel.risingworld.gps.PluginSettings;
 import de.omegazirkel.risingworld.gps.ui.GPSGridOverlay;
+import de.omegazirkel.risingworld.gps.ui.GPSPlayerPluginData;
 import de.omegazirkel.risingworld.gps.ui.GPSPlayerPluginSettings;
 import de.omegazirkel.risingworld.tools.Colors;
 import de.omegazirkel.risingworld.tools.FileChangeListener;
@@ -63,7 +64,8 @@ public class GPS extends Plugin implements Listener, FileChangeListener {
 		DiscordConnect.init(this);
 
 		// register plugin settings
-		PlayerPluginSettingsOverlay.registerPlayerPluginSettings(new GPSPlayerPluginSettings());
+		PlayerPluginSettingsOverlay.registerPlayerPluginSettings(new GPSPlayerPluginSettings(getDescription("version")));
+		PlayerPluginSettingsOverlay.registerPlayerPluginData(new GPSPlayerPluginData(getDescription("version")));
 
 		logger().info("✅ " + this.getName() + " Plugin is enabled version:" + this.getDescription("version"));
 	}

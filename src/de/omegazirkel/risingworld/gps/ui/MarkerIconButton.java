@@ -11,13 +11,18 @@ import net.risingworld.api.ui.style.Unit;
 
 public class MarkerIconButton extends OZUIElement {
 
+    private static final float GOLD_R = 0.95f;
+    private static final float GOLD_G = 0.75f;
+    private static final float GOLD_B = 0.25f;
+
     public MarkerIconButton(String iconKey) {
         super();
         this.setClickable(true);
         this.setBorder(1);
-        this.setHoverBackgroundColor(0xaaaaaa50);
-        this.setBackgroundColor(0, 0, 0, 0.85f);
-        this.setBorderColor(1, 1, 1, 0.4f);
+        this.setHoverBackgroundColor(0x611F1AF2);
+        this.setBackgroundColor(0.14f, 0.13f, 0.12f, 0.92f);
+        this.setBorderColor(GOLD_R, GOLD_G, GOLD_B, 0.26f);
+        this.setBorderEdgeRadius(6, false);
         this.setPivot(Pivot.UpperLeft);
         this.style.display.set(DisplayStyle.Flex);
         this.style.justifyContent.set(Justify.Center);
@@ -35,9 +40,11 @@ public class MarkerIconButton extends OZUIElement {
 
     public void setSelected(Boolean selected) {
         if (selected) {
-            this.setBackgroundColor(0xaaaa00dd);
+            this.setBackgroundColor(0.19f, 0.10f, 0.03f, 0.92f);
+            this.setBorderColor(1.0f, 0.48f, 0.12f, 0.86f);
         } else {
-            this.setBackgroundColor(0, 0, 0, 0.85f);
+            this.setBackgroundColor(0.14f, 0.13f, 0.12f, 0.92f);
+            this.setBorderColor(GOLD_R, GOLD_G, GOLD_B, 0.26f);
         }
     }
 
