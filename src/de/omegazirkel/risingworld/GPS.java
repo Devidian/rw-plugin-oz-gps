@@ -4,6 +4,7 @@ import java.nio.file.Path;
 
 import de.omegazirkel.risingworld.gps.DiscordConnect;
 import de.omegazirkel.risingworld.gps.GPSDatabase;
+import de.omegazirkel.risingworld.gps.GPSPlayerPreferences;
 import de.omegazirkel.risingworld.gps.PluginGUI;
 import de.omegazirkel.risingworld.gps.PluginSettings;
 import de.omegazirkel.risingworld.gps.ui.GPSGridOverlay;
@@ -120,14 +121,12 @@ public class GPS extends Plugin implements Listener, FileChangeListener {
 					player.addUIElement(overlay);
 					break;
 				case "sortasc":
-					player.setAttribute("oz.gps.sort-order", "ASC");
-					ps.setString(player.getDbID(), "oz.gps.sort-order", "ASC");
+					GPSPlayerPreferences.setMarkerSortOrder(player, "ASC");
 					player.sendTextMessage(
 							t.get("TC_MSG_SORT_ORDER_CHANGED", player).replace("PH_SORT_ORDER", "ASC"));
 					break;
 				case "sortdesc":
-					player.setAttribute("oz.gps.sort-order", "DESC");
-					ps.setString(player.getDbID(), "oz.gps.sort-order", "DESC");
+					GPSPlayerPreferences.setMarkerSortOrder(player, "DESC");
 					player.sendTextMessage(
 							t.get("TC_MSG_SORT_ORDER_CHANGED", player).replace("PH_SORT_ORDER", "DESC"));
 					break;
@@ -141,10 +140,8 @@ public class GPS extends Plugin implements Listener, FileChangeListener {
 	@EventMethod
 	public void onPlayerSpawnEvent(PlayerSpawnEvent event) {
 		Player player = event.getPlayer();
-		Integer dbId = player.getDbID();
 
-		if (!player.hasAttribute("oz.gps.sort-order"))
-			player.setAttribute("oz.gps.sort-order", ps.getString(dbId, "oz.gps.sort-order").orElse("DESC"));
+		GPSPlayerPreferences.load(player);
 
 		if (s.enableWelcomeMessage) {
 			// Player player = event.getPlayer();

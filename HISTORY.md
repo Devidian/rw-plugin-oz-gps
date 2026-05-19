@@ -4,6 +4,16 @@
 
 ## [unreleased]
 
+## [0.4.0] - 2026-05-19 | Marker management and cooldowns
+
+- fix: keep GPS marker edit and delete actions from overlapping grid labels and teleport dialog buttons
+- fix: save marker edits opened from the teleport overlay reliably
+- feat: allow permitted players to edit GPS marker names and icons from grid and radial overlays
+- feat: add optional marker delete confirmation with a per-player setting
+- feat: add per-marker-type teleport cooldowns with grid and radial menu status
+- feat: show GPS cooldown and runtime values in the player plugin data tab
+- fix: apply static marker cooldowns to static spawn teleports
+
 ## [0.3.2] - 2026-05-19 | GPS UI/UX update
 
 - style: align GPS grid cards and marker dialogs with the shared OZ plugin UI style

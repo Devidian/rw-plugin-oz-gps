@@ -1,6 +1,7 @@
 package de.omegazirkel.risingworld.gps.ui;
 
 import de.omegazirkel.risingworld.GPS;
+import de.omegazirkel.risingworld.gps.GPSPlayerPreferences;
 import de.omegazirkel.risingworld.tools.I18n;
 import de.omegazirkel.risingworld.tools.ui.BasePlayerPluginSettingsPanel;
 import de.omegazirkel.risingworld.tools.ui.OZUIElement;
@@ -25,6 +26,7 @@ public class GPSPlayerPluginSettings extends PlayerPluginSettings {
             protected void redrawContent() {
                 flexWrapper.removeAllChilds();
                 flexWrapper.addChild(playerSettingMarkerOrder(uiPlayer));
+                flexWrapper.addChild(playerSettingConfirmMarkerDelete(uiPlayer));
             }
 
             protected OZUIElement playerSettingMarkerOrder(Player uiPlayer) {
@@ -32,13 +34,22 @@ public class GPSPlayerPluginSettings extends PlayerPluginSettings {
                 // label
                 element.addChild(defaultSettingsLabel(t().get("TC_LABEL_MARKER_ORDER", uiPlayer)));
                 // current value
-                String attributeKey = "oz.gps.sort-order";
-                String currentValue = uiPlayer.hasAttribute(attributeKey) ? (String) uiPlayer.getAttribute(attributeKey)
-                        : "DESC";
-                element.addChild(switchButtons(uiPlayer, currentValue == "DESC", event -> {
-                    uiPlayer.setAttribute(attributeKey, currentValue == "DESC" ? "ASC" : "DESC");
+                String currentValue = GPSPlayerPreferences.markerSortOrder(uiPlayer);
+                element.addChild(switchButtons(uiPlayer, "DESC".equals(currentValue), event -> {
+                    GPSPlayerPreferences.setMarkerSortOrder(uiPlayer, "DESC".equals(currentValue) ? "ASC" : "DESC");
                     redrawContent();
                 }, t().get("TC_BTN_ORDER_ASC", uiPlayer), t().get("TC_BTN_ORDER_DESC", uiPlayer)));
+                return element;
+            }
+
+            protected OZUIElement playerSettingConfirmMarkerDelete(Player uiPlayer) {
+                OZUIElement element = defaultSettingsContainer();
+                element.addChild(defaultSettingsLabel(t().get("TC_LABEL_CONFIRM_MARKER_DELETE", uiPlayer)));
+                boolean currentValue = GPSPlayerPreferences.confirmMarkerDelete(uiPlayer);
+                element.addChild(switchButtons(uiPlayer, currentValue, event -> {
+                    GPSPlayerPreferences.setConfirmMarkerDelete(uiPlayer, !currentValue);
+                    redrawContent();
+                }));
                 return element;
             }
 

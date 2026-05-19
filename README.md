@@ -7,13 +7,18 @@ Main Goal for this plugin is to replace ingame teleport system with a cool gps s
 - Players can teleport to their spawn (fixed location)
 - Players can teleport to their last death (fixed location)
 - Players can teleport back to the last position where they teleported from (fixed location)
+- Admins can configure per-type teleport cooldowns for static, private, group, and global markers
 - Players can set a name for a gps marker
 - Players can choose an icon for a gps marker
-- Players can remove gps marker
+- Players can edit marker names and icons when they are allowed to manage the marker
+- Players can remove gps markers with an optional confirmation dialog
 - Players can create custom teleport targets
   - gps can be private, only for the user himself
-  - gps can be restricted to group, player in the same group will see it.
-  - gps can be public, everyone will have it (admin only)
+  - gps can be restricted to group, players in the same group will see and manage it
+  - gps can be public, everyone will have it and admins can manage it
+- Player plugin settings
+  - Players can change marker sort order
+  - Players can re-enable or disable the marker delete confirmation
 - settings.properties (for admins)
   - Admins can allow or disallow:
     - home teleport
@@ -21,6 +26,8 @@ Main Goal for this plugin is to replace ingame teleport system with a cool gps s
     - last position teleport
     - creating/using private custom teleports
     - creating/using group teleports
+  - Admins can set teleport cooldowns in seconds for static, group, private, and global markers.
+    - Set a cooldown value to `0` to disable it for that marker type.
 
 ## Features planned
 
@@ -28,8 +35,6 @@ Main Goal for this plugin is to replace ingame teleport system with a cool gps s
   - Admins can set:
     - maximum for private custom teleports
     - maximum for group teleports
-  - Admins can set a cooldown for teleporting
-    - for private,group and global
   - Admins can set a cost for teleporting [to use with a currency plugin]
     - for private,group and global
 

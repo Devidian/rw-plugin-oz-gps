@@ -109,6 +109,8 @@ public class PluginGUI {
                             return;
                         }
                         GPSEventUtils.executeTeleport(p, marker.getPosition(), marker.getName(), marker.getType());
+                    }, markerChanged -> {
+                        onTeleportAborted.onCall(true);
                     });
                     p.setAttribute("gps-ui-overlay", to);
 
@@ -171,7 +173,7 @@ public class PluginGUI {
         List<MenuItem> menuItems = new ArrayList<>();
         Callback<Player> onBackReopen = (Player player) -> openPrivateTeleportMenu(player, level, onBack);
         // Get markers from db
-        String orderBy = uiPlayer.getAttribute("oz.gps.sort-order").toString();
+        String orderBy = GPSPlayerPreferences.markerSortOrder(uiPlayer);
         List<Marker> markers = GPSDatabase.getInstance().getPrivateMarker(uiPlayer.getDbID(), level, markersPerPage,
                 orderBy);
 
@@ -238,8 +240,9 @@ public class PluginGUI {
 
         BiFunction<Vector3f, String, Callback<Player>> teleportAction = (Vector3f pos,
                 String label) -> (Player player) -> {
-                    GPSEventUtils.executeTeleport(player, pos, label, MarkerType.GLOBAL);
-                    player.hideRadialMenu(false);
+                    if (GPSEventUtils.executeTeleport(player, pos, label, MarkerType.STATIC)) {
+                        player.hideRadialMenu(false);
+                    }
                 };
 
         if (primarySpawnPos != null)
@@ -271,18 +274,20 @@ public class PluginGUI {
                     new MenuItem(AssetManager.getIcon("icon-ki-special-01"),
                             t().get("TC_MENU_STATIC_BACKPORT", uiPlayer),
                             (Player p) -> {
-                                GPSEventUtils.executeTeleport(uiPlayer, lastPositionBeforePort,
-                                        t().get("TC_MENU_STATIC_BACKPORT", uiPlayer), MarkerType.STATIC, false);
-                                p.hideRadialMenu(false);
+                                if (GPSEventUtils.executeTeleport(uiPlayer, lastPositionBeforePort,
+                                        t().get("TC_MENU_STATIC_BACKPORT", uiPlayer), MarkerType.STATIC, false)) {
+                                    p.hideRadialMenu(false);
+                                }
                             }));
         if (lastDeathPosition != null)
             menuItems.add(
                     new MenuItem(AssetManager.getIcon("icon-ki-sleep-05"),
                             t().get("TC_MENU_STATIC_DEATHPORT", uiPlayer),
                             (Player p) -> {
-                                GPSEventUtils.executeTeleport(uiPlayer, lastDeathPosition,
-                                        t().get("TC_MENU_STATIC_DEATHPORT", uiPlayer), MarkerType.STATIC, false);
-                                p.hideRadialMenu(false);
+                                if (GPSEventUtils.executeTeleport(uiPlayer, lastDeathPosition,
+                                        t().get("TC_MENU_STATIC_DEATHPORT", uiPlayer), MarkerType.STATIC, false)) {
+                                    p.hideRadialMenu(false);
+                                }
                             }));
 
         menuItems.add(MenuItem.closeMenu(uiPlayer));
@@ -299,7 +304,7 @@ public class PluginGUI {
         List<MenuItem> menuItems = new ArrayList<>();
         Callback<Player> onBackReopen = (Player player) -> openGroupTeleportMenu(player, level, onBack);
         // Get markers from db
-        String orderBy = uiPlayer.getAttribute("oz.gps.sort-order").toString();
+        String orderBy = GPSPlayerPreferences.markerSortOrder(uiPlayer);
         List<Marker> markers = GPSDatabase.getInstance().getGroupMarker(uiPlayer.getPermissionGroup(), level,
                 markersPerPage, orderBy);
 
@@ -355,7 +360,7 @@ public class PluginGUI {
         List<MenuItem> menuItems = new ArrayList<>();
         Callback<Player> onBackReopen = (Player player) -> openGlobalTeleportMenu(player, level, onBack);
         // Get markers from db
-        String orderBy = uiPlayer.getAttribute("oz.gps.sort-order").toString();
+        String orderBy = GPSPlayerPreferences.markerSortOrder(uiPlayer);
         List<Marker> markers = GPSDatabase.getInstance().getGlobalMarker(level, markersPerPage, orderBy);
 
         // Add marker menu item

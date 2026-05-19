@@ -27,6 +27,7 @@ public class CreateMarkerOverlay extends OZUIElement {
     private SetMarkerNamePanel markerName;
     private MarkerType type = null;
     private String groupName = null;
+    private Marker existingMarker = null;
 
     private Callback<Marker> onMarkerCreated;
 
@@ -43,6 +44,15 @@ public class CreateMarkerOverlay extends OZUIElement {
     }
 
     public CreateMarkerOverlay(Player player, MarkerType type, String groupName, Callback<Marker> onMarkerCreated) {
+        this(player, type, groupName, null, onMarkerCreated);
+    }
+
+    public CreateMarkerOverlay(Player player, Marker marker, Callback<Marker> onMarkerCreated) {
+        this(player, marker.getType(), marker.getGroup(), marker, onMarkerCreated);
+    }
+
+    private CreateMarkerOverlay(Player player, MarkerType type, String groupName, Marker existingMarker,
+            Callback<Marker> onMarkerCreated) {
         super();
         setClickable(false);
         setPivot(Pivot.UpperLeft);
@@ -52,6 +62,7 @@ public class CreateMarkerOverlay extends OZUIElement {
         this.onMarkerCreated = onMarkerCreated;
         this.type = type;
         this.groupName = groupName;
+        this.existingMarker = existingMarker;
 
         setupMarkerIconSelection(player);
         setupMarkerName(player);
@@ -59,12 +70,12 @@ public class CreateMarkerOverlay extends OZUIElement {
     }
 
     private void setupMarkerIconSelection(Player player) {
-        markerIconSelection = new SelectMarkerIconPanel(player);
+        markerIconSelection = new SelectMarkerIconPanel(player, existingMarker == null ? null : existingMarker.getIcon());
         this.addChild(markerIconSelection);
     }
 
     private void setupMarkerName(Player player) {
-        markerName = new SetMarkerNamePanel(player);
+        markerName = new SetMarkerNamePanel(player, existingMarker == null ? null : existingMarker.getName());
         this.addChild(markerName);
     }
 
@@ -92,15 +103,21 @@ public class CreateMarkerOverlay extends OZUIElement {
                     // error messsage to player?
                     return;
                 }
-                Marker marker = new Marker(
-                        player.getDbID(),
-                        type,
-                        groupName,
-                        player.getPosition(),
-                        selectedMarkerName,
-                        selectedMarkerKey,
-                        0xFFFFFFFF,
-                        0);
+                Marker marker = existingMarker;
+                if (marker == null) {
+                    marker = new Marker(
+                            player.getDbID(),
+                            type,
+                            groupName,
+                            player.getPosition(),
+                            selectedMarkerName,
+                            selectedMarkerKey,
+                            0xFFFFFFFF,
+                            0);
+                } else {
+                    marker.setName(selectedMarkerName);
+                    marker.setIcon(selectedMarkerKey);
+                }
                 CursorManager.hide(player);
                 player.removeUIElement(this);
                 this.onMarkerCreated.onCall(marker);

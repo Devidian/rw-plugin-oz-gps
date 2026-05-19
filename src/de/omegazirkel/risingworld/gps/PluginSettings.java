@@ -54,9 +54,9 @@ public class PluginSettings {
 	public Integer maxGroupMarkers = -1;
 
 	public Integer useStaticMarkerCooldownSeconds = 10;
-	public Integer usePrivateMarkerCooldownSeconds = 10;
-	public Integer useGroupMarkerCooldownSeconds = 10;
-	public Integer useGlobalMarkerCooldownSeconds = 10;
+	public Integer usePrivateMarkerCooldownSeconds = 60;
+	public Integer useGroupMarkerCooldownSeconds = 30;
+	public Integer useGlobalMarkerCooldownSeconds = 300;
 
 	public Integer createPrivateMarkerCost = 100;
 	public Integer createGroupMarkerCost = 100;
@@ -132,11 +132,11 @@ public class PluginSettings {
 			useStaticMarkerCooldownSeconds = Integer
 					.parseInt(settings.getProperty("useStaticMarkerCooldownSeconds", "10"));
 			usePrivateMarkerCooldownSeconds = Integer
-					.parseInt(settings.getProperty("usePrivateMarkerCooldownSeconds", "10"));
+					.parseInt(settings.getProperty("usePrivateMarkerCooldownSeconds", "60"));
 			useGroupMarkerCooldownSeconds = Integer
-					.parseInt(settings.getProperty("useGroupMarkerCooldownSeconds", "10"));
+					.parseInt(settings.getProperty("useGroupMarkerCooldownSeconds", "30"));
 			useGlobalMarkerCooldownSeconds = Integer
-					.parseInt(settings.getProperty("useGlobalMarkerCooldownSeconds", "10"));
+					.parseInt(settings.getProperty("useGlobalMarkerCooldownSeconds", "300"));
 
 			createPrivateMarkerCost = Integer.parseInt(settings.getProperty("createPrivateMarkerCost", "100"));
 			createGroupMarkerCost = Integer.parseInt(settings.getProperty("createGroupMarkerCost", "100"));

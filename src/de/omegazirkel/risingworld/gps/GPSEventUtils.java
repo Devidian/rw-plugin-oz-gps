@@ -12,21 +12,29 @@ public class GPSEventUtils {
         return I18n.getInstance(GPS.name);
     }
 
-    public static void executeTeleport(Player uiPlayer, Vector3f pos, String label, MarkerType type) {
-        executeTeleport(uiPlayer, pos, label, type, true);
+    public static boolean executeTeleport(Player uiPlayer, Vector3f pos, String label, MarkerType type) {
+        return executeTeleport(uiPlayer, pos, label, type, true);
     }
 
-    public static void executeTeleport(Player uiPlayer, Vector3f pos, String label, MarkerType type,
+    public static boolean executeTeleport(Player uiPlayer, Vector3f pos, String label, MarkerType type,
             boolean saveLastPosition) {
         boolean canLeaveArea = (boolean) uiPlayer.getPermissionValue("area_canleave", true);
 
         if (!canLeaveArea) {
             uiPlayer.sendTextMessage(t().get("TC_GPS_CANT_LEAVE", uiPlayer));
-            return;
+            return false;
+        }
+        int cooldownRemaining = TeleportCooldowns.remainingSeconds(uiPlayer, type);
+        if (cooldownRemaining > 0) {
+            uiPlayer.sendTextMessage(t().get("TC_GPS_COOLDOWN_ACTIVE", uiPlayer)
+                    .replace("PH_SECONDS", String.valueOf(cooldownRemaining))
+                    .replace("PH_MARKER_TYPE", t().get(TeleportCooldowns.displayTypeKey(type), uiPlayer)));
+            return false;
         }
         if (saveLastPosition)
             uiPlayer.setAttribute("pre-port-location", uiPlayer.getPosition());
         uiPlayer.setPosition(pos);
+        TeleportCooldowns.recordUse(uiPlayer, type);
 
         switch (type) {
             case GLOBAL:
@@ -44,6 +52,7 @@ public class GPSEventUtils {
             default:
                 break;
         }
+        return true;
     }
 
     public static void onStaticGPSEvent(Player p, String gpsName, Vector3f targetPos) {

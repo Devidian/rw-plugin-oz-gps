@@ -6,6 +6,7 @@ import java.util.List;
 
 import de.omegazirkel.risingworld.GPS;
 import de.omegazirkel.risingworld.tools.db.SQLite;
+import net.risingworld.api.objects.Player;
 import net.risingworld.api.utils.Vector3f;
 
 public class GPSDatabase {
@@ -100,17 +101,58 @@ public class GPSDatabase {
 
     // --- Delete Queries ----------------------------------------------------
 
-    public boolean deleteMarker(int markerId, int playerId) {
+    public boolean updateMarkerDetails(Marker marker, Player player, String name, String icon) {
+        if (!MarkerPermissions.canManage(player, marker)) {
+            return false;
+        }
+
         try {
-            db.execute(
-                    "DELETE FROM " + tableName
-                            + " WHERE id=" + markerId
-                            + " AND player_id=" + playerId + ";");
+            db.execute("UPDATE " + tableName
+                    + " SET name=" + q(name)
+                    + ", icon=" + q(icon)
+                    + " WHERE " + managementWhereClause(marker, player) + ";");
+            marker.setName(name);
+            marker.setIcon(icon);
+            return true;
+        } catch (Exception e) {
+            GPS.logger().error("updateMarkerDetails failed: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deleteMarker(Marker marker, Player player) {
+        if (!MarkerPermissions.canManage(player, marker)) {
+            return false;
+        }
+
+        try {
+            db.execute("DELETE FROM " + tableName
+                    + " WHERE " + managementWhereClause(marker, player) + ";");
             return true;
         } catch (Exception e) {
             GPS.logger().error("deleteMarker failed: " + e.getMessage());
             e.printStackTrace();
             return false;
+        }
+    }
+
+    private String managementWhereClause(Marker marker, Player player) {
+        switch (marker.getType()) {
+            case PRIVATE:
+                return "id=" + marker.getId()
+                        + " AND type=" + q(MarkerType.PRIVATE.toString())
+                        + " AND player_id=" + player.getDbID();
+            case GROUP:
+                return "id=" + marker.getId()
+                        + " AND type=" + q(MarkerType.GROUP.toString())
+                        + " AND group_name=" + q(player.getPermissionGroup());
+            case GLOBAL:
+                return "id=" + marker.getId()
+                        + " AND type=" + q(MarkerType.GLOBAL.toString());
+            case STATIC:
+            default:
+                return "id=-1";
         }
     }
 
