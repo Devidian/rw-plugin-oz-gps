@@ -205,6 +205,26 @@ public class GPSDatabase {
                         + " LIMIT " + pageSize + " OFFSET " + (page * pageSize) + ";");
     }
 
+    public int countPrivateMarkers(int playerId) {
+        return count("SELECT COUNT(*) FROM " + tableName + " WHERE type=" + q(MarkerType.PRIVATE.toString())
+                + " AND player_id=" + playerId + ";");
+    }
+
+    public int countGroupMarkers(String groupName) {
+        return count("SELECT COUNT(*) FROM " + tableName + " WHERE type=" + q(MarkerType.GROUP.toString())
+                + " AND group_name=" + q(groupName) + ";");
+    }
+
+    private int count(String query) {
+        try (ResultSet result = db.executeQuery(query)) {
+            return result.next() ? result.getInt(1) : 0;
+        } catch (Exception e) {
+            GPS.logger().error("count markers failed: " + e.getMessage());
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
     private List<Marker> executeListQuery(String query) {
         List<Marker> markers = new ArrayList<>();
 

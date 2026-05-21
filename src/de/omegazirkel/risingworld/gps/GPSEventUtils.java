@@ -31,6 +31,19 @@ public class GPSEventUtils {
                     .replace("PH_MARKER_TYPE", t().get(TeleportCooldowns.displayTypeKey(type), uiPlayer)));
             return false;
         }
+        GPSEconomy economy = GPSEconomy.getInstance();
+        if (economy != null) {
+            GPSEconomy.EconomyResult charge = economy.chargeTeleport(uiPlayer, pos, type, label);
+            if (!charge.success()) {
+                uiPlayer.sendTextMessage(t().get("TC_GPS_ECONOMY_FAILED", uiPlayer)
+                        .replace("PH_MESSAGE", charge.message()));
+                return false;
+            }
+            if (!charge.message().isBlank()) {
+                uiPlayer.sendTextMessage(t().get("TC_GPS_COST_CHARGED", uiPlayer)
+                        .replace("PH_COST", charge.message()));
+            }
+        }
         if (saveLastPosition)
             uiPlayer.setAttribute("pre-port-location", uiPlayer.getPosition());
         uiPlayer.setPosition(pos);

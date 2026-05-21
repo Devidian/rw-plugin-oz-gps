@@ -4,6 +4,12 @@
 
 ## [unreleased]
 
+- feat: add optional Wallet and Shop integration detection for GPS economy features
+- feat: add GPS teleport-token currency registration and optional Shop token packages
+- feat: add disabled, fixed, and distance travel cost modes with cost display
+- feat: add optional private/group marker creation costs and marker limits
+- feat: add global plus personal admin override for GPS costs and limits
+
 ## [0.4.0] - 2026-05-19 | Marker management and cooldowns
 
 - fix: keep GPS marker edit and delete actions from overlapping grid labels and teleport dialog buttons

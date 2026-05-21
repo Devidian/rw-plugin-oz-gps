@@ -6,6 +6,7 @@ import net.risingworld.api.objects.Player;
 public final class GPSPlayerPreferences {
     public static final String SORT_ORDER_KEY = "oz.gps.sort-order";
     public static final String CONFIRM_MARKER_DELETE_KEY = "oz.gps.confirmMarkerDelete";
+    public static final String ADMIN_OVERRIDE_KEY = "oz.gps.adminOverride";
 
     private GPSPlayerPreferences() {
     }
@@ -18,6 +19,9 @@ public final class GPSPlayerPreferences {
         if (!player.hasAttribute(CONFIRM_MARKER_DELETE_KEY)) {
             player.setAttribute(CONFIRM_MARKER_DELETE_KEY,
                     GPS.ps.getBoolean(dbId, CONFIRM_MARKER_DELETE_KEY).orElse(true));
+        }
+        if (!player.hasAttribute(ADMIN_OVERRIDE_KEY)) {
+            player.setAttribute(ADMIN_OVERRIDE_KEY, GPS.ps.getBoolean(dbId, ADMIN_OVERRIDE_KEY).orElse(false));
         }
     }
 
@@ -44,5 +48,18 @@ public final class GPSPlayerPreferences {
     public static void setMarkerSortOrder(Player player, String value) {
         player.setAttribute(SORT_ORDER_KEY, value);
         GPS.ps.setString(player.getDbID(), SORT_ORDER_KEY, value);
+    }
+
+    public static boolean adminOverride(Player player) {
+        if (!player.hasAttribute(ADMIN_OVERRIDE_KEY)) {
+            load(player);
+        }
+        Object value = player.getAttribute(ADMIN_OVERRIDE_KEY);
+        return value instanceof Boolean && (Boolean) value;
+    }
+
+    public static void setAdminOverride(Player player, boolean value) {
+        player.setAttribute(ADMIN_OVERRIDE_KEY, value);
+        GPS.ps.setBoolean(player.getDbID(), ADMIN_OVERRIDE_KEY, value);
     }
 }

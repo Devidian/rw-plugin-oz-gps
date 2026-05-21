@@ -3,6 +3,7 @@ package de.omegazirkel.risingworld;
 import java.nio.file.Path;
 
 import de.omegazirkel.risingworld.gps.DiscordConnect;
+import de.omegazirkel.risingworld.gps.GPSEconomy;
 import de.omegazirkel.risingworld.gps.GPSDatabase;
 import de.omegazirkel.risingworld.gps.GPSPlayerPreferences;
 import de.omegazirkel.risingworld.gps.PluginGUI;
@@ -16,6 +17,7 @@ import de.omegazirkel.risingworld.tools.I18n;
 import de.omegazirkel.risingworld.tools.OZLogger;
 import de.omegazirkel.risingworld.tools.PlayerSettings;
 import de.omegazirkel.risingworld.tools.db.SQLite;
+import de.omegazirkel.risingworld.tools.settings.PlayerPluginAdminSettings;
 import de.omegazirkel.risingworld.tools.ui.AssetManager;
 import de.omegazirkel.risingworld.tools.ui.CursorManager;
 import de.omegazirkel.risingworld.tools.ui.MenuItem;
@@ -63,10 +65,14 @@ public class GPS extends Plugin implements Listener, FileChangeListener {
 						}));
 		// connect plugins
 		DiscordConnect.init(this);
+		GPSEconomy.init(this, s);
 
 		// register plugin settings
 		PlayerPluginSettingsOverlay.registerPlayerPluginSettings(new GPSPlayerPluginSettings(getDescription("version")));
 		PlayerPluginSettingsOverlay.registerPlayerPluginData(new GPSPlayerPluginData(getDescription("version")));
+		PlayerPluginSettingsOverlay.registerPlayerPluginAdminSettings(
+				new PlayerPluginAdminSettings(name, getDescription("version"), () -> s.adminSettingsEntries(),
+						s::initSettings));
 
 		logger().info("✅ " + this.getName() + " Plugin is enabled version:" + this.getDescription("version"));
 	}
@@ -79,6 +85,9 @@ public class GPS extends Plugin implements Listener, FileChangeListener {
 	public void onSettingsChanged(Path settingsPath) {
 		s.initSettings(settingsPath.toString());
 		logger().setLevel(s.logLevel);
+		if (GPSEconomy.getInstance() != null) {
+			GPSEconomy.getInstance().updateSettings(s);
+		}
 	}
 
 	@EventMethod
@@ -150,6 +159,12 @@ public class GPS extends Plugin implements Listener, FileChangeListener {
 					.replace("PH_PLUGIN_NAME", getDescription("name"))
 					.replace("PH_PLUGIN_CMD", pluginCMD)
 					.replace("PH_PLUGIN_VERSION", getDescription("version")));
+		}
+		if (player.isAdmin() && (s.enableTeleportTokens || !s.travelCostMode.equals("disabled")
+				|| s.enableMarkerCreateCosts)) {
+			if (GPSEconomy.getInstance() != null && !GPSEconomy.getInstance().walletAvailable()) {
+				player.sendTextMessage(c.warning + "OZ - GPS economy features require OZ - Wallet.");
+			}
 		}
 	}
 

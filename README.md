@@ -8,6 +8,9 @@ Main Goal for this plugin is to replace ingame teleport system with a cool gps s
 - Players can teleport to their last death (fixed location)
 - Players can teleport back to the last position where they teleported from (fixed location)
 - Admins can configure per-type teleport cooldowns for static, private, group, and global markers
+- Admins can optionally require Wallet costs for teleports and marker creation
+- Admins can optionally register GPS teleport-token currency and Shop token packages
+- Admins can enforce private and group marker limits with a two-step admin override
 - Players can set a name for a gps marker
 - Players can choose an icon for a gps marker
 - Players can edit marker names and icons when they are allowed to manage the marker
@@ -29,14 +32,42 @@ Main Goal for this plugin is to replace ingame teleport system with a cool gps s
   - Admins can set teleport cooldowns in seconds for static, group, private, and global markers.
     - Set a cooldown value to `0` to disable it for that marker type.
 
-## Features planned
+## Economy and limits
 
-- settings.properties (for admins)
-  - Admins can set:
-    - maximum for private custom teleports
-    - maximum for group teleports
-  - Admins can set a cost for teleporting [to use with a currency plugin]
-    - for private,group and global
+Economy behavior is disabled by default. GPS remains loadable with only `rw-plugin-oz-tools`.
+
+Optional Wallet-backed settings:
+
+```properties
+travelCostMode=disabled
+travelCostCurrencyIdentifier=
+travelDistanceCostPerBlock=1
+useStaticMarkerCost=10
+usePrivateMarkerCost=10
+useGroupMarkerCost=10
+useGlobalMarkerCost=10
+enableMarkerCreateCosts=false
+createPrivateMarkerCost=25
+createGroupMarkerCost=75
+markerCreateCostCurrencyIdentifier=
+enableTeleportTokens=false
+teleportTokenCurrencyIdentifier=GPSTP
+teleportTokenCurrencyName=GPS Teleport Token
+teleportTokenIcon=icon-ki-gps-coin
+enableTeleportTokenShopOffers=false
+teleportTokenShopCurrencyIdentifier=
+teleportTokenPackage1Price=25
+teleportTokenPackage10Price=200
+teleportTokenPackage50Price=900
+allowAdminOverride=false
+```
+
+`travelCostMode` supports `disabled`, `fixed`, and `distance`.
+`distance` uses Manhattan distance from the player's current position to the target.
+`fixed` uses the per-marker-type `use*MarkerCost` settings.
+Marker limits use `maxPrivateMarkers` and `maxGroupMarkers`; `-1` means unlimited.
+
+Admin override is two-step: `allowAdminOverride=true` enables the feature globally, and each admin must also enable the personal GPS admin override in player plugin settings.
 
 ## Attribution
 

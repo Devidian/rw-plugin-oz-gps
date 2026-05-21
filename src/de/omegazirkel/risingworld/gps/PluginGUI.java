@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 
 import de.omegazirkel.risingworld.GPS;
+import de.omegazirkel.risingworld.gps.GPSEconomy.EconomyResult;
 import de.omegazirkel.risingworld.gps.ui.CreateMarkerOverlay;
 import de.omegazirkel.risingworld.gps.ui.GPSGridOverlay;
 import de.omegazirkel.risingworld.gps.ui.TeleportOverlay;
@@ -182,6 +183,10 @@ public class PluginGUI {
                 new MenuItem(AssetManager.getIcon("icon-ki-gps-add-marker"),
                         t().get("TC_MENU_ADD_MARKER_PRIVATE", uiPlayer),
                         (Player p) -> {
+                            if (!canCreateMarker(p, MarkerType.PRIVATE)) {
+                                openPrivateTeleportMenu(p, level, onBack);
+                                return;
+                            }
                             OZUIElement overlay = null;
                             // remove existing overlays from this plugin before adding
                             if (p.hasAttribute("gps-ui-overlay")) {
@@ -190,11 +195,10 @@ public class PluginGUI {
                             }
                             overlay = new CreateMarkerOverlay(p, MarkerType.PRIVATE, marker -> {
 
-                                GPSDatabase.getInstance().saveMarker(marker);
+                                if (!saveMarkerWithEconomy(p, marker)) {
+                                    return;
+                                }
                                 openPrivateTeleportMenu(p, level, onBack);
-                                p.sendTextMessage(t().get("TC_GPS_PRIVATE_CREATED", p)
-                                        .replace("PH_MARKER_NAME", marker.getName())
-                                        .replace("PH_MARKER_POS", marker.getPosition() + ""));
 
                             });
                             p.setAttribute("gps-ui-overlay", overlay);
@@ -313,6 +317,10 @@ public class PluginGUI {
                 .add(new MenuItem(AssetManager.getIcon("icon-ki-gps-add-marker"),
                         t().get("TC_MENU_ADD_MARKER_GROUP", uiPlayer),
                         (Player p) -> {
+                            if (!canCreateMarker(p, MarkerType.GROUP)) {
+                                openGroupTeleportMenu(p, level, onBack);
+                                return;
+                            }
                             OZUIElement overlay = null;
                             // remove existing overlays from this plugin before adding
                             if (p.hasAttribute("gps-ui-overlay")) {
@@ -321,11 +329,10 @@ public class PluginGUI {
                             }
                             overlay = new CreateMarkerOverlay(p, p.getPermissionGroup(), marker -> {
 
-                                GPSDatabase.getInstance().saveMarker(marker);
+                                if (!saveMarkerWithEconomy(p, marker)) {
+                                    return;
+                                }
                                 openGroupTeleportMenu(p, level, onBack);
-                                p.sendTextMessage(t().get("TC_GPS_GROUP_CREATED", p)
-                                        .replace("PH_MARKER_NAME", marker.getName())
-                                        .replace("PH_MARKER_POS", marker.getPosition() + ""));
 
                             });
                             p.setAttribute("gps-ui-overlay", overlay);
@@ -405,6 +412,38 @@ public class PluginGUI {
                             (Player p) -> openGlobalTeleportMenu(p, level + 1, onBackReopen)));
 
         PluginMenuManager.showMenu(uiPlayer, menuItems);
+    }
+
+    private boolean canCreateMarker(Player player, MarkerType type) {
+        GPSEconomy economy = GPSEconomy.getInstance();
+        if (economy != null && economy.markerLimitReached(player, type)) {
+            player.sendTextMessage(t().get("TC_GPS_MARKER_LIMIT_REACHED", player)
+                    .replace("PH_LIMIT", String.valueOf(economy.markerLimit(type))));
+            return false;
+        }
+        return true;
+    }
+
+    private boolean saveMarkerWithEconomy(Player player, Marker marker) {
+        GPSEconomy economy = GPSEconomy.getInstance();
+        if (economy != null) {
+            EconomyResult charge = economy.chargeMarkerCreation(player, marker.getType());
+            if (!charge.success()) {
+                player.sendTextMessage(t().get("TC_GPS_ECONOMY_FAILED", player)
+                        .replace("PH_MESSAGE", charge.message()));
+                return false;
+            }
+            if (!charge.message().isBlank()) {
+                player.sendTextMessage(t().get("TC_GPS_COST_CHARGED", player)
+                        .replace("PH_COST", charge.message()));
+            }
+        }
+        GPSDatabase.getInstance().saveMarker(marker);
+        String key = marker.getType() == MarkerType.GROUP ? "TC_GPS_GROUP_CREATED" : "TC_GPS_PRIVATE_CREATED";
+        player.sendTextMessage(t().get(key, player)
+                .replace("PH_MARKER_NAME", marker.getName())
+                .replace("PH_MARKER_POS", marker.getPosition() + ""));
+        return true;
     }
 
 }

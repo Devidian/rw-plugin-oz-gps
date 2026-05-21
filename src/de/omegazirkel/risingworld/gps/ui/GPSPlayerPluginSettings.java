@@ -27,6 +27,9 @@ public class GPSPlayerPluginSettings extends PlayerPluginSettings {
                 flexWrapper.removeAllChilds();
                 flexWrapper.addChild(playerSettingMarkerOrder(uiPlayer));
                 flexWrapper.addChild(playerSettingConfirmMarkerDelete(uiPlayer));
+                if (uiPlayer.isAdmin()) {
+                    flexWrapper.addChild(playerSettingAdminOverride(uiPlayer));
+                }
             }
 
             protected OZUIElement playerSettingMarkerOrder(Player uiPlayer) {
@@ -48,6 +51,17 @@ public class GPSPlayerPluginSettings extends PlayerPluginSettings {
                 boolean currentValue = GPSPlayerPreferences.confirmMarkerDelete(uiPlayer);
                 element.addChild(switchButtons(uiPlayer, currentValue, event -> {
                     GPSPlayerPreferences.setConfirmMarkerDelete(uiPlayer, !currentValue);
+                    redrawContent();
+                }));
+                return element;
+            }
+
+            protected OZUIElement playerSettingAdminOverride(Player uiPlayer) {
+                OZUIElement element = defaultSettingsContainer();
+                element.addChild(defaultSettingsLabel(t().get("TC_LABEL_ADMIN_OVERRIDE", uiPlayer)));
+                boolean currentValue = GPSPlayerPreferences.adminOverride(uiPlayer);
+                element.addChild(switchButtons(uiPlayer, currentValue, event -> {
+                    GPSPlayerPreferences.setAdminOverride(uiPlayer, !currentValue);
                     redrawContent();
                 }));
                 return element;

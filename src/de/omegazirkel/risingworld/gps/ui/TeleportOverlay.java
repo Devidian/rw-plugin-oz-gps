@@ -2,6 +2,7 @@ package de.omegazirkel.risingworld.gps.ui;
 
 import de.omegazirkel.risingworld.GPS;
 // import de.omegazirkel.risingworld.gps.PluginSettings;
+import de.omegazirkel.risingworld.gps.GPSEconomy;
 import de.omegazirkel.risingworld.gps.GPSDatabase;
 import de.omegazirkel.risingworld.gps.GPSPlayerPreferences;
 import de.omegazirkel.risingworld.gps.Marker;
@@ -118,6 +119,16 @@ public class TeleportOverlay extends OZUIElement {
         cooldownLabel.setTextWrap(true);
         body.addChild(cooldownLabel);
 
+        UILabel costLabel = new UILabel(costText(player));
+        costLabel.setSize(90, 16, true);
+        costLabel.setPivot(Pivot.LowerLeft);
+        costLabel.setPosition(5, 78, true);
+        costLabel.setFont(Font.Default);
+        costLabel.setFontSize(12);
+        costLabel.setTextAlign(TextAnchor.MiddleCenter);
+        costLabel.setTextWrap(false);
+        body.addChild(costLabel);
+
         // footer
 
         OZUIElement panelFooter = new OZUIElement();
@@ -211,6 +222,16 @@ public class TeleportOverlay extends OZUIElement {
         });
         styleFooterButton(btn, true);
         return btn;
+    }
+
+    private String costText(Player player) {
+        GPSEconomy economy = GPSEconomy.getInstance();
+        if (economy == null) {
+            return "";
+        }
+        long cost = economy.teleportCost(player, marker.getPosition(), marker.getType());
+        return cost <= 0 ? "" : t().get("TC_GPS_COST_LABEL", player)
+                .replace("PH_COST", economy.costLabel(cost, economy.teleportCurrency(marker.getType())));
     }
 
     private void startCooldownTimer(Player player) {

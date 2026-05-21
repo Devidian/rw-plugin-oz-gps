@@ -1,15 +1,15 @@
 # OZ GPS 0.3.2
 
-Diese Version aktualisiert die GPS-Oberflaeche und richtet das Plugin auf OZTools 0.18.0 aus.
+Diese Version aktualisiert die GPS-Oberfläche und richtet das Plugin auf OZTools 0.18.0 aus.
 
 ## Highlights
 
-- GPS-Rasterkarten und Marker-Dialoge orientieren sich jetzt staerker am gemeinsamen OZ-Plugin-UI-Stil.
+- GPS-Rasterkarten und Marker-Dialoge orientieren sich jetzt stärker am gemeinsamen OZ-Plugin-UI-Stil.
 - Rahmen des GPS-Overlays, Buttons im Teleport-Dialog, Breite der Marker-Icon-Auswahl und Marker-Benennung wurden verfeinert.
 - Die Plugin-Willkommensnachricht erscheint wieder als einfarbige Chat-Zeile.
-- Neue Marker-Icon-Assets werden fuer die GPS-Marker-Auswahl mitgeliefert.
+- Neue Marker-Icon-Assets werden für die GPS-Marker-Auswahl mitgeliefert.
 - Die Standardeinstellung `sendPluginWelcome` ist jetzt `false`.
-- Gebuendelte PluginAPI- und Maven-Abhaengigkeitsversionen sind auf den Release-Build abgestimmt.
+- Gebündelte PluginAPI- und Maven-Abhängigkeitsversionen sind auf den Release-Build abgestimmt.
 
 ## Installation
 
