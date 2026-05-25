@@ -1,5 +1,6 @@
 # Roadmaps
 
+- [Roadmap Plan 02 UI Entry Preference](roadmap-plan-02-ui-entry-preference.md)
 - [GPS Economy And Marker Controls](gps-economy-and-marker-controls.md)
 
 Large implementation plans and long-lived roadmap documents live here.

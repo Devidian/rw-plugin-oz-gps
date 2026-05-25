@@ -26,6 +26,7 @@ public class GPSPlayerPluginSettings extends PlayerPluginSettings {
             protected void redrawContent() {
                 flexWrapper.removeAllChilds();
                 flexWrapper.addChild(playerSettingMarkerOrder(uiPlayer));
+                flexWrapper.addChild(playerSettingEntryMode(uiPlayer));
                 flexWrapper.addChild(playerSettingConfirmMarkerDelete(uiPlayer));
                 if (uiPlayer.isAdmin()) {
                     flexWrapper.addChild(playerSettingAdminOverride(uiPlayer));
@@ -53,6 +54,20 @@ public class GPSPlayerPluginSettings extends PlayerPluginSettings {
                     GPSPlayerPreferences.setConfirmMarkerDelete(uiPlayer, !currentValue);
                     redrawContent();
                 }));
+                return element;
+            }
+
+            protected OZUIElement playerSettingEntryMode(Player uiPlayer) {
+                OZUIElement element = defaultSettingsContainer();
+                element.addChild(defaultSettingsLabel(t().get("TC_LABEL_ENTRY_MODE", uiPlayer)));
+                String currentValue = GPSPlayerPreferences.entryMode(uiPlayer);
+                boolean radialMode = GPSPlayerPreferences.ENTRY_MODE_RADIAL.equals(currentValue);
+                element.addChild(switchButtons(uiPlayer, radialMode, event -> {
+                    GPSPlayerPreferences.setEntryMode(uiPlayer,
+                            radialMode ? GPSPlayerPreferences.ENTRY_MODE_GRID
+                                    : GPSPlayerPreferences.ENTRY_MODE_RADIAL);
+                    redrawContent();
+                }, t().get("TC_BTN_ENTRY_GRID", uiPlayer), t().get("TC_BTN_ENTRY_RADIAL", uiPlayer)));
                 return element;
             }
 

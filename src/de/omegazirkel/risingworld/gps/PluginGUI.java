@@ -125,23 +125,6 @@ public class PluginGUI {
         List<MenuItem> menuItems = new ArrayList<>();
         Callback<Player> onBackReopen = (Player player) -> openMainMenu(player);
 
-        menuItems.add(
-                new MenuItem(AssetManager.getIcon("icon-ki-gps-grid-view"), t().get("TC_MENU_GRID_VIEW", uiPlayer),
-                        (Player p) -> {
-                            OZUIElement overlay = null;
-                            // remove existing overlays from this plugin before adding
-                            if (p.hasAttribute("gps-ui-overlay")) {
-                                overlay = (OZUIElement) p.getAttribute("gps-ui-overlay");
-                                p.removeUIElement(overlay);
-                            }
-                            overlay = new GPSGridOverlay(p);
-                            p.setAttribute("gps-ui-overlay", overlay);
-
-                            p.hideRadialMenu(true);
-                            CursorManager.show(p);
-                            p.addUIElement(overlay);
-                        }));
-
         if (s.enablePrivateMarkers)
             menuItems.add(
                     new MenuItem(AssetManager.getIcon("icon-ki-gps-private"),
@@ -163,6 +146,28 @@ public class PluginGUI {
 
         menuItems.add(MenuItem.closeMenu(uiPlayer));
         PluginMenuManager.showMenu(uiPlayer, menuItems);
+    }
+
+    public void openPreferredEntry(Player uiPlayer) {
+        if (GPSPlayerPreferences.ENTRY_MODE_RADIAL.equals(GPSPlayerPreferences.entryMode(uiPlayer))) {
+            openMainMenu(uiPlayer);
+            return;
+        }
+        openGridView(uiPlayer);
+    }
+
+    public void openGridView(Player uiPlayer) {
+        OZUIElement overlay = null;
+        if (uiPlayer.hasAttribute("gps-ui-overlay")) {
+            overlay = (OZUIElement) uiPlayer.getAttribute("gps-ui-overlay");
+            uiPlayer.removeUIElement(overlay);
+        }
+        overlay = new GPSGridOverlay(uiPlayer);
+        uiPlayer.setAttribute("gps-ui-overlay", overlay);
+
+        uiPlayer.hideRadialMenu(true);
+        CursorManager.show(uiPlayer);
+        uiPlayer.addUIElement(overlay);
     }
 
     /**

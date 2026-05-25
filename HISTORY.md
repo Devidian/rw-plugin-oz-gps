@@ -4,6 +4,10 @@
 
 ## [unreleased]
 
+- feat: add shared Tools Info/Status panel content for GPS and route `/gps status` to it
+- feat: complete grouped admin settings metadata and i18n labels for GPS settings
+- feat: add player preference for the shared GPS entry and default it to the grid view
+- refactor: remove the redundant grid-view entry from the GPS radial menu
 - feat: add optional Wallet and Shop integration detection for GPS economy features
 - feat: add GPS teleport-token currency registration and optional Shop token packages
 - feat: add disabled, fixed, and distance travel cost modes with cost display

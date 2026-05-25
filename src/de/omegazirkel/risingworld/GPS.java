@@ -5,10 +5,10 @@ import java.nio.file.Path;
 import de.omegazirkel.risingworld.gps.DiscordConnect;
 import de.omegazirkel.risingworld.gps.GPSEconomy;
 import de.omegazirkel.risingworld.gps.GPSDatabase;
+import de.omegazirkel.risingworld.gps.GPSPluginInfoStatusProvider;
 import de.omegazirkel.risingworld.gps.GPSPlayerPreferences;
 import de.omegazirkel.risingworld.gps.PluginGUI;
 import de.omegazirkel.risingworld.gps.PluginSettings;
-import de.omegazirkel.risingworld.gps.ui.GPSGridOverlay;
 import de.omegazirkel.risingworld.gps.ui.GPSPlayerPluginData;
 import de.omegazirkel.risingworld.gps.ui.GPSPlayerPluginSettings;
 import de.omegazirkel.risingworld.tools.Colors;
@@ -19,10 +19,9 @@ import de.omegazirkel.risingworld.tools.PlayerSettings;
 import de.omegazirkel.risingworld.tools.db.SQLite;
 import de.omegazirkel.risingworld.tools.settings.PlayerPluginAdminSettings;
 import de.omegazirkel.risingworld.tools.ui.AssetManager;
-import de.omegazirkel.risingworld.tools.ui.CursorManager;
 import de.omegazirkel.risingworld.tools.ui.MenuItem;
-import de.omegazirkel.risingworld.tools.ui.OZUIElement;
 import de.omegazirkel.risingworld.tools.ui.PlayerPluginSettingsOverlay;
+import de.omegazirkel.risingworld.tools.ui.PluginInfoStatusProviders;
 import de.omegazirkel.risingworld.tools.ui.PluginMenuManager;
 import net.risingworld.api.Plugin;
 import net.risingworld.api.events.EventMethod;
@@ -61,7 +60,8 @@ public class GPS extends Plugin implements Listener, FileChangeListener {
 		PluginMenuManager
 				.registerPluginMenu(
 						new MenuItem(AssetManager.getIcon("icon-ki-gps-plugin"), "GPS", (Player p) -> {
-							gui.openMainMenu(p);
+							GPSPlayerPreferences.load(p);
+							gui.openPreferredEntry(p);
 						}));
 		// connect plugins
 		DiscordConnect.init(this);
@@ -73,12 +73,16 @@ public class GPS extends Plugin implements Listener, FileChangeListener {
 		PlayerPluginSettingsOverlay.registerPlayerPluginAdminSettings(
 				new PlayerPluginAdminSettings(name, getDescription("version"), () -> s.adminSettingsEntries(),
 						s::initSettings));
+		PluginInfoStatusProviders.registerProvider(new GPSPluginInfoStatusProvider(this, getDescription("version")));
 
 		logger().info("✅ " + this.getName() + " Plugin is enabled version:" + this.getDescription("version"));
 	}
 
 	@Override
 	public void onDisable() {
+		if (name != null) {
+			PluginInfoStatusProviders.unregisterProvider(name);
+		}
 	}
 
 	@Override
@@ -108,13 +112,7 @@ public class GPS extends Plugin implements Listener, FileChangeListener {
 			String option = cmdParts[1];
 			switch (option) {
 				case "status":
-					String statusMessage = t.get("TC_CMD_STATUS", lang)
-							.replace("PH_VERSION", c.okay + this.getDescription("version") + c.endTag)
-							.replace("PH_LANGUAGE",
-									c.info + player.getLanguage() + " / " + player.getSystemLanguage() + c.endTag)
-							.replace("PH_USEDLANG", c.okay + t.getLanguageUsed(lang) + c.endTag)
-							.replace("PH_LANG_AVAILABLE", c.warning + t.getLanguageAvailable() + c.endTag);
-					player.sendTextMessage(c.okay + this.getName() + ":> " + c.text + statusMessage);
+					PluginInfoStatusProviders.show(player, name);
 					break;
 				case "help":
 					String helpMessage = t.get("TC_CMD_HELP", player).replaceAll("PH_PLUGIN_CMD", pluginCMD);
@@ -124,10 +122,7 @@ public class GPS extends Plugin implements Listener, FileChangeListener {
 					gui.openMainMenu(player);
 					break;
 				case "opengrid":
-					OZUIElement overlay = new GPSGridOverlay(player);
-					player.setAttribute("gps-ui-overlay", overlay);
-					CursorManager.show(player);
-					player.addUIElement(overlay);
+					gui.openGridView(player);
 					break;
 				case "sortasc":
 					GPSPlayerPreferences.setMarkerSortOrder(player, "ASC");

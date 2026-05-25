@@ -56,6 +56,8 @@ public class GPSPlayerPluginData extends PlayerPluginData {
                 addRow(table, t().get("TC_DATA_CONFIRM_MARKER_DELETE", uiPlayer),
                         GPSPlayerPreferences.CONFIRM_MARKER_DELETE_KEY,
                         String.valueOf(GPSPlayerPreferences.confirmMarkerDelete(uiPlayer)));
+                addRow(table, t().get("TC_DATA_ENTRY_MODE", uiPlayer), GPSPlayerPreferences.ENTRY_MODE_KEY,
+                        GPSPlayerPreferences.entryMode(uiPlayer));
                 addRow(table, t().get("TC_DATA_LAST_DEATH_POSITION", uiPlayer), "death-location",
                         attributeValue(uiPlayer, "death-location", "-"));
                 addRow(table, t().get("TC_DATA_PRE_PORT_POSITION", uiPlayer), "pre-port-location",

@@ -20,6 +20,7 @@ Main Goal for this plugin is to replace ingame teleport system with a cool gps s
   - gps can be restricted to group, players in the same group will see and manage it
   - gps can be public, everyone will have it and admins can manage it
 - Player plugin settings
+  - Players can choose whether the shared `/ozt` GPS entry opens the grid view or the GPS radial menu
   - Players can change marker sort order
   - Players can re-enable or disable the marker delete confirmation
 - settings.properties (for admins)
@@ -68,6 +69,13 @@ allowAdminOverride=false
 Marker limits use `maxPrivateMarkers` and `maxGroupMarkers`; `-1` means unlimited.
 
 Admin override is two-step: `allowAdminOverride=true` enables the feature globally, and each admin must also enable the personal GPS admin override in player plugin settings.
+
+## Commands
+
+- `/gps` or `/gps open`: open the GPS radial menu.
+- `/gps opengrid`: open the GPS grid view.
+- `/gps status`: open the shared Tools Info/Status panel.
+- `/gps help`: show command help.
 
 ## Attribution
 
