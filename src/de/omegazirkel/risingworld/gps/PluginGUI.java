@@ -15,6 +15,7 @@ import de.omegazirkel.risingworld.tools.ui.AssetManager;
 import de.omegazirkel.risingworld.tools.ui.CursorManager;
 import de.omegazirkel.risingworld.tools.ui.MenuItem;
 import de.omegazirkel.risingworld.tools.ui.OZUIElement;
+import de.omegazirkel.risingworld.tools.ui.PluginInfoStatusProviders;
 import de.omegazirkel.risingworld.tools.ui.PluginMenuManager;
 import net.risingworld.api.Plugin;
 import net.risingworld.api.callbacks.Callback;
@@ -144,6 +145,7 @@ public class PluginGUI {
                     new MenuItem(AssetManager.getIcon("icon-ki-gps-static"), t().get("TC_MENU_STATIC_MARKER", uiPlayer),
                             (Player p) -> openStaticTeleportMenu(p, onBackReopen)));
 
+        menuItems.add(PluginInfoStatusProviders.menuItem(t().get("TC_MENU_INFO_STATUS", uiPlayer), GPS.name));
         menuItems.add(MenuItem.closeMenu(uiPlayer));
         PluginMenuManager.showMenu(uiPlayer, menuItems);
     }

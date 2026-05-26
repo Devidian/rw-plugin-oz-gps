@@ -174,6 +174,17 @@ public class GPSDatabase {
         return executeListQuery(sql);
     }
 
+    public List<Marker> getPrivateMarkers(int playerId, String orderBy) {
+        if (!orderBy.equals("ASC") && !orderBy.equals("DESC")) {
+            GPS.logger().warn("Invalid value for orderBy: " + orderBy);
+            orderBy = "DESC";
+        }
+        String sql = "SELECT * FROM " + tableName + " WHERE type=" + q(MarkerType.PRIVATE.toString())
+                + " AND player_id=" + playerId
+                + " ORDER BY created_at " + orderBy + ";";
+        return executeListQuery(sql);
+    }
+
     public List<Marker> getGroupMarker(String groupName, int page, int pageSize) {
         return getGroupMarker(groupName, page, pageSize, "DESC");
     }
@@ -190,6 +201,17 @@ public class GPSDatabase {
                         + " LIMIT " + pageSize + " OFFSET " + (page * pageSize) + ";");
     }
 
+    public List<Marker> getGroupMarkers(String groupName, String orderBy) {
+        if (!orderBy.equals("ASC") && !orderBy.equals("DESC")) {
+            GPS.logger().warn("Invalid value for orderBy: " + orderBy);
+            orderBy = "DESC";
+        }
+        return executeListQuery(
+                "SELECT * FROM " + tableName + " WHERE type=" + q(MarkerType.GROUP.toString())
+                        + " AND group_name=" + q(groupName)
+                        + " ORDER BY created_at " + orderBy + ";");
+    }
+
     public List<Marker> getGlobalMarker(int page, int pageSize) {
         return getGlobalMarker(page, pageSize, "DESC");
     }
@@ -203,6 +225,16 @@ public class GPSDatabase {
                 "SELECT * FROM " + tableName + " WHERE type=" + q(MarkerType.GLOBAL.toString())
                         + " ORDER BY created_at " + orderBy
                         + " LIMIT " + pageSize + " OFFSET " + (page * pageSize) + ";");
+    }
+
+    public List<Marker> getGlobalMarkers(String orderBy) {
+        if (!orderBy.equals("ASC") && !orderBy.equals("DESC")) {
+            GPS.logger().warn("Invalid value for orderBy: " + orderBy);
+            orderBy = "DESC";
+        }
+        return executeListQuery(
+                "SELECT * FROM " + tableName + " WHERE type=" + q(MarkerType.GLOBAL.toString())
+                        + " ORDER BY created_at " + orderBy + ";");
     }
 
     public int countPrivateMarkers(int playerId) {

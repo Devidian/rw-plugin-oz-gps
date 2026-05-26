@@ -111,6 +111,7 @@ public class GPS extends Plugin implements Listener, FileChangeListener {
 			}
 			String option = cmdParts[1];
 			switch (option) {
+				case "info":
 				case "status":
 					PluginInfoStatusProviders.show(player, name);
 					break;

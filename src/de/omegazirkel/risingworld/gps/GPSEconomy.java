@@ -3,7 +3,9 @@ package de.omegazirkel.risingworld.gps;
 import de.omegazirkel.risingworld.GPS;
 import net.risingworld.api.Plugin;
 import net.risingworld.api.objects.Player;
+import net.risingworld.api.utils.Utils.ChunkUtils;
 import net.risingworld.api.utils.Vector3f;
+import net.risingworld.api.utils.Vector3i;
 
 public class GPSEconomy {
     private static final String PLUGIN_IDENTIFIER = "OZ - GPS";
@@ -171,10 +173,14 @@ public class GPSEconomy {
         if (player == null || targetPosition == null || settings.travelDistanceCostPerBlock <= 0) {
             return 0L;
         }
-        Vector3f source = player.getPosition();
-        long distance = Math.round(Math.abs(source.x - targetPosition.x)
-                + Math.abs(source.y - targetPosition.y)
-                + Math.abs(source.z - targetPosition.z));
+        Vector3i source = player.getChunkPosition();
+        if (source == null) {
+            source = ChunkUtils.getChunkPosition(player.getPosition());
+        }
+        Vector3i target = ChunkUtils.getChunkPosition(targetPosition);
+        long distance = Math.abs(source.x - target.x)
+                + Math.abs(source.y - target.y)
+                + Math.abs(source.z - target.z);
         return distance * settings.travelDistanceCostPerBlock;
     }
 

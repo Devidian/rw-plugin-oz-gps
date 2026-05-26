@@ -4,6 +4,10 @@
 
 ## [unreleased]
 
+- feat: calculate GPS distance travel costs from Manhattan chunk distance instead of block distance
+- feat: render GPS grid markers on one page without pager cards
+- feat: place marker creation first in the GPS grid regardless of marker sort order
+- feat: add GPS radial Info/Status menu action with the shared Tools info icon
 - feat: add shared Tools Info/Status panel content for GPS and route `/gps status` to it
 - feat: complete grouped admin settings metadata and i18n labels for GPS settings
 - feat: add player preference for the shared GPS entry and default it to the grid view

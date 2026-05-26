@@ -64,7 +64,7 @@ allowAdminOverride=false
 ```
 
 `travelCostMode` supports `disabled`, `fixed`, and `distance`.
-`distance` uses Manhattan distance from the player's current position to the target.
+`distance` uses Manhattan chunk distance from the player's current chunk to the target chunk. The setting key `travelDistanceCostPerBlock` keeps its legacy name for compatibility, but the value is now applied per chunk.
 `fixed` uses the per-marker-type `use*MarkerCost` settings.
 Marker limits use `maxPrivateMarkers` and `maxGroupMarkers`; `-1` means unlimited.
 
@@ -74,7 +74,7 @@ Admin override is two-step: `allowAdminOverride=true` enables the feature global
 
 - `/gps` or `/gps open`: open the GPS radial menu.
 - `/gps opengrid`: open the GPS grid view.
-- `/gps status`: open the shared Tools Info/Status panel.
+- `/gps status` or `/gps info`: open the shared Tools Info/Status panel.
 - `/gps help`: show command help.
 
 ## Attribution

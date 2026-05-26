@@ -62,7 +62,6 @@ public class GPSGridOverlay extends OZUIElement {
     private Timer cooldownTimer = null;
 
     private static final float scaleFactor = 0.75f;
-    private static final Integer markerPerPage = 19;
     private static final Integer cardMargin = 5;
 
     public GPSGridOverlay(Player player) {
@@ -219,10 +218,10 @@ public class GPSGridOverlay extends OZUIElement {
     }
 
     private void refreshGrid(Player player) {
-        refreshGrid(currentMarkerType, player, 0);
+        refreshGrid(currentMarkerType, player);
     }
 
-    private void refreshGrid(MarkerType type, Player uiPlayer, Integer page) {
+    private void refreshGrid(MarkerType type, Player uiPlayer) {
         gridScrollView.removeAllChilds();
         // Create icon grid
         UIElement iconGrid = new UIElement();
@@ -249,14 +248,13 @@ public class GPSGridOverlay extends OZUIElement {
 
         switch (type) {
             case PRIVATE:
-                markers = GPSDatabase.getInstance().getPrivateMarker(uiPlayer.getDbID(), page, markerPerPage, orderBy);
+                markers = GPSDatabase.getInstance().getPrivateMarkers(uiPlayer.getDbID(), orderBy);
                 break;
             case GROUP:
-                markers = GPSDatabase.getInstance().getGroupMarker(uiPlayer.getPermissionGroup(), page, markerPerPage,
-                        orderBy);
+                markers = GPSDatabase.getInstance().getGroupMarkers(uiPlayer.getPermissionGroup(), orderBy);
                 break;
             case GLOBAL:
-                markers = GPSDatabase.getInstance().getGlobalMarker(page, markerPerPage, orderBy);
+                markers = GPSDatabase.getInstance().getGlobalMarkers(orderBy);
                 break;
             case STATIC:
                 if (primarySpawnPos != null)
@@ -307,12 +305,6 @@ public class GPSGridOverlay extends OZUIElement {
                 break;
             default:
                 break;
-        }
-
-        if (markers != null) {
-            for (Marker marker : markers) {
-                iconGrid.addChild(createMarkerCardFromMarker(marker, uiPlayer));
-            }
         }
 
         switch (type) {
@@ -392,16 +384,10 @@ public class GPSGridOverlay extends OZUIElement {
                 break;
         }
 
-        // previous page ?
-        if (page > 0) {
-            iconGrid.addChild(createPreviousPageCard(uiPlayer, type, page - 1, onPreviousPage -> {
-            }));
-        }
-        // next page
-        if (markers != null && markers.size() >= markerPerPage) {
-            // Add a "more" button or similar indicator
-            iconGrid.addChild(createNextPageCard(uiPlayer, type, page + 1, onNextPage -> {
-            }));
+        if (markers != null) {
+            for (Marker marker : markers) {
+                iconGrid.addChild(createMarkerCardFromMarker(marker, uiPlayer));
+            }
         }
     }
 
@@ -588,57 +574,6 @@ public class GPSGridOverlay extends OZUIElement {
             player.sendTextMessage(t().get("TC_GPS_DELETED", player).replace("PH_MARKER_NAME", marker.getName()));
             onDeleted.onCall(true);
         }
-    }
-
-    private OZUIElement createPreviousPageCard(Player player, MarkerType type, Integer previousPage,
-            Callback<Boolean> onPreviousPage) {
-        return createNavigationCard(player, type, previousPage, onPreviousPage, "icon-ki-gps-previous-page",
-                "TC_MENU_PREVIOUS_PAGE");
-    }
-
-    private OZUIElement createNextPageCard(Player player, MarkerType type, Integer nextPage,
-            Callback<Boolean> onNextPage) {
-        return createNavigationCard(player, type, nextPage, onNextPage, "icon-ki-gps-next-page", "TC_MENU_NEXT_PAGE");
-    }
-
-    private OZUIElement createNavigationCard(Player player, MarkerType type, Integer targetPage,
-            Callback<Boolean> onNavigate, String iconKey, String cardLabel) {
-        OZUIElement card = new OZUIElement();
-        card.setSize(250 * scaleFactor, 300 * scaleFactor, false);
-        card.setPivot(Pivot.UpperLeft);
-        card.setBackgroundColor(0.14f, 0.13f, 0.12f, CARD_ALPHA);
-        card.setBorder(1);
-        card.setBorderColor(GOLD_R, GOLD_G, GOLD_B, 0.26f);
-        card.setBorderEdgeRadius(6, false);
-        int margin = cardMargin;
-        card.style.marginBottom.set(margin, Unit.Pixel);
-        card.style.marginTop.set(margin, Unit.Pixel);
-        card.style.marginLeft.set(margin, Unit.Pixel);
-        card.style.marginRight.set(margin, Unit.Pixel);
-
-        // next page icon + click action
-        OZUIElement nextIcon = new OZUIElement();
-        nextIcon.setSize(240 * scaleFactor, 240 * scaleFactor, false);
-        nextIcon.setPivot(Pivot.UpperLeft);
-        nextIcon.setPosition(5 * scaleFactor, 5 * scaleFactor, false);
-        nextIcon.style.backgroundImage.set(AssetManager.getIcon(iconKey));
-        nextIcon.setClickable(true);
-        nextIcon.setClickAction(event -> {
-            refreshGrid(type, player, targetPage);
-            onNavigate.onCall(true);
-        });
-        card.addChild(nextIcon);
-
-        // next page label
-        UILabel nextLabel = new UILabel(t().get(cardLabel, player));
-        nextLabel.setSize(210 * scaleFactor, 40 * scaleFactor, false);
-        nextLabel.setFontSize(14 * scaleFactor);
-        nextLabel.setTextAlign(TextAnchor.UpperLeft);
-        nextLabel.setPivot(Pivot.LowerLeft);
-        nextLabel.setPosition(5 * scaleFactor, 295 * scaleFactor, false);
-        nextLabel.setTextWrap(true);
-        card.addChild(nextLabel);
-        return card;
     }
 
     private OZUIElement createAddMarkerCard(Player player, String labelText, Callback<Boolean> onCreateNewMarker) {
