@@ -4,6 +4,8 @@
 
 ## [unreleased]
 
+## [0.5.0] - 2026-05-26 | Economy integrations and shared menu polish
+
 - feat: calculate GPS distance travel costs from Manhattan chunk distance instead of block distance
 - feat: render GPS grid markers on one page without pager cards
 - feat: place marker creation first in the GPS grid regardless of marker sort order
