@@ -1,6 +1,8 @@
 package de.omegazirkel.risingworld;
 
 import java.nio.file.Path;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import de.omegazirkel.risingworld.gps.DiscordConnect;
 import de.omegazirkel.risingworld.gps.GPSEconomy;
@@ -16,13 +18,14 @@ import de.omegazirkel.risingworld.tools.FileChangeListener;
 import de.omegazirkel.risingworld.tools.I18n;
 import de.omegazirkel.risingworld.tools.OZLogger;
 import de.omegazirkel.risingworld.tools.PlayerSettings;
-import de.omegazirkel.risingworld.tools.db.SQLite;
+import de.omegazirkel.risingworld.tools.db.SQLiteConnectionFactory;
 import de.omegazirkel.risingworld.tools.settings.PlayerPluginAdminSettings;
 import de.omegazirkel.risingworld.tools.ui.AssetManager;
 import de.omegazirkel.risingworld.tools.ui.MenuItem;
 import de.omegazirkel.risingworld.tools.ui.PlayerPluginSettingsOverlay;
 import de.omegazirkel.risingworld.tools.ui.PluginInfoStatusProviders;
 import de.omegazirkel.risingworld.tools.ui.PluginMenuManager;
+import de.omegazirkel.risingworld.tools.ui.PluginShortcutVisibility;
 import net.risingworld.api.Plugin;
 import net.risingworld.api.events.EventMethod;
 import net.risingworld.api.events.Listener;
@@ -38,7 +41,7 @@ public class GPS extends Plugin implements Listener, FileChangeListener {
 	private static PluginSettings s = null;
 	private static PluginGUI gui;
 	public static String name;
-	public static SQLite db;
+	public static Connection db;
 	public static PlayerSettings ps;
 
 	public static OZLogger logger() {
@@ -52,17 +55,18 @@ public class GPS extends Plugin implements Listener, FileChangeListener {
 		t = I18n.getInstance(this);
 		registerEventListener(this);
 		s.initSettings();
-		db = new SQLite(this);
-		ps = new PlayerSettings(db.getConnection());// .
+		db = SQLiteConnectionFactory.open(this);
+		ps = new PlayerSettings(db);
 		GPSDatabase.getInstance(db);
 		gui = PluginGUI.getInstance(this);
 		// Load Plugin Menu into Main Plugin Menu
 		PluginMenuManager
 				.registerPluginMenu(
-						new MenuItem(AssetManager.getIcon("icon-ki-gps-plugin"), "GPS", (Player p) -> {
+						new MenuItem(name, AssetManager.getIcon("icon-ki-gps-plugin"), "GPS", (Player p) -> {
 							GPSPlayerPreferences.load(p);
 							gui.openPreferredEntry(p);
 						}));
+		PluginShortcutVisibility.register(name, GPSPlayerPreferences::shortcutVisible);
 		// connect plugins
 		DiscordConnect.init(this);
 		GPSEconomy.init(this, s);
@@ -81,7 +85,15 @@ public class GPS extends Plugin implements Listener, FileChangeListener {
 	@Override
 	public void onDisable() {
 		if (name != null) {
+			PluginShortcutVisibility.unregister(name);
 			PluginInfoStatusProviders.unregisterProvider(name);
+		}
+		if (db != null) {
+			try {
+				db.close();
+			} catch (SQLException ex) {
+				logger().error("Failed to close GPS database connection: " + ex.getMessage());
+			}
 		}
 	}
 

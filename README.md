@@ -11,6 +11,7 @@ Main Goal for this plugin is to replace ingame teleport system with a cool gps s
 - Admins can optionally require Wallet costs for teleports and marker creation
 - Admins can optionally register GPS teleport-token currency and Shop token packages
 - Admins can enforce private and group marker limits with a two-step admin override
+- Admins can require total playtime before non-static GPS features become available
 - Players can set a name for a gps marker
 - Players can choose an icon for a gps marker
 - Players can edit marker names and icons when they are allowed to manage the marker
@@ -61,14 +62,17 @@ teleportTokenPackage1Price=25
 teleportTokenPackage10Price=200
 teleportTokenPackage50Price=900
 allowAdminOverride=false
+minimumPlaytimeMinutes=15
 ```
 
 `travelCostMode` supports `disabled`, `fixed`, and `distance`.
-`distance` uses Manhattan chunk distance from the player's current chunk to the target chunk. The setting key `travelDistanceCostPerBlock` keeps its legacy name for compatibility, but the value is now applied per chunk.
+`distance` uses sector-distance pricing: `base + (abs(sectorDistanceX) + abs(sectorDistanceZ)) * base`. The setting key `travelDistanceCostPerBlock` keeps its legacy name for compatibility, but the value is now the sector-distance base cost.
 `fixed` uses the per-marker-type `use*MarkerCost` settings.
 Marker limits use `maxPrivateMarkers` and `maxGroupMarkers`; `-1` means unlimited.
 
-Admin override is two-step: `allowAdminOverride=true` enables the feature globally, and each admin must also enable the personal GPS admin override in player plugin settings.
+`minimumPlaytimeMinutes` defaults to `15` and blocks viewing, using, creating, editing, and deleting non-static markers until the player reaches the configured total playtime. Static markers remain available; `0` disables the restriction.
+
+Admin override is two-step: `allowAdminOverride=true` enables the feature globally, and each admin must also enable the personal GPS admin override in player plugin settings. The override bypasses costs, limits, and minimum playtime. Players can hide the GPS shortcut from `/ozt` and the inventory shortcut panel in GPS player settings. Use explicit close controls until Rising World exposes custom-overlay Escape handling.
 
 ## Commands
 

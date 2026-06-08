@@ -29,7 +29,7 @@ Supporting repositories:
 - [x] Package 2: Add settings and admin data display for enabling/disabling each economy feature independently.
 - [x] Package 3: Implement teleport-token currency registration when Wallet exists and `teleportMarken` is enabled.
 - [x] Package 4: Register Shop offers for 1, 10, and 50 teleport-token packages with directly configurable package prices when Shop exists and buying tokens is enabled.
-- [ ] Package 5: Add optional kill rewards for bandits/skeletons that grant teleport tokens when configured.
+- [x] Package 5: Review optional kill rewards for bandits/skeletons; close the GPS-specific implementation as superseded by Rewards-owned generic enemy-NPC rewards.
 - [x] Package 6: Implement travel costs with disabled, fixed-price, and Manhattan-distance-based modes.
 - [x] Package 7: Show travel costs on GPS marker tiles and withdraw cost before teleport.
 - [x] Package 8: Implement marker creation costs for private and group markers.

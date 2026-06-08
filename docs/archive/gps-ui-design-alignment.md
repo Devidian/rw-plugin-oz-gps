@@ -19,7 +19,7 @@ Supporting repositories/plugins: `rw-plugin-oz-tools`
 ## Validation Strategy
 - [x] `mvn -B -DskipTests package`
 - [x] `mvn -B test` when tests exist
-- [ ] Runtime review of GPS raster view, create-marker overlay, and radial teleport dialog
+- [x] Runtime review of GPS raster view, create-marker overlay, and radial teleport dialog
 
 ## Affected Repositories/Plugins
 - `rw-plugin-oz-gps`
@@ -35,3 +35,6 @@ Revert the styling changes in the GPS UI classes and the matching `HISTORY.md` e
 - [x] Apply UI/UX corrections for thicker grid border, shorter teleport buttons, and wider icon picker
 - [x] Update `HISTORY.md`
 - [x] Run Maven validation
+
+## Runtime Review
+- Screenshots in root `local.res` were reviewed on 2026-06-08. Raster cards, marker creation, icon selection, and the teleport dialog are readable, aligned, and visually consistent.

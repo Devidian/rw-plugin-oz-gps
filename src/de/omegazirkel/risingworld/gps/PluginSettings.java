@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Properties;
 
 import de.omegazirkel.risingworld.GPS;
@@ -27,6 +28,7 @@ public class PluginSettings {
 	public String logLevel = "ALL";
 	public boolean reloadOnChange = true;
 	public boolean enableWelcomeMessage = false;
+	public Integer minimumPlaytimeMinutes = 15;
 
 	public boolean enablePrivateMarkers = false;
 	public boolean enableGroupMarkers = false;
@@ -134,6 +136,7 @@ public class PluginSettings {
 
 			// motd settings
 			enableWelcomeMessage = settings.getProperty("sendPluginWelcome", "false").contentEquals("true");
+			minimumPlaytimeMinutes = Integer.parseInt(settings.getProperty("minimumPlaytimeMinutes", "15"));
 			// markers
 			enablePrivateMarkers = settings.getProperty("enablePrivateMarkers", "false").contentEquals("true");
 			enableGroupMarkers = settings.getProperty("enableGroupMarkers", "false").contentEquals("true");
@@ -229,8 +232,11 @@ public class PluginSettings {
 				entry("sendPluginWelcome", "Welcome message", "Shows a short GPS message when a player joins.",
 						enableWelcomeMessage, "false", AdminSettingsType.BOOLEAN),
 				entry("allowAdminOverride", "Allow admin override",
-						"Allows admins with their personal GPS override enabled to bypass costs and limits.",
+						"Allows admins with their personal GPS override enabled to bypass costs, limits, and minimum playtime.",
 						allowAdminOverride, "false", AdminSettingsType.BOOLEAN),
+				entry("minimumPlaytimeMinutes", "Minimum playtime",
+						"Required total playtime in minutes for non-static GPS features; 0 disables the restriction.",
+						minimumPlaytimeMinutes, "15", AdminSettingsType.INTEGER),
 				AdminSettingsEntry.group("markers", "Marker categories", "Marker categories exposed through GPS workflows."),
 				entry("enablePrivateMarkers", "Private markers", "Enables private marker workflows.",
 						enablePrivateMarkers, "true", AdminSettingsType.BOOLEAN),
@@ -272,13 +278,13 @@ public class PluginSettings {
 						"Cooldown in seconds for global marker teleports.", useGlobalMarkerCooldownSeconds, "300",
 						AdminSettingsType.INTEGER),
 				AdminSettingsEntry.group("travelCosts", "Travel costs", "Wallet-backed travel cost settings."),
-				readOnlyEntry("travelCostMode", "Travel cost mode", "disabled, fixed, or distance.", travelCostMode,
-						"disabled", AdminSettingsType.STRING),
+				selectEntry("travelCostMode", "Travel cost mode", "disabled, fixed, or distance.", travelCostMode,
+						"disabled", List.of("disabled", "fixed", "distance")),
 				entry("travelCostCurrencyIdentifier", "Travel cost currency",
 						"Wallet currency identifier for fixed and distance travel costs; empty uses Wallet default.",
 						travelCostCurrencyIdentifier, "", AdminSettingsType.STRING),
-				entry("travelDistanceCostPerBlock", "Distance cost per block",
-						"Whole-number cost per Manhattan-distance block when travelCostMode=distance.",
+				entry("travelDistanceCostPerBlock", "Distance cost base",
+						"Base cost for sector-distance pricing when travelCostMode=distance.",
 						travelDistanceCostPerBlock, "1", AdminSettingsType.INTEGER),
 				entry("useStaticMarkerCost", "Static travel cost", "Wallet cost for using static markers.",
 						useStaticMarkerCost, "10", AdminSettingsType.INTEGER),
@@ -382,6 +388,20 @@ public class PluginSettings {
 				type,
 				false,
 				null);
+	}
+
+	private AdminSettingsEntry selectEntry(String key, String label, String description, Object value,
+			String defaultValue, List<String> options) {
+		return new AdminSettingsEntry(
+				key,
+				label,
+				description,
+				String.valueOf(value),
+				defaultValue,
+				AdminSettingsType.SELECT,
+				false,
+				newValue -> SettingsFileEditor.writeValue(settingsPath(), key, newValue),
+				options);
 	}
 
 	private Path settingsPath() {

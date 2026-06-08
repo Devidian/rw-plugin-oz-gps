@@ -1,6 +1,7 @@
 package de.omegazirkel.risingworld.gps;
 
 import de.omegazirkel.risingworld.GPS;
+import de.omegazirkel.risingworld.tools.ui.PluginShortcutVisibility;
 import net.risingworld.api.objects.Player;
 
 public final class GPSPlayerPreferences {
@@ -28,6 +29,10 @@ public final class GPSPlayerPreferences {
         }
         if (!player.hasAttribute(ENTRY_MODE_KEY)) {
             player.setAttribute(ENTRY_MODE_KEY, GPS.ps.getString(dbId, ENTRY_MODE_KEY).orElse(ENTRY_MODE_GRID));
+        }
+        String shortcutKey = shortcutKey();
+        if (!player.hasAttribute(shortcutKey)) {
+            player.setAttribute(shortcutKey, GPS.ps.getBoolean(dbId, shortcutKey).orElse(true));
         }
     }
 
@@ -81,5 +86,23 @@ public final class GPSPlayerPreferences {
         String normalizedValue = ENTRY_MODE_RADIAL.equals(value) ? ENTRY_MODE_RADIAL : ENTRY_MODE_GRID;
         player.setAttribute(ENTRY_MODE_KEY, normalizedValue);
         GPS.ps.setString(player.getDbID(), ENTRY_MODE_KEY, normalizedValue);
+    }
+
+    public static boolean shortcutVisible(Player player) {
+        if (!player.hasAttribute(shortcutKey())) {
+            load(player);
+        }
+        Object value = player.getAttribute(shortcutKey());
+        return !(value instanceof Boolean) || (Boolean) value;
+    }
+
+    public static void setShortcutVisible(Player player, boolean value) {
+        String key = shortcutKey();
+        player.setAttribute(key, value);
+        GPS.ps.setBoolean(player.getDbID(), key, value);
+    }
+
+    private static String shortcutKey() {
+        return PluginShortcutVisibility.playerSettingKey(GPS.name);
     }
 }

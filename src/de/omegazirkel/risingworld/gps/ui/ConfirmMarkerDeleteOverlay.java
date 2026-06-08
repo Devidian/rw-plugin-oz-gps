@@ -79,16 +79,16 @@ public class ConfirmMarkerDeleteOverlay extends OZUIElement {
         panel.addChild(footer);
 
         footer.addChild(button(ButtonFactory.cancel(t().get("TC_BTN_NO", player), event -> {
-            event.getPlayer().removeUIElement(this);
+            close(event.getPlayer());
             onCancel.onCall(true);
         }), 26));
         footer.addChild(button(ButtonFactory.danger(t().get("TC_BTN_YES", player), event -> {
-            event.getPlayer().removeUIElement(this);
+            close(event.getPlayer());
             onDelete.onCall(false);
         }), 22));
         footer.addChild(button(ButtonFactory.danger(t().get("TC_BTN_YES_DONT_ASK", player), event -> {
             GPSPlayerPreferences.setConfirmMarkerDelete(event.getPlayer(), false);
-            event.getPlayer().removeUIElement(this);
+            close(event.getPlayer());
             onDelete.onCall(true);
         }), 42));
     }
@@ -106,5 +106,9 @@ public class ConfirmMarkerDeleteOverlay extends OZUIElement {
         button.style.marginRight.set(2, Unit.Pixel);
         button.setBorderEdgeRadius(4, false);
         return button;
+    }
+
+    public void close(Player player) {
+        player.removeUIElement(this);
     }
 }

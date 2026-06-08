@@ -5,6 +5,7 @@ import de.omegazirkel.risingworld.GPS;
 import de.omegazirkel.risingworld.gps.GPSEconomy;
 import de.omegazirkel.risingworld.gps.GPSDatabase;
 import de.omegazirkel.risingworld.gps.GPSPlayerPreferences;
+import de.omegazirkel.risingworld.gps.GPSAccessPolicy;
 import de.omegazirkel.risingworld.gps.Marker;
 import de.omegazirkel.risingworld.gps.MarkerPermissions;
 import de.omegazirkel.risingworld.gps.TeleportCooldowns;
@@ -155,9 +156,7 @@ public class TeleportOverlay extends OZUIElement {
 
     private UIElement setupCancelButton(Player player, boolean twoColumnFooter) {
         BaseButton btn = ButtonFactory.cancel(t().get("TC_BTN_CANCEL", player), event -> {
-            stopCooldownTimer();
-            event.getPlayer().removeUIElement(this);
-            CursorManager.hide(event.getPlayer());
+            close(event.getPlayer(), false);
             onTeleportConfirm.onCall(false);
         });
         styleFooterButton(btn, twoColumnFooter);
@@ -166,8 +165,7 @@ public class TeleportOverlay extends OZUIElement {
 
     private UIElement setupEditButton(Player player) {
         BaseButton btn = ButtonFactory.info(t().get("TC_BTN_EDIT", player), event -> {
-            stopCooldownTimer();
-            player.removeUIElement(this);
+            close(player, true);
             CreateMarkerOverlay overlay = new CreateMarkerOverlay(player, editableMarkerCopy(),
                     editedMarker -> {
                         if (GPSDatabase.getInstance().updateMarkerDetails(marker, player, editedMarker.getName(),
@@ -207,9 +205,7 @@ public class TeleportOverlay extends OZUIElement {
 
     private UIElement setupTeleportButton(Player player, boolean twoColumnFooter) {
         teleportButton = ButtonFactory.ok(t().get("TC_BTN_TELEPORT", player), event -> {
-            stopCooldownTimer();
-            event.getPlayer().removeUIElement(this);
-            CursorManager.hide(event.getPlayer());
+            close(event.getPlayer(), false);
             onTeleportConfirm.onCall(true);
         });
         styleFooterButton(teleportButton, twoColumnFooter);
@@ -261,6 +257,17 @@ public class TeleportOverlay extends OZUIElement {
             return;
         }
 
+        if (!GPSAccessPolicy.canUse(player, marker.getType())) {
+            cooldownLabel.setVisible(true);
+            cooldownLabel.setText(t().get("TC_GPS_PLAYTIME_STATUS", player)
+                    .replace("PH_REQUIRED_MINUTES", String.valueOf(GPSAccessPolicy.requiredMinutes()))
+                    .replace("PH_REMAINING_MINUTES", String.valueOf(GPSAccessPolicy.remainingMinutes(player))));
+            teleportButton.setText(t().get("TC_BTN_TELEPORT_LOCKED", player));
+            teleportButton.setClickable(false);
+            teleportButton.setBackgroundColor(0x333333AA);
+            return;
+        }
+
         int remainingSeconds = TeleportCooldowns.remainingSeconds(player, marker.getType());
         if (remainingSeconds > 0) {
             String secondsText = String.valueOf(remainingSeconds);
@@ -301,9 +308,7 @@ public class TeleportOverlay extends OZUIElement {
     }
 
     private void performDelete(Player player) {
-        stopCooldownTimer();
-        player.removeUIElement(this);
-        CursorManager.hide(player);
+        close(player, false);
         if (GPSDatabase.getInstance().deleteMarker(marker, player)) {
             player.sendTextMessage(t().get("TC_GPS_DELETED", player).replace("PH_MARKER_NAME", marker.getName()));
             onMarkerChanged.onCall(true);
@@ -323,5 +328,14 @@ public class TeleportOverlay extends OZUIElement {
         btn.style.marginLeft.set(margin, Unit.Pixel);
         btn.style.marginRight.set(margin, Unit.Pixel);
         btn.setBorderEdgeRadius(4, false);
+    }
+
+    public void close(Player player, boolean keepCursorVisible) {
+        stopCooldownTimer();
+        player.removeUIElement(this);
+        player.deleteAttribute("gps-ui-overlay");
+        if (!keepCursorVisible) {
+            CursorManager.hide(player);
+        }
     }
 }

@@ -3,6 +3,7 @@ package de.omegazirkel.risingworld.gps.ui;
 import de.omegazirkel.risingworld.GPS;
 import de.omegazirkel.risingworld.gps.Marker;
 import de.omegazirkel.risingworld.gps.MarkerType;
+import de.omegazirkel.risingworld.gps.GPSAccessPolicy;
 import de.omegazirkel.risingworld.tools.I18n;
 import de.omegazirkel.risingworld.tools.ui.BaseButton;
 import de.omegazirkel.risingworld.tools.ui.ButtonFactory;
@@ -96,6 +97,12 @@ public class CreateMarkerOverlay extends OZUIElement {
 
     private UIElement setupCreateButton(Player player) {
         BaseButton createButton = ButtonFactory.ok(t().get("TC_BTN_SAVE", player), event -> {
+            if (!GPSAccessPolicy.canUse(player, type)) {
+                player.sendTextMessage(t().get("TC_GPS_PLAYTIME_REQUIRED", player)
+                        .replace("PH_REQUIRED_MINUTES", String.valueOf(GPSAccessPolicy.requiredMinutes()))
+                        .replace("PH_REMAINING_MINUTES", String.valueOf(GPSAccessPolicy.remainingMinutes(player))));
+                return;
+            }
 
             String selectedMarkerKey = markerIconSelection.getSelectedKey();
             markerName.getCurrentText(player, selectedMarkerName -> {
@@ -118,8 +125,7 @@ public class CreateMarkerOverlay extends OZUIElement {
                     marker.setName(selectedMarkerName);
                     marker.setIcon(selectedMarkerKey);
                 }
-                CursorManager.hide(player);
-                player.removeUIElement(this);
+                close(player);
                 this.onMarkerCreated.onCall(marker);
             });
 
@@ -133,13 +139,18 @@ public class CreateMarkerOverlay extends OZUIElement {
 
     private UIElement setupCancelButton(Player player) {
         BaseButton cancelButton = ButtonFactory.cancel(t().get("TC_BTN_CANCEL", player), event -> {
-            event.getPlayer().removeUIElement(this);
-            CursorManager.hide(event.getPlayer());
+            close(event.getPlayer());
         });
         cancelButton.setPivot(Pivot.MiddleRight);
         cancelButton.setPosition(49, 50, true);
         cancelButton.setBorderEdgeRadius(4, false);
         return cancelButton;
+    }
+
+    public void close(Player player) {
+        player.removeUIElement(this);
+        player.deleteAttribute("gps-ui-overlay");
+        CursorManager.hide(player);
     }
 
 }

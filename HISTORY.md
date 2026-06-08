@@ -4,6 +4,15 @@
 
 ## [unreleased]
 
+## [0.6.0] - 2026-06-08 | Access rules and sector pricing
+
+- feat: require configurable total playtime for non-static GPS features while keeping static markers available
+- feat: make `travelCostMode` editable through the shared admin settings select control
+- change: calculate distance travel costs from sector distance with `base + sectorDistance * base`
+- refactor: migrate GPS marker persistence from deprecated Tools `SQLite` to `SQLiteConnectionFactory`
+- feat: add GPS shortcut visibility setting for `/ozt` and inventory shortcuts
+- change: remove obsolete shared escape-close registrations pending future API support
+
 ## [0.5.0] - 2026-05-26 | Economy integrations and shared menu polish
 
 - feat: calculate GPS distance travel costs from Manhattan chunk distance instead of block distance

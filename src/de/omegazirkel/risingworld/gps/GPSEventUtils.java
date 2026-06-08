@@ -18,6 +18,12 @@ public class GPSEventUtils {
 
     public static boolean executeTeleport(Player uiPlayer, Vector3f pos, String label, MarkerType type,
             boolean saveLastPosition) {
+        if (!GPSAccessPolicy.canUse(uiPlayer, type)) {
+            uiPlayer.sendTextMessage(t().get("TC_GPS_PLAYTIME_REQUIRED", uiPlayer)
+                    .replace("PH_REQUIRED_MINUTES", String.valueOf(GPSAccessPolicy.requiredMinutes()))
+                    .replace("PH_REMAINING_MINUTES", String.valueOf(GPSAccessPolicy.remainingMinutes(uiPlayer))));
+            return false;
+        }
         boolean canLeaveArea = (boolean) uiPlayer.getPermissionValue("area_canleave", true);
 
         if (!canLeaveArea) {

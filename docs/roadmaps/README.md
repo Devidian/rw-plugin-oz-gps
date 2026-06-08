@@ -1,5 +1,6 @@
 # Roadmaps
 
+- [Roadmap Plan 04 Settings And Sector Pricing](roadmap-plan-04-settings-and-sector-pricing.md)
 - [Roadmap Plan 03 Distance And Grid Cleanup](roadmap-plan-03-distance-and-grid-cleanup.md)
 - [Roadmap Plan 02 UI Entry Preference](roadmap-plan-02-ui-entry-preference.md)
 - [GPS Economy And Marker Controls](gps-economy-and-marker-controls.md)

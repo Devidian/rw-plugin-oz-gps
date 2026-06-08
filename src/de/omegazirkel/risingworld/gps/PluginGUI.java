@@ -125,18 +125,19 @@ public class PluginGUI {
     public void openMainMenu(Player uiPlayer) {
         List<MenuItem> menuItems = new ArrayList<>();
         Callback<Player> onBackReopen = (Player player) -> openMainMenu(player);
+        boolean nonStaticAccess = GPSAccessPolicy.canUseNonStatic(uiPlayer);
 
-        if (s.enablePrivateMarkers)
+        if (nonStaticAccess && s.enablePrivateMarkers)
             menuItems.add(
                     new MenuItem(AssetManager.getIcon("icon-ki-gps-private"),
                             t().get("TC_MENU_PRIVATE_MARKER", uiPlayer),
                             (Player p) -> openPrivateTeleportMenu(p, 0, onBackReopen)));
-        if (s.enableGroupMarkers)
+        if (nonStaticAccess && s.enableGroupMarkers)
             menuItems
                     .add(new MenuItem(AssetManager.getIcon("icon-ki-gps-group-alt"),
                             t().get("TC_MENU_GROUP_MARKER", uiPlayer),
                             (Player p) -> openGroupTeleportMenu(p, 0, onBackReopen)));
-        if (s.enableGlobalMarkers)
+        if (nonStaticAccess && s.enableGlobalMarkers)
             menuItems.add(
                     new MenuItem(AssetManager.getIcon("icon-ki-gps-global"), t().get("TC_MENU_GLOBAL_MARKER", uiPlayer),
                             (Player p) -> openGlobalTeleportMenu(p, 0, onBackReopen)));
@@ -178,6 +179,10 @@ public class PluginGUI {
      * @param uiPlayer
      */
     public void openPrivateTeleportMenu(Player uiPlayer, Integer level, Callback<Player> onBack) {
+        if (!requireNonStaticAccess(uiPlayer)) {
+            openMainMenu(uiPlayer);
+            return;
+        }
         List<MenuItem> menuItems = new ArrayList<>();
         Callback<Player> onBackReopen = (Player player) -> openPrivateTeleportMenu(player, level, onBack);
         // Get markers from db
@@ -312,6 +317,10 @@ public class PluginGUI {
      * @param uiPlayer
      */
     public void openGroupTeleportMenu(Player uiPlayer, Integer level, Callback<Player> onBack) {
+        if (!requireNonStaticAccess(uiPlayer)) {
+            openMainMenu(uiPlayer);
+            return;
+        }
         List<MenuItem> menuItems = new ArrayList<>();
         Callback<Player> onBackReopen = (Player player) -> openGroupTeleportMenu(player, level, onBack);
         // Get markers from db
@@ -371,6 +380,10 @@ public class PluginGUI {
      * @param uiPlayer
      */
     public void openGlobalTeleportMenu(Player uiPlayer, Integer level, Callback<Player> onBack) {
+        if (!requireNonStaticAccess(uiPlayer)) {
+            openMainMenu(uiPlayer);
+            return;
+        }
         List<MenuItem> menuItems = new ArrayList<>();
         Callback<Player> onBackReopen = (Player player) -> openGlobalTeleportMenu(player, level, onBack);
         // Get markers from db
@@ -383,6 +396,10 @@ public class PluginGUI {
                     new MenuItem(AssetManager.getIcon("icon-ki-gps-add-marker"),
                             t().get("TC_MENU_ADD_MARKER_GLOBAL", uiPlayer),
                             (Player p) -> {
+                                if (!canCreateMarker(p, MarkerType.GLOBAL)) {
+                                    openGlobalTeleportMenu(p, level, onBack);
+                                    return;
+                                }
                                 OZUIElement overlay = null;
                                 // remove existing overlays from this plugin before adding
                                 if (p.hasAttribute("gps-ui-overlay")) {
@@ -422,6 +439,9 @@ public class PluginGUI {
     }
 
     private boolean canCreateMarker(Player player, MarkerType type) {
+        if (!requireAccess(player, type)) {
+            return false;
+        }
         GPSEconomy economy = GPSEconomy.getInstance();
         if (economy != null && economy.markerLimitReached(player, type)) {
             player.sendTextMessage(t().get("TC_GPS_MARKER_LIMIT_REACHED", player)
@@ -429,6 +449,20 @@ public class PluginGUI {
             return false;
         }
         return true;
+    }
+
+    private boolean requireNonStaticAccess(Player player) {
+        return requireAccess(player, MarkerType.PRIVATE);
+    }
+
+    private boolean requireAccess(Player player, MarkerType type) {
+        if (GPSAccessPolicy.canUse(player, type)) {
+            return true;
+        }
+        player.sendTextMessage(t().get("TC_GPS_PLAYTIME_REQUIRED", player)
+                .replace("PH_REQUIRED_MINUTES", String.valueOf(GPSAccessPolicy.requiredMinutes()))
+                .replace("PH_REMAINING_MINUTES", String.valueOf(GPSAccessPolicy.remainingMinutes(player))));
+        return false;
     }
 
     private boolean saveMarkerWithEconomy(Player player, Marker marker) {

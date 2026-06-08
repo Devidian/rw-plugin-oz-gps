@@ -12,6 +12,9 @@ public final class MarkerPermissions {
         if (player == null || marker == null) {
             return false;
         }
+        if (!GPSAccessPolicy.canUse(player, marker.getType())) {
+            return false;
+        }
 
         switch (marker.getType()) {
             case PRIVATE:

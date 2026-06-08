@@ -38,6 +38,8 @@ public class GPSPluginInfoStatusProvider implements PluginInfoStatusProvider {
                 .replace("PH_TRAVEL_COST_MODE", settings.travelCostMode)
                 .replace("PH_MARKER_CREATE_COSTS", String.valueOf(settings.enableMarkerCreateCosts))
                 .replace("PH_TELEPORT_TOKENS", String.valueOf(settings.enableTeleportTokens))
+                .replace("PH_MINIMUM_PLAYTIME", String.valueOf(Math.max(0, settings.minimumPlaytimeMinutes)))
+                .replace("PH_PLAYTIME_ACCESS", GPSAccessPolicy.canUseNonStatic(player) ? "available" : "locked")
                 .replace("PH_WALLET_STATUS", available(economy != null && economy.walletAvailable()))
                 .replace("PH_SHOP_STATUS", available(economy != null && economy.shopAvailable()))
                 .replace("PH_LANGUAGE", player.getLanguage() + " / " + player.getSystemLanguage())

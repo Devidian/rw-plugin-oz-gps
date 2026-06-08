@@ -1,25 +1,26 @@
 package de.omegazirkel.risingworld.gps;
 
 import java.sql.ResultSet;
+import java.sql.Connection;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.omegazirkel.risingworld.GPS;
-import de.omegazirkel.risingworld.tools.db.SQLite;
 import net.risingworld.api.objects.Player;
 import net.risingworld.api.utils.Vector3f;
 
 public class GPSDatabase {
     private static GPSDatabase instance = null;
-    private final SQLite db;
+    private final Connection db;
     static private final String tableName = "marker";
 
-    private GPSDatabase(SQLite database) {
+    private GPSDatabase(Connection database) {
         this.db = database;
         initialize();
     }
 
-    public static GPSDatabase getInstance(SQLite database) {
+    public static GPSDatabase getInstance(Connection database) {
         if (instance == null) {
             instance = new GPSDatabase(database);
         }
@@ -67,9 +68,10 @@ public class GPSDatabase {
                         + marker.getCost()
                         + ");";
 
-                db.execute(query);
+                execute(query);
 
-                try (ResultSet rs = db.executeQuery("SELECT last_insert_rowid();")) {
+                try (Statement statement = db.createStatement();
+                        ResultSet rs = statement.executeQuery("SELECT last_insert_rowid();")) {
                     if (rs.next()) {
                         int id = rs.getInt(1);
                         marker.setId(id);
@@ -90,7 +92,7 @@ public class GPSDatabase {
                         + "cost=" + marker.getCost()
                         + " WHERE id=" + marker.getId() + ";";
 
-                db.execute(query);
+                execute(query);
             }
 
         } catch (Exception e) {
@@ -107,7 +109,7 @@ public class GPSDatabase {
         }
 
         try {
-            db.execute("UPDATE " + tableName
+            execute("UPDATE " + tableName
                     + " SET name=" + q(name)
                     + ", icon=" + q(icon)
                     + " WHERE " + managementWhereClause(marker, player) + ";");
@@ -127,7 +129,7 @@ public class GPSDatabase {
         }
 
         try {
-            db.execute("DELETE FROM " + tableName
+            execute("DELETE FROM " + tableName
                     + " WHERE " + managementWhereClause(marker, player) + ";");
             return true;
         } catch (Exception e) {
@@ -248,7 +250,8 @@ public class GPSDatabase {
     }
 
     private int count(String query) {
-        try (ResultSet result = db.executeQuery(query)) {
+        try (Statement statement = db.createStatement();
+                ResultSet result = statement.executeQuery(query)) {
             return result.next() ? result.getInt(1) : 0;
         } catch (Exception e) {
             GPS.logger().error("count markers failed: " + e.getMessage());
@@ -260,7 +263,8 @@ public class GPSDatabase {
     private List<Marker> executeListQuery(String query) {
         List<Marker> markers = new ArrayList<>();
 
-        try (ResultSet result = db.executeQuery(query)) {
+        try (Statement statement = db.createStatement();
+                ResultSet result = statement.executeQuery(query)) {
             while (result.next()) {
                 Vector3f pos = new Vector3f(
                         result.getFloat("pos_x"),
@@ -289,7 +293,7 @@ public class GPSDatabase {
 
     private void initialize() {
         // create table
-        db.execute(
+        execute(
                 "CREATE TABLE IF NOT EXISTS " + tableName + " ("
                         + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                         + "player_id INTEGER NOT NULL,"
@@ -304,5 +308,14 @@ public class GPSDatabase {
                         + "color INTEGER NOT NULL,"
                         + "cost INTEGER NOT NULL"
                         + ");");
+    }
+
+    private void execute(String sql) {
+        try (Statement statement = db.createStatement()) {
+            statement.execute(sql);
+        } catch (Exception e) {
+            GPS.logger().error("GPS database statement failed: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }
