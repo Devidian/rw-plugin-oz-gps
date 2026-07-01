@@ -34,6 +34,7 @@ public class PluginSettings {
 	public boolean enableGroupMarkers = false;
 	public boolean enableGlobalMarkers = false;
 	public boolean enableStaticMarkers = false;
+	public boolean exposeGlobalMarkers = true;
 
 	public boolean enableBackport = true;
 	public boolean enableDeathport = true;
@@ -142,6 +143,7 @@ public class PluginSettings {
 			enableGroupMarkers = settings.getProperty("enableGroupMarkers", "false").contentEquals("true");
 			enableGlobalMarkers = settings.getProperty("enableGlobalMarkers", "false").contentEquals("true");
 			enableStaticMarkers = settings.getProperty("enableStaticMarkers", "false").contentEquals("true");
+			exposeGlobalMarkers = settings.getProperty("exposeGlobalMarkers", "true").contentEquals("true");
 
 			enableBackport = settings.getProperty("enableBackport", "true").contentEquals("true");
 			enableDeathport = settings.getProperty("enableDeathport", "true").contentEquals("true");
@@ -207,7 +209,7 @@ public class PluginSettings {
 			discordGPSIncludeMarkerName = settings.getProperty("discordGPSIncludeMarkerName", "true")
 					.contentEquals("true");
 
-			logger().info(plugin.getName() + " Plugin settings loaded");
+			logger().info((plugin == null ? "OZGPS" : plugin.getName()) + " Plugin settings loaded");
 			logger().info("Sending welcome message on login is: " + String.valueOf(enableWelcomeMessage));
 			logger().info("Loglevel is set to " + logLevel);
 			logger().setLevel(logLevel);
@@ -246,6 +248,11 @@ public class PluginSettings {
 						"true", AdminSettingsType.BOOLEAN),
 				entry("enableStaticMarkers", "Static markers", "Enables static marker workflows.", enableStaticMarkers,
 						"true", AdminSettingsType.BOOLEAN),
+				AdminSettingsEntry.group("exportRoutes", "Export routes",
+						"Future native route exposure flags for external manager services."),
+				entry("exposeGlobalMarkers", "Expose global markers",
+						"Enables the future GPS global-marker export route.", exposeGlobalMarkers, "true",
+						AdminSettingsType.BOOLEAN),
 				AdminSettingsEntry.group("staticTeleports", "Static teleports", "Built-in static teleport targets."),
 				entry("enableBackport", "Backport", "Enables teleporting back to the position before the last GPS teleport.",
 						enableBackport, "true", AdminSettingsType.BOOLEAN),

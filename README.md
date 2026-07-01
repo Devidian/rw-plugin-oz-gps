@@ -88,6 +88,14 @@ Uicons by [Flaticon]("https://www.flaticon.com/uicons")
 Other icons (`icon-ki-*`) made by copilot
 Other icons (`icon-gpt-*`) made by chat-gpt
 
+## Future export route preparation
+
+GPS contains route-ready export DTOs/services for future native plugin routes.
+The prepared global marker export matches the transitional bridge contract and
+supports `lastChange` cursor filtering over marker `created_at` values.
+`exposeGlobalMarkers=true` controls whether the future native global-marker
+route should be exposed.
+
 ## Contributor Workflow
 
 - Review `AGENTS.md`, `PLANS.md`, `.codex/agents.toml`, and `.codex/skills/` before making structural changes.

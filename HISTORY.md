@@ -4,6 +4,9 @@
 
 ## [unreleased]
 
+- feat: add route-ready GPS global marker export DTOs/services with `lastChange` filtering
+- feat: add future native route exposure flag for global marker export
+
 ## [0.6.0] - 2026-06-08 | Access rules and sector pricing
 
 - feat: require configurable total playtime for non-static GPS features while keeping static markers available
