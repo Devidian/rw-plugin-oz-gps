@@ -154,16 +154,16 @@ public class GPSGridOverlay extends OZUIElement {
         icon.setPosition(0, 5, true);
         switch (type) {
             case PRIVATE:
-                icon.style.backgroundImage.set(AssetManager.getIcon("icon-ki-gps-private"));
+                icon.style.backgroundImage.set(AssetManager.getIcon(player, "icon-ki-gps-private"));
                 break;
             case GROUP:
-                icon.style.backgroundImage.set(AssetManager.getIcon("icon-ki-gps-group-alt"));
+                icon.style.backgroundImage.set(AssetManager.getIcon(player, "icon-ki-gps-group-alt"));
                 break;
             case GLOBAL:
-                icon.style.backgroundImage.set(AssetManager.getIcon("icon-ki-gps-global"));
+                icon.style.backgroundImage.set(AssetManager.getIcon(player, "icon-ki-gps-global"));
                 break;
             case STATIC:
-                icon.style.backgroundImage.set(AssetManager.getIcon("icon-ki-gps-static"));
+                icon.style.backgroundImage.set(AssetManager.getIcon(player, "icon-ki-gps-static"));
                 break;
         }
         icon.style.backgroundImageScaleMode.set(ScaleMode.ScaleToFit);
@@ -269,38 +269,38 @@ public class GPSGridOverlay extends OZUIElement {
             case STATIC:
                 if (primarySpawnPos != null)
                     iconGrid.addChild(createMarkerCard(uiPlayer, costLabel(uiPlayer, t().get("TC_MENU_STATIC_PRIMARY_SPAWN", uiPlayer), primarySpawnPos, MarkerType.STATIC),
-                            AssetManager.getIcon("icon-ki-sleep-01"), null, null, onTeleport -> {
+                            AssetManager.getIcon(uiPlayer, "icon-ki-sleep-01"), null, null, onTeleport -> {
                                 executeGridTeleport(uiPlayer, primarySpawnPos,
                                         t().get("TC_MENU_STATIC_PRIMARY_SPAWN", uiPlayer), MarkerType.STATIC);
                             }));
                 if (secondarySpawnPos != null)
                     iconGrid.addChild(createMarkerCard(uiPlayer, costLabel(uiPlayer, t().get("TC_MENU_STATIC_SECONDARY_SPAWN", uiPlayer), secondarySpawnPos, MarkerType.STATIC),
-                            AssetManager.getIcon("icon-ki-sleep-02"), null, null, onTeleport -> {
+                            AssetManager.getIcon(uiPlayer, "icon-ki-sleep-02"), null, null, onTeleport -> {
                                 executeGridTeleport(uiPlayer, secondarySpawnPos,
                                         t().get("TC_MENU_STATIC_SECONDARY_SPAWN", uiPlayer), MarkerType.STATIC);
                             }));
                 if (tertiarySpawnPos != null)
                     iconGrid.addChild(createMarkerCard(uiPlayer, costLabel(uiPlayer, t().get("TC_MENU_STATIC_TERTIARY_SPAWN", uiPlayer), tertiarySpawnPos, MarkerType.STATIC),
-                            AssetManager.getIcon("icon-ki-sleep-03"), null, null, onTeleport -> {
+                            AssetManager.getIcon(uiPlayer, "icon-ki-sleep-03"), null, null, onTeleport -> {
                                 executeGridTeleport(uiPlayer, tertiarySpawnPos,
                                         t().get("TC_MENU_STATIC_TERTIARY_SPAWN", uiPlayer), MarkerType.STATIC);
                             }));
                 if (quaternarySpawnPos != null)
                     iconGrid.addChild(createMarkerCard(uiPlayer, costLabel(uiPlayer, t().get("TC_MENU_STATIC_QUATERNARY_SPAWN", uiPlayer), quaternarySpawnPos, MarkerType.STATIC),
-                            AssetManager.getIcon("icon-ki-sleep-04"), null, null, onTeleport -> {
+                            AssetManager.getIcon(uiPlayer, "icon-ki-sleep-04"), null, null, onTeleport -> {
                                 executeGridTeleport(uiPlayer, quaternarySpawnPos,
                                         t().get("TC_MENU_STATIC_QUATERNARY_SPAWN", uiPlayer), MarkerType.STATIC);
                             }));
                 if (defaultSpawnPos != null)
                     iconGrid.addChild(createMarkerCard(uiPlayer, costLabel(uiPlayer, t().get("TC_MENU_STATIC_DEFAULT_SPAWN", uiPlayer), defaultSpawnPos, MarkerType.STATIC),
-                            AssetManager.getIcon("icon-ki-coast-01"), null, null, onTeleport -> {
+                            AssetManager.getIcon(uiPlayer, "icon-ki-coast-01"), null, null, onTeleport -> {
                                 executeGridTeleport(uiPlayer, defaultSpawnPos,
                                         t().get("TC_MENU_STATIC_DEFAULT_SPAWN", uiPlayer), MarkerType.STATIC);
                             }));
                 if (lastDeathPosition != null)
                     iconGrid.addChild(
                             createMarkerCard(uiPlayer, costLabel(uiPlayer, t().get("TC_MENU_STATIC_DEATHPORT", uiPlayer), lastDeathPosition, MarkerType.STATIC),
-                                    AssetManager.getIcon("icon-ki-death-skull"), null, null, onTeleport -> {
+                                    AssetManager.getIcon(uiPlayer, "icon-ki-death-skull"), null, null, onTeleport -> {
                                         executeGridTeleport(uiPlayer, lastDeathPosition,
                                                 t().get("TC_MENU_STATIC_DEATHPORT", uiPlayer), MarkerType.STATIC,
                                                 false);
@@ -308,7 +308,7 @@ public class GPSGridOverlay extends OZUIElement {
                 if (lastPositionBeforePort != null)
                     iconGrid.addChild(createMarkerCard(uiPlayer,
                             costLabel(uiPlayer, t().get("TC_MENU_STATIC_BACKPORT", uiPlayer), lastPositionBeforePort, MarkerType.STATIC),
-                            AssetManager.getIcon("icon-ki-special-01"), null, null, onTeleport -> {
+                            AssetManager.getIcon(uiPlayer, "icon-ki-special-01"), null, null, onTeleport -> {
                                 executeGridTeleport(uiPlayer, lastPositionBeforePort,
                                         t().get("TC_MENU_STATIC_BACKPORT", uiPlayer), MarkerType.STATIC, false);
                             }));
@@ -428,7 +428,7 @@ public class GPSGridOverlay extends OZUIElement {
             onDeleteCallback = null;
             onEditCallback = null;
         }
-        return createMarkerCard(player, costLabel(player, marker.getName(), marker.getPosition(), marker.getType()), AssetManager.getIcon(marker.getIcon()), onDeleteCallback,
+        return createMarkerCard(player, costLabel(player, marker.getName(), marker.getPosition(), marker.getType()), AssetManager.getIcon(player, marker.getIcon()), onDeleteCallback,
                 onEditCallback,
                 onTeleport -> {
                     executeGridTeleport(player, marker.getPosition(), marker.getName(), marker.getType());
@@ -478,7 +478,7 @@ public class GPSGridOverlay extends OZUIElement {
             editButton.style.paddingTop.set(5);
             editButton.style.paddingLeft.set(5);
             editButton.style.paddingRight.set(5);
-            editButton.style.backgroundImage.set(AssetManager.getIcon("rename"));
+            editButton.style.backgroundImage.set(AssetManager.getIcon(player, "rename"));
             editButton.style.backgroundImageScaleMode.set(ScaleMode.ScaleToFit);
             card.addChild(editButton);
         }
@@ -496,7 +496,7 @@ public class GPSGridOverlay extends OZUIElement {
             deleteButton.style.paddingTop.set(5);
             deleteButton.style.paddingLeft.set(5);
             deleteButton.style.paddingRight.set(5);
-            deleteButton.style.backgroundImage.set(AssetManager.getIcon("trash-xmark"));
+            deleteButton.style.backgroundImage.set(AssetManager.getIcon(player, "trash-xmark"));
             deleteButton.style.backgroundImageScaleMode.set(ScaleMode.ScaleToFit);
             card.addChild(deleteButton);
         }
@@ -611,7 +611,7 @@ public class GPSGridOverlay extends OZUIElement {
         addIcon.setSize(240 * scaleFactor, 240 * scaleFactor, false);
         addIcon.setPivot(Pivot.UpperLeft);
         addIcon.setPosition(5 * scaleFactor, 5 * scaleFactor, false);
-        addIcon.style.backgroundImage.set(AssetManager.getIcon("icon-ki-gps-add-marker"));
+        addIcon.style.backgroundImage.set(AssetManager.getIcon(player, "icon-ki-gps-add-marker"));
         addIcon.setClickable(true);
         addIcon.setClickAction(event -> {
             onCreateNewMarker.onCall(true);
@@ -644,7 +644,7 @@ public class GPSGridOverlay extends OZUIElement {
         icon.setSize(100, 70, true);
         icon.setPivot(Pivot.UpperLeft);
         icon.setPosition(0, 5, true);
-        icon.style.backgroundImage.set(AssetManager.getIcon("icon-gpt-exit"));
+        icon.style.backgroundImage.set(AssetManager.getIcon(player, "icon-gpt-exit"));
         icon.style.backgroundImageScaleMode.set(ScaleMode.ScaleToFit);
         tab.addChild(icon);
         // label

@@ -94,7 +94,7 @@ public class SelectMarkerIconPanel extends OZUIElement {
         iconGrid.style.justifyContent.set(Justify.FlexStart);
 
         for (String key : PluginGUI.markerKeys) {
-            MarkerIconButton iconBtn = new MarkerIconButton(key);
+            MarkerIconButton iconBtn = new MarkerIconButton(uiPlayer, key);
 
             if (key.equals(selectedKey)) {
                 iconBtn.setSelected(true);

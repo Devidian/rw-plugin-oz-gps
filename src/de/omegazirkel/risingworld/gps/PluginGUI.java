@@ -95,7 +95,7 @@ public class PluginGUI {
 
     private MenuItem fromMarker(Marker marker, Callback<Boolean> onTeleportAborted) {
         return new MenuItem(
-                AssetManager.getIcon(marker.getIcon()),
+                marker.getIcon(),
                 marker.getName(),
                 (Player p) -> {
                     OZUIElement overlay = null;
@@ -129,21 +129,21 @@ public class PluginGUI {
 
         if (nonStaticAccess && s.enablePrivateMarkers)
             menuItems.add(
-                    new MenuItem(AssetManager.getIcon("icon-ki-gps-private"),
+                    new MenuItem("icon-ki-gps-private",
                             t().get("TC_MENU_PRIVATE_MARKER", uiPlayer),
                             (Player p) -> openPrivateTeleportMenu(p, 0, onBackReopen)));
         if (nonStaticAccess && s.enableGroupMarkers)
             menuItems
-                    .add(new MenuItem(AssetManager.getIcon("icon-ki-gps-group-alt"),
+                    .add(new MenuItem("icon-ki-gps-group-alt",
                             t().get("TC_MENU_GROUP_MARKER", uiPlayer),
                             (Player p) -> openGroupTeleportMenu(p, 0, onBackReopen)));
         if (nonStaticAccess && s.enableGlobalMarkers)
             menuItems.add(
-                    new MenuItem(AssetManager.getIcon("icon-ki-gps-global"), t().get("TC_MENU_GLOBAL_MARKER", uiPlayer),
+                    new MenuItem("icon-ki-gps-global", t().get("TC_MENU_GLOBAL_MARKER", uiPlayer),
                             (Player p) -> openGlobalTeleportMenu(p, 0, onBackReopen)));
         if (s.enableStaticMarkers)
             menuItems.add(
-                    new MenuItem(AssetManager.getIcon("icon-ki-gps-static"), t().get("TC_MENU_STATIC_MARKER", uiPlayer),
+                    new MenuItem("icon-ki-gps-static", t().get("TC_MENU_STATIC_MARKER", uiPlayer),
                             (Player p) -> openStaticTeleportMenu(p, onBackReopen)));
 
         menuItems.add(PluginInfoStatusProviders.menuItem(t().get("TC_MENU_INFO_STATUS", uiPlayer), GPS.name));
@@ -192,7 +192,7 @@ public class PluginGUI {
 
         // Add marker menu item
         menuItems.add(
-                new MenuItem(AssetManager.getIcon("icon-ki-gps-add-marker"),
+                new MenuItem("icon-ki-gps-add-marker",
                         t().get("TC_MENU_ADD_MARKER_PRIVATE", uiPlayer),
                         (Player p) -> {
                             if (!canCreateMarker(p, MarkerType.PRIVATE)) {
@@ -232,7 +232,7 @@ public class PluginGUI {
 
         if (markers.size() >= markersPerPage)
             menuItems.add(
-                    new MenuItem(AssetManager.getIcon("icon-ki-gps-next-page"), t().get("TC_MENU_NEXT_PAGE", uiPlayer),
+                    new MenuItem("icon-ki-gps-next-page", t().get("TC_MENU_NEXT_PAGE", uiPlayer),
                             (Player p) -> openPrivateTeleportMenu(p, level + 1, onBackReopen)));
 
         PluginMenuManager.showMenu(uiPlayer, menuItems);
@@ -262,32 +262,32 @@ public class PluginGUI {
                 };
 
         if (primarySpawnPos != null)
-            menuItems.add(new MenuItem(AssetManager.getIcon("icon-ki-sleep-01"),
+            menuItems.add(new MenuItem("icon-ki-sleep-01",
                     t().get("TC_MENU_STATIC_PRIMARY_SPAWN", uiPlayer),
                     teleportAction.apply(primarySpawnPos, t().get("TC_MENU_STATIC_PRIMARY_SPAWN", uiPlayer))));
         if (secondarySpawnPos != null)
             menuItems.add(
-                    new MenuItem(AssetManager.getIcon("icon-ki-sleep-02"),
+                    new MenuItem("icon-ki-sleep-02",
                             t().get("TC_MENU_STATIC_SECONDARY_SPAWN", uiPlayer),
                             teleportAction.apply(secondarySpawnPos,
                                     t().get("TC_MENU_STATIC_SECONDARY_SPAWN", uiPlayer))));
         if (tertiarySpawnPos != null)
-            menuItems.add(new MenuItem(AssetManager.getIcon("icon-ki-sleep-03"),
+            menuItems.add(new MenuItem("icon-ki-sleep-03",
                     t().get("TC_MENU_STATIC_TERTIARY_SPAWN", uiPlayer),
                     teleportAction.apply(tertiarySpawnPos, t().get("TC_MENU_STATIC_TERTIARY_SPAWN", uiPlayer))));
         if (quaternarySpawnPos != null)
             menuItems.add(
-                    new MenuItem(AssetManager.getIcon("icon-ki-sleep-04"),
+                    new MenuItem("icon-ki-sleep-04",
                             t().get("TC_MENU_STATIC_QUATERNARY_SPAWN", uiPlayer),
                             teleportAction.apply(quaternarySpawnPos,
                                     t().get("TC_MENU_STATIC_QUATERNARY_SPAWN", uiPlayer))));
         if (defaultSpawnPos != null)
-            menuItems.add(new MenuItem(AssetManager.getIcon("icon-ki-coast-01"),
+            menuItems.add(new MenuItem("icon-ki-coast-01",
                     t().get("TC_MENU_STATIC_DEFAULT_SPAWN", uiPlayer),
                     teleportAction.apply(defaultSpawnPos, t().get("TC_MENU_STATIC_DEFAULT_SPAWN", uiPlayer))));
         if (lastPositionBeforePort != null)
             menuItems.add(
-                    new MenuItem(AssetManager.getIcon("icon-ki-special-01"),
+                    new MenuItem("icon-ki-special-01",
                             t().get("TC_MENU_STATIC_BACKPORT", uiPlayer),
                             (Player p) -> {
                                 if (GPSEventUtils.executeTeleport(uiPlayer, lastPositionBeforePort,
@@ -297,7 +297,7 @@ public class PluginGUI {
                             }));
         if (lastDeathPosition != null)
             menuItems.add(
-                    new MenuItem(AssetManager.getIcon("icon-ki-sleep-05"),
+                    new MenuItem("icon-ki-sleep-05",
                             t().get("TC_MENU_STATIC_DEATHPORT", uiPlayer),
                             (Player p) -> {
                                 if (GPSEventUtils.executeTeleport(uiPlayer, lastDeathPosition,
@@ -330,7 +330,7 @@ public class PluginGUI {
 
         // Add marker menu item
         menuItems
-                .add(new MenuItem(AssetManager.getIcon("icon-ki-gps-add-marker"),
+                .add(new MenuItem("icon-ki-gps-add-marker",
                         t().get("TC_MENU_ADD_MARKER_GROUP", uiPlayer),
                         (Player p) -> {
                             if (!canCreateMarker(p, MarkerType.GROUP)) {
@@ -368,7 +368,7 @@ public class PluginGUI {
 
         if (markers.size() >= markersPerPage)
             menuItems.add(
-                    new MenuItem(AssetManager.getIcon("icon-ki-gps-next-page"), t().get("TC_MENU_NEXT_PAGE", uiPlayer),
+                    new MenuItem("icon-ki-gps-next-page", t().get("TC_MENU_NEXT_PAGE", uiPlayer),
                             (Player p) -> openGroupTeleportMenu(p, level + 1, onBackReopen)));
 
         PluginMenuManager.showMenu(uiPlayer, menuItems);
@@ -393,7 +393,7 @@ public class PluginGUI {
         // Add marker menu item
         if (uiPlayer.isAdmin())
             menuItems.add(
-                    new MenuItem(AssetManager.getIcon("icon-ki-gps-add-marker"),
+                    new MenuItem("icon-ki-gps-add-marker",
                             t().get("TC_MENU_ADD_MARKER_GLOBAL", uiPlayer),
                             (Player p) -> {
                                 if (!canCreateMarker(p, MarkerType.GLOBAL)) {
@@ -432,7 +432,7 @@ public class PluginGUI {
 
         if (markers.size() >= markersPerPage)
             menuItems.add(
-                    new MenuItem(AssetManager.getIcon("icon-ki-gps-next-page"), t().get("TC_MENU_NEXT_PAGE", uiPlayer),
+                    new MenuItem("icon-ki-gps-next-page", t().get("TC_MENU_NEXT_PAGE", uiPlayer),
                             (Player p) -> openGlobalTeleportMenu(p, level + 1, onBackReopen)));
 
         PluginMenuManager.showMenu(uiPlayer, menuItems);

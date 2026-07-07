@@ -2,6 +2,7 @@ package de.omegazirkel.risingworld.gps.ui;
 
 import de.omegazirkel.risingworld.tools.ui.AssetManager;
 import de.omegazirkel.risingworld.tools.ui.OZUIElement;
+import net.risingworld.api.objects.Player;
 import net.risingworld.api.ui.style.Align;
 import net.risingworld.api.ui.style.DisplayStyle;
 import net.risingworld.api.ui.style.Justify;
@@ -15,7 +16,7 @@ public class MarkerIconButton extends OZUIElement {
     private static final float GOLD_G = 0.75f;
     private static final float GOLD_B = 0.25f;
 
-    public MarkerIconButton(String iconKey) {
+    public MarkerIconButton(Player player, String iconKey) {
         super();
         this.setClickable(true);
         this.setBorder(1);
@@ -34,7 +35,7 @@ public class MarkerIconButton extends OZUIElement {
         this.style.marginTop.set(margin, Unit.Pixel);
         this.style.marginLeft.set(margin, Unit.Pixel);
         this.style.marginRight.set(margin, Unit.Pixel);
-        this.style.backgroundImage.set(AssetManager.getIcon(iconKey));
+        this.style.backgroundImage.set(AssetManager.getIcon(player, iconKey));
         this.style.backgroundImageScaleMode.set(ScaleMode.ScaleToFit);
     }
 
