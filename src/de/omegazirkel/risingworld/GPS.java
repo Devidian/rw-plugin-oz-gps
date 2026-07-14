@@ -62,7 +62,7 @@ public class GPS extends Plugin implements Listener, FileChangeListener {
 		// Load Plugin Menu into Main Plugin Menu
 		PluginMenuManager
 				.registerPluginMenu(
-						new MenuItem(name, "icon-ki-gps-plugin", "GPS", (Player p) -> {
+						new MenuItem(name, "oz-gps", "GPS", (Player p) -> {
 							GPSPlayerPreferences.load(p);
 							gui.openPreferredEntry(p);
 						}));

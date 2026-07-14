@@ -76,7 +76,7 @@ public class GpsMarkerExportServiceTest {
         try (PreparedStatement statement = connection.prepareStatement("""
                 INSERT INTO marker
                 (id, player_id, type, group_name, created_at, pos_x, pos_y, pos_z, name, icon, color, cost)
-                VALUES (?, 0, ?, NULL, ?, 10, 20, 30, ?, 'icon-ki-gps-global', ?, 0);
+                VALUES (?, 0, ?, NULL, ?, 10, 20, 30, ?, 'menu-global-marker', ?, 0);
                 """)) {
             statement.setInt(1, id);
             statement.setString(2, type);

@@ -43,5 +43,5 @@ Keep pricing calculation isolated. If all-on-one grid rendering is too heavy, pa
 - Phase 2 complete: README, default settings comments, and admin setting labels describe chunk-based pricing while keeping the legacy setting key.
 - Phase 3 complete: `GPSGridOverlay` loads all markers for the active type without pager cards.
 - Phase 4 complete: private, group, and global marker creation cards are inserted before sorted marker cards.
-- Phase 5 complete: the GPS radial menu includes an Info/Status action using the shared Tools `icon-ki-info-status` asset, and `/gps info` routes to the same panel as `/gps status`.
+- Phase 5 complete: the GPS radial menu includes an Info/Status action using the shared Tools `info-status` asset, and `/gps info` routes to the same panel as `/gps status`.
 - Phase 6 complete: README/HISTORY were updated and validation passed with `mvn -B test` and `mvn -B -DskipTests package`.

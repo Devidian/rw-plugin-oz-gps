@@ -81,7 +81,7 @@ public class PluginSettings {
 	public boolean enableTeleportTokens = false;
 	public String teleportTokenCurrencyIdentifier = "GPSTP";
 	public String teleportTokenCurrencyName = "GPS Teleport Token";
-	public String teleportTokenIcon = "icon-ki-gps-coin";
+	public String teleportTokenIcon = "coin-gps-token";
 	public boolean enableTeleportTokenShopOffers = false;
 	public String teleportTokenShopCurrencyIdentifier = "";
 	public Integer teleportTokenPackage1Price = 25;
@@ -181,7 +181,7 @@ public class PluginSettings {
 			enableTeleportTokens = settings.getProperty("enableTeleportTokens", "false").contentEquals("true");
 			teleportTokenCurrencyIdentifier = settings.getProperty("teleportTokenCurrencyIdentifier", "GPSTP");
 			teleportTokenCurrencyName = settings.getProperty("teleportTokenCurrencyName", "GPS Teleport Token");
-			teleportTokenIcon = settings.getProperty("teleportTokenIcon", "icon-ki-gps-coin");
+			teleportTokenIcon = settings.getProperty("teleportTokenIcon", "coin-gps-token");
 			enableTeleportTokenShopOffers = settings.getProperty("enableTeleportTokenShopOffers", "false")
 					.contentEquals("true");
 			teleportTokenShopCurrencyIdentifier = settings.getProperty("teleportTokenShopCurrencyIdentifier", "");
@@ -322,7 +322,7 @@ public class PluginSettings {
 				entry("teleportTokenCurrencyName", "Token currency name", "Display name for GPS teleport tokens.",
 						teleportTokenCurrencyName, "GPS Teleport Token", AdminSettingsType.STRING),
 				entry("teleportTokenIcon", "Token icon", "Asset icon used for GPS teleport tokens.",
-						teleportTokenIcon, "icon-ki-gps-coin", AdminSettingsType.STRING),
+						teleportTokenIcon, "coin-gps-token", AdminSettingsType.STRING),
 				entry("enableTeleportTokenShopOffers", "Token shop offers",
 						"Registers GPS teleport-token packages in OZ Shop when Shop is available.",
 						enableTeleportTokenShopOffers, "false", AdminSettingsType.BOOLEAN),

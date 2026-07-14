@@ -2,8 +2,10 @@
 
 <https://www.conventionalcommits.org/en/v1.0.0/>
 
-## [unreleased]
+## [0.6.2] - 2026-07-14 | Icon set and export polish
 
+- change: use the shared Tools exit icon and remove the obsolete GPS exit asset
+- change: rename GPS marker and menu icon keys to their final semantic names
 - feat: add route-ready GPS global marker export DTOs/services with `lastChange` filtering
 - feat: add future native route exposure flag for global marker export
 
