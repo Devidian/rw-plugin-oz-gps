@@ -2,6 +2,13 @@
 
 <https://www.conventionalcommits.org/en/v1.0.0/>
 
+## [0.7.0] - 2026-07-15 | GPS sector and zone access rules
+
+- feat: add configurable sector restrictions for private, group, and global marker teleports
+- feat: add GPS-area restrictions for marker use and creation, including per-area administrator marking
+- feat: show unavailable marker cards as disabled red cards with localized explanations
+- feat: allow static markers to explicitly ignore or honor GPS-area restrictions
+
 ## [0.6.2] - 2026-07-14 | Icon set and export polish
 
 - change: use the shared Tools exit icon and remove the obsolete GPS exit asset

@@ -14,6 +14,10 @@ public class GPSDatabase {
     private static GPSDatabase instance = null;
     private final Connection db;
     static private final String tableName = "marker";
+    static private final String gpsAreaTableName = "gps_area";
+
+    public record GPSArea(long areaId, int adminId, long createdAt, boolean allowGPS) {
+    }
 
     private GPSDatabase(Connection database) {
         this.db = database;
@@ -137,6 +141,42 @@ public class GPSDatabase {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public GPSArea getGPSArea(long areaId) {
+        if (areaId <= 0L) {
+            return null;
+        }
+        String query = "SELECT area_id, admin_id, created_at, allow_gps FROM " + gpsAreaTableName
+                + " WHERE area_id=" + areaId + " LIMIT 1;";
+        try (Statement statement = db.createStatement(); ResultSet result = statement.executeQuery(query)) {
+            if (!result.next()) {
+                return null;
+            }
+            return new GPSArea(result.getLong("area_id"), result.getInt("admin_id"),
+                    result.getLong("created_at"), result.getInt("allow_gps") != 0);
+        } catch (Exception e) {
+            GPS.logger().error("GPS area lookup failed: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public boolean isGPSAreaAllowed(long areaId) {
+        GPSArea area = getGPSArea(areaId);
+        return area != null && area.allowGPS();
+    }
+
+    public boolean saveGPSArea(long areaId, int adminId, boolean allowGPS) {
+        if (areaId <= 0L || adminId <= 0) {
+            return false;
+        }
+        return executeUpdate("INSERT OR REPLACE INTO " + gpsAreaTableName
+                + " (area_id, admin_id, created_at, allow_gps) VALUES ("
+                + areaId + ", " + adminId + ", " + System.currentTimeMillis() + ", " + (allowGPS ? 1 : 0) + ");");
+    }
+
+    public boolean deleteGPSArea(long areaId) {
+        return areaId > 0L && executeUpdate("DELETE FROM " + gpsAreaTableName + " WHERE area_id=" + areaId + ";");
     }
 
     private String managementWhereClause(Marker marker, Player player) {
@@ -308,6 +348,13 @@ public class GPSDatabase {
                         + "color INTEGER NOT NULL,"
                         + "cost INTEGER NOT NULL"
                         + ");");
+        execute("CREATE TABLE IF NOT EXISTS " + gpsAreaTableName + " ("
+                + "area_id INTEGER PRIMARY KEY,"
+                + "admin_id INTEGER NOT NULL,"
+                + "created_at BIGINT NOT NULL,"
+                + "allow_gps INTEGER NOT NULL DEFAULT 1"
+                + ");");
+        execute("CREATE INDEX IF NOT EXISTS idx_gps_area_allow_gps ON " + gpsAreaTableName + " (allow_gps);");
     }
 
     private void execute(String sql) {
@@ -316,6 +363,16 @@ public class GPSDatabase {
         } catch (Exception e) {
             GPS.logger().error("GPS database statement failed: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    private boolean executeUpdate(String sql) {
+        try (Statement statement = db.createStatement()) {
+            statement.executeUpdate(sql);
+            return true;
+        } catch (Exception e) {
+            GPS.logger().error("GPS database update failed: " + e.getMessage());
+            return false;
         }
     }
 }

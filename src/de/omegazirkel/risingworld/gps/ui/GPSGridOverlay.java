@@ -5,6 +5,7 @@ import java.util.List;
 import de.omegazirkel.risingworld.GPS;
 import de.omegazirkel.risingworld.gps.GPSDatabase;
 import de.omegazirkel.risingworld.gps.GPSAccessPolicy;
+import de.omegazirkel.risingworld.gps.GPSAreaAccessPolicy;
 import de.omegazirkel.risingworld.gps.GPSPlayerPreferences;
 import de.omegazirkel.risingworld.gps.GPSEconomy;
 import de.omegazirkel.risingworld.gps.GPSEventUtils;
@@ -23,6 +24,7 @@ import net.risingworld.api.Timer;
 import net.risingworld.api.assets.TextureAsset;
 import net.risingworld.api.callbacks.Callback;
 import net.risingworld.api.objects.Player;
+import net.risingworld.api.objects.Area;
 import net.risingworld.api.ui.UIElement;
 import net.risingworld.api.ui.UILabel;
 import net.risingworld.api.ui.UIScrollView;
@@ -239,7 +241,8 @@ public class GPSGridOverlay extends OZUIElement {
         iconGrid.style.flexWrap.set(Wrap.Wrap);
         iconGrid.style.justifyContent.set(Justify.FlexStart);
 
-        gridScrollView.addChild(iconGrid);
+		gridScrollView.addChild(iconGrid);
+		if (type != MarkerType.STATIC) addGPSAreaManagementCard(iconGrid, uiPlayer);
 
         if (!GPSAccessPolicy.canUse(uiPlayer, type)) {
             return;
@@ -343,7 +346,7 @@ public class GPSGridOverlay extends OZUIElement {
                 }
                 break;
             case GROUP:
-                iconGrid.addChild(createAddMarkerCard(uiPlayer, addMarkerLabel(uiPlayer, t().get("TC_MENU_ADD_MARKER_GROUP", uiPlayer), MarkerType.GROUP),
+                if (GPSAreaAccessPolicy.markerCreationDenialKey(uiPlayer, MarkerType.GROUP) == null) iconGrid.addChild(createAddMarkerCard(uiPlayer, addMarkerLabel(uiPlayer, t().get("TC_MENU_ADD_MARKER_GROUP", uiPlayer), MarkerType.GROUP),
                         onCreateNewMarker -> {
                             if (!canCreateMarker(uiPlayer, MarkerType.GROUP)) {
                                 return;
@@ -367,7 +370,7 @@ public class GPSGridOverlay extends OZUIElement {
                         }));
                 break;
             case PRIVATE:
-                iconGrid.addChild(createAddMarkerCard(uiPlayer, addMarkerLabel(uiPlayer, t().get("TC_MENU_ADD_MARKER_PRIVATE", uiPlayer), MarkerType.PRIVATE),
+                if (GPSAreaAccessPolicy.markerCreationDenialKey(uiPlayer, MarkerType.PRIVATE) == null) iconGrid.addChild(createAddMarkerCard(uiPlayer, addMarkerLabel(uiPlayer, t().get("TC_MENU_ADD_MARKER_PRIVATE", uiPlayer), MarkerType.PRIVATE),
                         onCreateNewMarker -> {
                             if (!canCreateMarker(uiPlayer, MarkerType.PRIVATE)) {
                                 return;
@@ -401,6 +404,25 @@ public class GPSGridOverlay extends OZUIElement {
         }
     }
 
+	private void addGPSAreaManagementCard(UIElement iconGrid, Player player) {
+		Area area = player.getCurrentArea();
+		if (!player.isAdmin() || !GPSAreaAccessPolicy.areaFeaturesEnabled() || area == null) {
+			return;
+		}
+		boolean marked = GPSDatabase.getInstance().isGPSAreaAllowed(area.getID());
+		String label = t().get(marked ? "TC_GPS_AREA_UNMARK" : "TC_GPS_AREA_MARK", player)
+				.replace("PH_AREA_NAME", area.getName() == null ? String.valueOf(area.getID()) : area.getName());
+		iconGrid.addChild(createMarkerCard(player, label,
+				AssetManager.getIcon(player, "marker-special-destination"), null, null, ignored -> {
+					boolean updated = marked ? GPSDatabase.getInstance().deleteGPSArea(area.getID())
+							: GPSDatabase.getInstance().saveGPSArea(area.getID(), player.getDbID(), true);
+					if (updated) {
+						player.sendTextMessage(t().get(marked ? "TC_GPS_AREA_UNMARKED" : "TC_GPS_AREA_MARKED", player));
+						refreshGrid(player);
+					}
+				}));
+	}
+
     private UIElement createMarkerCardFromMarker(Marker marker, Player player) {
         Callback<Boolean> onDeleteCallback = onDelete -> {
             deleteMarker(player, marker, onDeleted -> refreshGrid(player));
@@ -428,20 +450,28 @@ public class GPSGridOverlay extends OZUIElement {
             onDeleteCallback = null;
             onEditCallback = null;
         }
-        return createMarkerCard(player, costLabel(player, marker.getName(), marker.getPosition(), marker.getType()), AssetManager.getIcon(player, marker.getIcon()), onDeleteCallback,
-                onEditCallback,
-                onTeleport -> {
+        String restriction = GPSAreaAccessPolicy.teleportDenialKey(player, marker.getPosition(), marker.getType());
+        if (restriction != null) {
+            return createMarkerCard(player, marker.getName() + "\n" + t().get(restriction, player),
+                    AssetManager.getIcon(player, marker.getIcon()), null, null, null);
+        }
+        return createMarkerCard(player, costLabel(player, marker.getName(), marker.getPosition(), marker.getType()), AssetManager.getIcon(player, marker.getIcon()), onDeleteCallback, onEditCallback, onTeleport -> {
                     executeGridTeleport(player, marker.getPosition(), marker.getName(), marker.getType());
                 });
     }
 
     private UIElement createMarkerCard(Player player, String name, TextureAsset icon, Callback<Boolean> onDelete,
             Callback<Boolean> onEdit, Callback<Boolean> onTeleport) {
+		boolean staticAreaBlocked = currentMarkerType == MarkerType.STATIC
+				&& GPSAreaAccessPolicy.gpsUseBlocked(player, MarkerType.STATIC);
+		String label = staticAreaBlocked ? name + "\n" + t().get("TC_GPS_AREA_REQUIRED", player) : name;
+		Callback<Boolean> teleportAction = staticAreaBlocked ? null : onTeleport;
 
         UIElement card = new UIElement();
         card.setSize(250 * scaleFactor, 300 * scaleFactor, false);
         card.setPivot(Pivot.UpperLeft);
-        card.setBackgroundColor(0.14f, 0.13f, 0.12f, CARD_ALPHA);
+        card.setBackgroundColor(teleportAction == null ? 0.38f : 0.14f, teleportAction == null ? 0.08f : 0.13f,
+                teleportAction == null ? 0.08f : 0.12f, CARD_ALPHA);
         card.setBorder(1);
         card.setBorderColor(GOLD_R, GOLD_G, GOLD_B, 0.26f);
         card.setBorderEdgeRadius(6, false);
@@ -457,10 +487,8 @@ public class GPSGridOverlay extends OZUIElement {
         markerIcon.setPivot(Pivot.UpperLeft);
         markerIcon.setPosition(5 * scaleFactor, 5 * scaleFactor, false);
         markerIcon.style.backgroundImage.set(icon);
-        markerIcon.setClickable(true);
-        markerIcon.setClickAction(event -> {
-            onTeleport.onCall(true);
-        });
+        markerIcon.setClickable(teleportAction != null);
+        if (teleportAction != null) markerIcon.setClickAction(event -> teleportAction.onCall(true));
         card.addChild(markerIcon);
 
         // marker edit/delete actions
@@ -502,7 +530,7 @@ public class GPSGridOverlay extends OZUIElement {
         }
 
         // marker label
-        UILabel markerLabel = new UILabel(name);
+        UILabel markerLabel = new UILabel(label);
         markerLabel.setSize((onEdit != null || onDelete != null ? 170 : 210) * scaleFactor, 40 * scaleFactor, false);
         markerLabel.setFontSize(14 * scaleFactor);
         markerLabel.setTextAlign(TextAnchor.UpperLeft);
@@ -541,6 +569,11 @@ public class GPSGridOverlay extends OZUIElement {
                     .replace("PH_REMAINING_MINUTES", String.valueOf(GPSAccessPolicy.remainingMinutes(player))));
             return false;
         }
+		String restrictionDenialKey = GPSAreaAccessPolicy.markerCreationDenialKey(player, type);
+		if (restrictionDenialKey != null) {
+			player.sendTextMessage(t().get(restrictionDenialKey, player));
+			return false;
+		}
         GPSEconomy economy = GPSEconomy.getInstance();
         if (economy != null && economy.markerLimitReached(player, type)) {
             player.sendTextMessage(t().get("TC_GPS_MARKER_LIMIT_REACHED", player)
@@ -724,6 +757,14 @@ public class GPSGridOverlay extends OZUIElement {
             markerLimitStatusLabel.setText("");
             return;
         }
+		if (GPSAreaAccessPolicy.gpsUseBlocked(player, currentMarkerType)) {
+			cooldownStatusBar.setVisible(true);
+			gridScrollView.setSize(100, 84, true);
+			cooldownStatusLabel.style.width.set(96, Unit.Percent);
+			cooldownStatusLabel.setText(t().get("TC_GPS_AREA_REQUIRED", player));
+			markerLimitStatusLabel.setText("");
+			return;
+		}
         cooldownStatusLabel.style.width.set(60, Unit.Percent);
         String limitText = markerLimitStatus(player);
         boolean cooldownEnabled = TeleportCooldowns.isEnabled(currentMarkerType);
@@ -752,8 +793,11 @@ public class GPSGridOverlay extends OZUIElement {
             return;
         }
 
-        cooldownStatusLabel.setText(t().get("TC_GPS_COOLDOWN_READY", player)
-                .replace("PH_MARKER_TYPE", markerType));
+        String ready = t().get("TC_GPS_COOLDOWN_READY", player).replace("PH_MARKER_TYPE", markerType);
+		if (GPSAreaAccessPolicy.sectorRestrictionEnabled(currentMarkerType)) {
+			ready += "\n" + t().get("TC_GPS_SECTOR_HINT", player);
+		}
+        cooldownStatusLabel.setText(ready);
     }
 
     private String markerLimitStatus(Player player) {

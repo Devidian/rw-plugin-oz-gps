@@ -144,6 +144,9 @@ public class PluginGUI {
             menuItems.add(
                     new MenuItem("menu-marker-static", t().get("TC_MENU_STATIC_MARKER", uiPlayer),
                             (Player p) -> openStaticTeleportMenu(p, onBackReopen)));
+		if (uiPlayer.isAdmin() && GPSAreaAccessPolicy.areaFeaturesEnabled() && uiPlayer.getCurrentArea() != null)
+			menuItems.add(new MenuItem("marker-special-destination", t().get("TC_GPS_AREA_MANAGE", uiPlayer),
+					(Player p) -> openGPSAreaManagement(p)));
 
         menuItems.add(PluginInfoStatusProviders.menuItem(t().get("TC_MENU_INFO_STATUS", uiPlayer), GPS.name));
         menuItems.add(MenuItem.closeMenu(uiPlayer));
@@ -172,6 +175,20 @@ public class PluginGUI {
         uiPlayer.addUIElement(overlay);
     }
 
+	private void openGPSAreaManagement(Player player) {
+		if (!player.isAdmin() || !GPSAreaAccessPolicy.areaFeaturesEnabled() || player.getCurrentArea() == null) {
+			return;
+		}
+		long areaId = player.getCurrentArea().getID();
+		boolean marked = GPSDatabase.getInstance().isGPSAreaAllowed(areaId);
+		boolean updated = marked ? GPSDatabase.getInstance().deleteGPSArea(areaId)
+				: GPSDatabase.getInstance().saveGPSArea(areaId, player.getDbID(), true);
+		if (updated) {
+			player.sendTextMessage(t().get(marked ? "TC_GPS_AREA_UNMARKED" : "TC_GPS_AREA_MARKED", player));
+		}
+		openGridView(player);
+	}
+
     /**
      * player created teleport marker
      * 
@@ -190,7 +207,7 @@ public class PluginGUI {
                 orderBy);
 
         // Add marker menu item
-        menuItems.add(
+        if (GPSAreaAccessPolicy.markerCreationDenialKey(uiPlayer, MarkerType.PRIVATE) == null) menuItems.add(
                 new MenuItem("gps-marker-create",
                         t().get("TC_MENU_ADD_MARKER_PRIVATE", uiPlayer),
                         (Player p) -> {
@@ -328,7 +345,7 @@ public class PluginGUI {
                 markersPerPage, orderBy);
 
         // Add marker menu item
-        menuItems
+        if (GPSAreaAccessPolicy.markerCreationDenialKey(uiPlayer, MarkerType.GROUP) == null) menuItems
                 .add(new MenuItem("gps-marker-create",
                         t().get("TC_MENU_ADD_MARKER_GROUP", uiPlayer),
                         (Player p) -> {
@@ -441,6 +458,11 @@ public class PluginGUI {
         if (!requireAccess(player, type)) {
             return false;
         }
+		String restrictionDenialKey = GPSAreaAccessPolicy.markerCreationDenialKey(player, type);
+		if (restrictionDenialKey != null) {
+			player.sendTextMessage(t().get(restrictionDenialKey, player));
+			return false;
+		}
         GPSEconomy economy = GPSEconomy.getInstance();
         if (economy != null && economy.markerLimitReached(player, type)) {
             player.sendTextMessage(t().get("TC_GPS_MARKER_LIMIT_REACHED", player)

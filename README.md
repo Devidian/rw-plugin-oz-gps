@@ -12,6 +12,8 @@ Main Goal for this plugin is to replace ingame teleport system with a cool gps s
 - Admins can optionally register GPS teleport-token currency and Shop token packages
 - Admins can enforce private and group marker limits with a two-step admin override
 - Admins can require total playtime before non-static GPS features become available
+- Admins can optionally restrict private, group, and global marker teleports to the current sector
+- Admins can optionally require players to be inside an administrator-marked GPS area to use or create markers
 - Players can set a name for a gps marker
 - Players can choose an icon for a gps marker
 - Players can edit marker names and icons when they are allowed to manage the marker
@@ -73,6 +75,19 @@ Marker limits use `maxPrivateMarkers` and `maxGroupMarkers`; `-1` means unlimite
 `minimumPlaytimeMinutes` defaults to `15` and blocks viewing, using, creating, editing, and deleting non-static markers until the player reaches the configured total playtime. Static markers remain available; `0` disables the restriction.
 
 Admin override is two-step: `allowAdminOverride=true` enables the feature globally, and each admin must also enable the personal GPS admin override in player plugin settings. The override bypasses costs, limits, and minimum playtime. Players can hide the GPS shortcut from `/ozt` and the inventory shortcut panel in GPS player settings. Use explicit close controls until Rising World exposes custom-overlay Escape handling.
+
+## Sector and GPS-area restrictions
+
+`restrictPrivateMarkersToSector`, `restrictGroupMarkersToSector`, and
+`restrictGlobalMarkersToSector` restrict the corresponding marker teleports to
+the current 256-chunk sector. Static markers remain sector-exempt.
+
+`requireGPSArea` restricts marker use to an administrator-marked area;
+`requireGPSAreaForMarkerCreation` applies the same rule to private and group
+marker creation. Administrators can mark or unmark their current area from the
+GPS menu while either option is active. `staticMarkersIgnoreGPSArea=true`
+(the default) keeps static markers available outside GPS areas. Disabled cards
+remain visible and show the reason rather than disappearing.
 
 ## Commands
 

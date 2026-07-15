@@ -89,6 +89,12 @@ public class PluginSettings {
 	public Integer teleportTokenPackage50Price = 900;
 
 	public boolean allowAdminOverride = false;
+	public boolean restrictPrivateMarkersToSector = false;
+	public boolean restrictGroupMarkersToSector = false;
+	public boolean restrictGlobalMarkersToSector = false;
+	public boolean requireGPSArea = false;
+	public boolean requireGPSAreaForMarkerCreation = false;
+	public boolean staticMarkersIgnoreGPSArea = true;
 
 	// END Settings
 
@@ -190,6 +196,17 @@ public class PluginSettings {
 			teleportTokenPackage50Price = Integer.parseInt(settings.getProperty("teleportTokenPackage50Price", "900"));
 
 			allowAdminOverride = settings.getProperty("allowAdminOverride", "false").contentEquals("true");
+			restrictPrivateMarkersToSector = settings.getProperty("restrictPrivateMarkersToSector", "false")
+					.contentEquals("true");
+			restrictGroupMarkersToSector = settings.getProperty("restrictGroupMarkersToSector", "false")
+					.contentEquals("true");
+			restrictGlobalMarkersToSector = settings.getProperty("restrictGlobalMarkersToSector", "false")
+					.contentEquals("true");
+			requireGPSArea = settings.getProperty("requireGPSArea", "false").contentEquals("true");
+			requireGPSAreaForMarkerCreation = settings.getProperty("requireGPSAreaForMarkerCreation", "false")
+					.contentEquals("true");
+			staticMarkersIgnoreGPSArea = settings.getProperty("staticMarkersIgnoreGPSArea", "true")
+					.contentEquals("true");
 
 			// Discord Connect settings
 			enableDiscordStaticGPSEvents = settings.getProperty("enableDiscordStaticGPSEvents", "false")
@@ -239,6 +256,28 @@ public class PluginSettings {
 				entry("minimumPlaytimeMinutes", "Minimum playtime",
 						"Required total playtime in minutes for non-static GPS features; 0 disables the restriction.",
 						minimumPlaytimeMinutes, "15", AdminSettingsType.INTEGER),
+				AdminSettingsEntry.group("sectorTeleport", "Sector teleport restrictions",
+						"Restricts selected marker teleports to the player's current sector."),
+				entry("restrictPrivateMarkersToSector", "Private markers in current sector",
+						"Allows private marker teleports only within the current sector.",
+						restrictPrivateMarkersToSector, "false", AdminSettingsType.BOOLEAN),
+				entry("restrictGroupMarkersToSector", "Group markers in current sector",
+						"Allows group marker teleports only within the current sector.",
+						restrictGroupMarkersToSector, "false", AdminSettingsType.BOOLEAN),
+				entry("restrictGlobalMarkersToSector", "Global markers in current sector",
+						"Allows global marker teleports only within the current sector.",
+						restrictGlobalMarkersToSector, "false", AdminSettingsType.BOOLEAN),
+				AdminSettingsEntry.group("gpsAreas", "GPS areas",
+						"Restricts GPS use and marker creation to administrator-marked areas."),
+				entry("requireGPSArea", "Require GPS area for teleporting",
+						"Allows GPS teleports only while the player is inside an allowed GPS area.",
+						requireGPSArea, "false", AdminSettingsType.BOOLEAN),
+				entry("requireGPSAreaForMarkerCreation", "Require GPS area for marker creation",
+						"Allows private and group marker creation only inside an allowed GPS area.",
+						requireGPSAreaForMarkerCreation, "false", AdminSettingsType.BOOLEAN),
+				entry("staticMarkersIgnoreGPSArea", "Static-marker exception",
+						"Lets static marker teleports ignore the GPS-area restriction.",
+						staticMarkersIgnoreGPSArea, "true", AdminSettingsType.BOOLEAN),
 				AdminSettingsEntry.group("markers", "Marker categories", "Marker categories exposed through GPS workflows."),
 				entry("enablePrivateMarkers", "Private markers", "Enables private marker workflows.",
 						enablePrivateMarkers, "true", AdminSettingsType.BOOLEAN),

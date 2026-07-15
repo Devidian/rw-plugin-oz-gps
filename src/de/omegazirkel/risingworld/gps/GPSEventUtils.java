@@ -18,6 +18,11 @@ public class GPSEventUtils {
 
     public static boolean executeTeleport(Player uiPlayer, Vector3f pos, String label, MarkerType type,
             boolean saveLastPosition) {
+		String restrictionDenialKey = GPSAreaAccessPolicy.teleportDenialKey(uiPlayer, pos, type);
+		if (restrictionDenialKey != null) {
+			uiPlayer.sendTextMessage(t().get(restrictionDenialKey, uiPlayer));
+			return false;
+		}
         if (!GPSAccessPolicy.canUse(uiPlayer, type)) {
             uiPlayer.sendTextMessage(t().get("TC_GPS_PLAYTIME_REQUIRED", uiPlayer)
                     .replace("PH_REQUIRED_MINUTES", String.valueOf(GPSAccessPolicy.requiredMinutes()))
