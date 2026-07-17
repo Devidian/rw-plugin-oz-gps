@@ -2,6 +2,10 @@
 
 <https://www.conventionalcommits.org/en/v1.0.0/>
 
+## [0.7.1] - 2026-07-17 | Mail bridge and localized shop offers
+
+- feat: use compatible Wallet and Shop bridge contracts for localized mail-related offers
+
 ## [0.7.0] - 2026-07-15 | GPS sector and zone access rules
 
 - feat: add configurable sector restrictions for private, group, and global marker teleports
