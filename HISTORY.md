@@ -2,6 +2,11 @@
 
 <https://www.conventionalcommits.org/en/v1.0.0/>
 
+## [0.7.2] - 2026-07-20 | Release metadata
+
+- change: publish the canonical GitHub release source used by OZ Tools to show
+  release notes and safely install GPS updates
+
 ## [0.7.1] - 2026-07-17 | Mail bridge and localized shop offers
 
 - feat: use compatible Wallet and Shop bridge contracts for localized mail-related offers
