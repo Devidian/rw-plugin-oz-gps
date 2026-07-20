@@ -5,8 +5,8 @@ import de.omegazirkel.risingworld.gps.Marker;
 import de.omegazirkel.risingworld.gps.MarkerType;
 import de.omegazirkel.risingworld.gps.GPSAccessPolicy;
 import de.omegazirkel.risingworld.tools.I18n;
-import de.omegazirkel.risingworld.tools.ui.BaseButton;
-import de.omegazirkel.risingworld.tools.ui.ButtonFactory;
+import de.omegazirkel.risingworld.tools.ui.AdvancedButton;
+import de.omegazirkel.risingworld.tools.ui.AdvancedButtonFactory;
 import de.omegazirkel.risingworld.tools.ui.CursorManager;
 import de.omegazirkel.risingworld.tools.ui.OZUIElement;
 import net.risingworld.api.callbacks.Callback;
@@ -96,7 +96,7 @@ public class CreateMarkerOverlay extends OZUIElement {
     }
 
     private UIElement setupCreateButton(Player player) {
-        BaseButton createButton = ButtonFactory.ok(t().get("TC_BTN_SAVE", player), event -> {
+        AdvancedButton createButton = AdvancedButtonFactory.ok(t().get("TC_BTN_SAVE", player), event -> {
             if (!GPSAccessPolicy.canUse(player, type)) {
                 player.sendTextMessage(t().get("TC_GPS_PLAYTIME_REQUIRED", player)
                         .replace("PH_REQUIRED_MINUTES", String.valueOf(GPSAccessPolicy.requiredMinutes()))
@@ -138,7 +138,7 @@ public class CreateMarkerOverlay extends OZUIElement {
     }
 
     private UIElement setupCancelButton(Player player) {
-        BaseButton cancelButton = ButtonFactory.cancel(t().get("TC_BTN_CANCEL", player), event -> {
+        AdvancedButton cancelButton = AdvancedButtonFactory.cancel(t().get("TC_BTN_CANCEL", player), event -> {
             close(event.getPlayer());
         });
         cancelButton.setPivot(Pivot.MiddleRight);

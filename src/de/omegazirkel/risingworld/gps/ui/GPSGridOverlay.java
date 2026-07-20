@@ -16,8 +16,8 @@ import de.omegazirkel.risingworld.gps.PluginSettings;
 import de.omegazirkel.risingworld.gps.TeleportCooldowns;
 import de.omegazirkel.risingworld.tools.I18n;
 import de.omegazirkel.risingworld.tools.ui.AssetManager;
-import de.omegazirkel.risingworld.tools.ui.BaseButton;
-import de.omegazirkel.risingworld.tools.ui.ButtonFactory;
+import de.omegazirkel.risingworld.tools.ui.AdvancedButton;
+import de.omegazirkel.risingworld.tools.ui.AdvancedButtonFactory;
 import de.omegazirkel.risingworld.tools.ui.CursorManager;
 import de.omegazirkel.risingworld.tools.ui.OZUIElement;
 import net.risingworld.api.Timer;
@@ -493,7 +493,7 @@ public class GPSGridOverlay extends OZUIElement {
 
         // marker edit/delete actions
         if (onEdit != null) {
-            BaseButton editButton = ButtonFactory.info("", event -> {
+            AdvancedButton editButton = AdvancedButtonFactory.defaultButton("", event -> {
                 onEdit.onCall(true);
             });
             editButton.setSize(30 * scaleFactor, 30 * scaleFactor, false);
@@ -511,7 +511,7 @@ public class GPSGridOverlay extends OZUIElement {
             card.addChild(editButton);
         }
         if (onDelete != null) {
-            BaseButton deleteButton = ButtonFactory.danger("", event -> {
+            AdvancedButton deleteButton = AdvancedButtonFactory.danger("", event -> {
                 onDelete.onCall(true);
             });
             deleteButton.setSize(30 * scaleFactor, 30 * scaleFactor, false);

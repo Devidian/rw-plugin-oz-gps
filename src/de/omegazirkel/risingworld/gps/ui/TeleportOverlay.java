@@ -10,8 +10,8 @@ import de.omegazirkel.risingworld.gps.Marker;
 import de.omegazirkel.risingworld.gps.MarkerPermissions;
 import de.omegazirkel.risingworld.gps.TeleportCooldowns;
 import de.omegazirkel.risingworld.tools.I18n;
-import de.omegazirkel.risingworld.tools.ui.BaseButton;
-import de.omegazirkel.risingworld.tools.ui.ButtonFactory;
+import de.omegazirkel.risingworld.tools.ui.AdvancedButton;
+import de.omegazirkel.risingworld.tools.ui.AdvancedButtonFactory;
 import de.omegazirkel.risingworld.tools.ui.CursorManager;
 import de.omegazirkel.risingworld.tools.ui.OZUIElement;
 import net.risingworld.api.Timer;
@@ -41,7 +41,7 @@ public class TeleportOverlay extends OZUIElement {
     Marker marker = null;
     private Timer cooldownTimer = null;
     private UILabel cooldownLabel = null;
-    private BaseButton teleportButton = null;
+    private AdvancedButton teleportButton = null;
 
     private static I18n t() {
         return I18n.getInstance(GPS.name);
@@ -155,7 +155,7 @@ public class TeleportOverlay extends OZUIElement {
     }
 
     private UIElement setupCancelButton(Player player, boolean twoColumnFooter) {
-        BaseButton btn = ButtonFactory.cancel(t().get("TC_BTN_CANCEL", player), event -> {
+        AdvancedButton btn = AdvancedButtonFactory.cancel(t().get("TC_BTN_CANCEL", player), event -> {
             close(event.getPlayer(), false);
             onTeleportConfirm.onCall(false);
         });
@@ -164,7 +164,7 @@ public class TeleportOverlay extends OZUIElement {
     }
 
     private UIElement setupEditButton(Player player) {
-        BaseButton btn = ButtonFactory.info(t().get("TC_BTN_EDIT", player), event -> {
+        AdvancedButton btn = AdvancedButtonFactory.defaultButton(t().get("TC_BTN_EDIT", player), event -> {
             close(player, true);
             CreateMarkerOverlay overlay = new CreateMarkerOverlay(player, editableMarkerCopy(),
                     editedMarker -> {
@@ -204,7 +204,7 @@ public class TeleportOverlay extends OZUIElement {
     }
 
     private UIElement setupTeleportButton(Player player, boolean twoColumnFooter) {
-        teleportButton = ButtonFactory.ok(t().get("TC_BTN_TELEPORT", player), event -> {
+        teleportButton = AdvancedButtonFactory.ok(t().get("TC_BTN_TELEPORT", player), event -> {
             close(event.getPlayer(), false);
             onTeleportConfirm.onCall(true);
         });
@@ -213,7 +213,7 @@ public class TeleportOverlay extends OZUIElement {
     }
 
     private UIElement setupRemoveButton(Player player) {
-        BaseButton btn = ButtonFactory.danger(t().get("TC_BTN_REMOVE", player), event -> {
+        AdvancedButton btn = AdvancedButtonFactory.danger(t().get("TC_BTN_REMOVE", player), event -> {
             deleteMarker(event.getPlayer());
         });
         styleFooterButton(btn, true);
@@ -315,7 +315,7 @@ public class TeleportOverlay extends OZUIElement {
         }
     }
 
-    private void styleFooterButton(BaseButton btn, boolean twoColumnFooter) {
+    private void styleFooterButton(AdvancedButton btn, boolean twoColumnFooter) {
         btn.setPivot(Pivot.UpperLeft);
         btn.style.display.set(DisplayStyle.Flex);
         btn.style.justifyContent.set(Justify.Center);
