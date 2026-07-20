@@ -45,10 +45,6 @@ public class PluginSettings {
 	public boolean enableQuaternarySpawn = true;
 
 	// Discord Connect settings
-	public boolean enableDiscordStaticGPSEvents = false;
-	public boolean enableDiscordPrivateGPSEvents = false;
-	public boolean enableDiscordGroupGPSEvents = false;
-	public boolean enableDiscordGlobalGPSEvents = false;
 	public long discordStaticGPSChannelId = 0;
 	public long discordPrivateGPSChannelId = 0;
 	public long discordGroupGPSChannelId = 0;
@@ -209,14 +205,6 @@ public class PluginSettings {
 					.contentEquals("true");
 
 			// Discord Connect settings
-			enableDiscordStaticGPSEvents = settings.getProperty("enableDiscordStaticGPSEvents", "false")
-					.contentEquals("true");
-			enableDiscordPrivateGPSEvents = settings.getProperty("enableDiscordPrivateGPSEvents", "false")
-					.contentEquals("true");
-			enableDiscordGroupGPSEvents = settings.getProperty("enableDiscordGroupGPSEvents", "false")
-					.contentEquals("true");
-			enableDiscordGlobalGPSEvents = settings.getProperty("enableDiscordGlobalGPSEvents", "false")
-					.contentEquals("true");
 			discordStaticGPSChannelId = Long.parseLong(settings.getProperty("discordStaticGPSChannelId", "0"));
 			discordPrivateGPSChannelId = Long.parseLong(settings.getProperty("discordPrivateGPSChannelId", "0"));
 			discordGroupGPSChannelId = Long.parseLong(settings.getProperty("discordGroupGPSChannelId", "0"));
@@ -378,18 +366,6 @@ public class PluginSettings {
 						"Price for the fifty-token GPS Shop package.", teleportTokenPackage50Price, "900",
 						AdminSettingsType.INTEGER),
 				AdminSettingsEntry.group("discord", "Discord", "Optional Discord event forwarding for GPS events."),
-				entry("enableDiscordStaticGPSEvents", "Static GPS events",
-						"Forwards static GPS events to Discord.", enableDiscordStaticGPSEvents, "false",
-						AdminSettingsType.BOOLEAN),
-				entry("enableDiscordPrivateGPSEvents", "Private GPS events",
-						"Forwards private marker GPS events to Discord.", enableDiscordPrivateGPSEvents, "false",
-						AdminSettingsType.BOOLEAN),
-				entry("enableDiscordGroupGPSEvents", "Group GPS events",
-						"Forwards group marker GPS events to Discord.", enableDiscordGroupGPSEvents, "false",
-						AdminSettingsType.BOOLEAN),
-				entry("enableDiscordGlobalGPSEvents", "Global GPS events",
-						"Forwards global marker GPS events to Discord.", enableDiscordGlobalGPSEvents, "false",
-						AdminSettingsType.BOOLEAN),
 				entry("discordStaticGPSChannelId", "Static GPS channel",
 						"Discord channel id for static GPS events; 0 uses default behavior.",
 						discordStaticGPSChannelId, "0", AdminSettingsType.STRING),

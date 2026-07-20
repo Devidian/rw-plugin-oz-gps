@@ -2,6 +2,10 @@
 
 <https://www.conventionalcommits.org/en/v1.0.0/>
 
+## [0.7.3] - 2026-07-20 | Discord channel settings
+
+- change: Discord GPS events use their configured channel ID directly
+
 ## [0.7.2] - 2026-07-20 | Release metadata
 
 - change: publish the canonical GitHub release source used by OZ Tools to show

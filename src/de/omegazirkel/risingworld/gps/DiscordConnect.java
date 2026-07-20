@@ -59,22 +59,22 @@ public class DiscordConnect {
     }
 
     public static void sendStaticGPSEventMessage(String message) {
-        if (s.enableDiscordStaticGPSEvents && s.discordStaticGPSChannelId > 0)
+        if (s.discordStaticGPSChannelId > 0)
             sendDiscordMessage(message, s.discordStaticGPSChannelId);
     }
 
     public static void sendPrivateGPSEventMessage(String message) {
-        if (s.enableDiscordPrivateGPSEvents && s.discordPrivateGPSChannelId > 0)
+        if (s.discordPrivateGPSChannelId > 0)
             sendDiscordMessage(message, s.discordPrivateGPSChannelId);
     }
 
     public static void sendGroupGPSEventMessage(String message) {
-        if (s.enableDiscordGroupGPSEvents && s.discordGroupGPSChannelId > 0)
+        if (s.discordGroupGPSChannelId > 0)
             sendDiscordMessage(message, s.discordGroupGPSChannelId);
     }
 
     public static void sendGlobalGPSEventMessage(String message) {
-        if (s.enableDiscordGlobalGPSEvents && s.discordGlobalGPSChannelId > 0)
+        if (s.discordGlobalGPSChannelId > 0)
             sendDiscordMessage(message, s.discordGlobalGPSChannelId);
     }
 
