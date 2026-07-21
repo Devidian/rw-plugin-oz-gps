@@ -12,7 +12,12 @@ import de.omegazirkel.risingworld.tools.ui.OZUIElement;
 import net.risingworld.api.callbacks.Callback;
 import net.risingworld.api.objects.Player;
 import net.risingworld.api.ui.UIElement;
+import net.risingworld.api.ui.style.Align;
+import net.risingworld.api.ui.style.DisplayStyle;
+import net.risingworld.api.ui.style.FlexDirection;
+import net.risingworld.api.ui.style.Justify;
 import net.risingworld.api.ui.style.Pivot;
+import net.risingworld.api.ui.style.Unit;
 
 public class CreateMarkerOverlay extends OZUIElement {
 
@@ -89,6 +94,10 @@ public class CreateMarkerOverlay extends OZUIElement {
         actionsPanel.setBorderColor(GOLD_R, GOLD_G, GOLD_B, 0.6f);
         actionsPanel.setBorder(1);
         actionsPanel.setBorderEdgeRadius(6, false);
+        actionsPanel.style.display.set(DisplayStyle.Flex);
+        actionsPanel.style.flexDirection.set(FlexDirection.Row);
+        actionsPanel.style.justifyContent.set(Justify.Center);
+        actionsPanel.style.alignItems.set(Align.Center);
 
         actionsPanel.addChild(setupCreateButton(player));
         actionsPanel.addChild(setupCancelButton(player));
@@ -131,20 +140,27 @@ public class CreateMarkerOverlay extends OZUIElement {
 
         });
 
-        createButton.setPivot(Pivot.MiddleLeft);
-        createButton.setPosition(51, 50, true);
-        createButton.setBorderEdgeRadius(4, false);
-        return createButton;
+        return styleActionButton(createButton);
     }
 
     private UIElement setupCancelButton(Player player) {
         AdvancedButton cancelButton = AdvancedButtonFactory.cancel(t().get("TC_BTN_CANCEL", player), event -> {
             close(event.getPlayer());
         });
-        cancelButton.setPivot(Pivot.MiddleRight);
-        cancelButton.setPosition(49, 50, true);
-        cancelButton.setBorderEdgeRadius(4, false);
-        return cancelButton;
+        return styleActionButton(cancelButton);
+    }
+
+    private UIElement styleActionButton(AdvancedButton button) {
+        button.setPivot(Pivot.UpperLeft);
+        button.style.display.set(DisplayStyle.Flex);
+        button.style.justifyContent.set(Justify.Center);
+        button.style.alignItems.set(Align.Center);
+        button.style.width.set(42, Unit.Percent);
+        button.style.height.set(36, Unit.Pixel);
+        button.style.marginLeft.set(2, Unit.Pixel);
+        button.style.marginRight.set(2, Unit.Pixel);
+        button.setBorderEdgeRadius(4, false);
+        return button;
     }
 
     public void close(Player player) {

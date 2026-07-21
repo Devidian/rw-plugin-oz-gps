@@ -2,6 +2,12 @@
 
 <https://www.conventionalcommits.org/en/v1.0.0/>
 
+## [0.7.5] - 2026-07-21 | Marker dialog stability
+
+- fix: keep Save and Abort separated in marker create and edit dialogs
+- fix: remove the Discord Connect build dependency while preserving optional bridge behavior
+- change: update the shared OZ Tools dependency to version 0.23.1
+
 ## [0.7.4] - 2026-07-20 | Advanced button controls
 
 - change: use the stable shared OZ button controls in GPS overlays
