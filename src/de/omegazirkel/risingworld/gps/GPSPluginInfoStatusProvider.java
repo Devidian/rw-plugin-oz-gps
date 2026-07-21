@@ -42,8 +42,8 @@ public class GPSPluginInfoStatusProvider implements PluginInfoStatusProvider {
                 .replace("PH_PLAYTIME_ACCESS", GPSAccessPolicy.canUseNonStatic(player) ? "available" : "locked")
                 .replace("PH_WALLET_STATUS", available(economy != null && economy.walletAvailable()))
                 .replace("PH_SHOP_STATUS", available(economy != null && economy.shopAvailable()))
-                .replace("PH_LANGUAGE", player.getLanguage() + " / " + player.getSystemLanguage())
-                .replace("PH_USEDLANG", t().getLanguageUsed(player.getSystemLanguage()))
+                .replace("PH_LANGUAGE", player.getLanguage() + " / " + de.omegazirkel.risingworld.OZTools.getPlayerLanguage(player))
+                .replace("PH_USEDLANG", t().getLanguageUsed(de.omegazirkel.risingworld.OZTools.getPlayerLanguage(player)))
                 .replace("PH_LANG_AVAILABLE", t().getLanguageAvailable());
     }
 
