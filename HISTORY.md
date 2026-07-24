@@ -4,8 +4,12 @@
 
 ## Unreleased
 
+## [0.7.8] - 2026-07-24 | Shared runtime bridges
+
 - fix: send GPS Discord events in the configured Discord bot language
 - refactor: use the synchronized optional Discord bridge
+- refactor: keep the plugin entry point limited to lifecycle wiring and event delegation
+- change: update the shared OZ Tools dependency to version 0.23.8
 
 ## [0.7.7] - 2026-07-24 | Marker action icons
 
