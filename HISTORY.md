@@ -2,6 +2,11 @@
 
 <https://www.conventionalcommits.org/en/v1.0.0/>
 
+## Unreleased
+
+- fix: send GPS Discord events in the configured Discord bot language
+- refactor: use the synchronized optional Discord bridge
+
 ## [0.7.7] - 2026-07-24 | Marker action icons
 
 - fix: render dedicated edit and delete icons on marker action buttons

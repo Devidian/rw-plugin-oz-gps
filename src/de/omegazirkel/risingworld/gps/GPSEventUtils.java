@@ -90,7 +90,7 @@ public class GPSEventUtils {
             staticMsgKey = "TC_DISCORD_GPS_STATIC_EVENT_NAME_ONLY";
         }
 
-        DiscordConnect.sendStaticGPSEventMessage(t().get(staticMsgKey, p)
+        DiscordConnect.sendStaticGPSEventMessage(t().get(staticMsgKey, DiscordConnect.botLang())
                 .replace("PH_PLAYER_NAME", p.getName())
                 .replace("PH_GPS_NAME", gpsName)
                 .replace("PH_GPS_POS", targetPos.toString()));
@@ -109,7 +109,7 @@ public class GPSEventUtils {
         }
 
         DiscordConnect.sendPrivateGPSEventMessage(
-                t().get(msgKey, p)
+                t().get(msgKey, DiscordConnect.botLang())
                         .replace("PH_PLAYER_NAME", p.getName())
                         .replace("PH_GPS_NAME", gpsName)
                         .replace("PH_GPS_POS", targetPos.toString()));
@@ -125,7 +125,7 @@ public class GPSEventUtils {
         } else if (!s.discordGPSIncludeMarkerPosition) {
             groupMsgKey = "TC_DISCORD_GPS_GROUP_EVENT_NAME_ONLY";
         }
-        DiscordConnect.sendGroupGPSEventMessage(t().get(groupMsgKey, p)
+        DiscordConnect.sendGroupGPSEventMessage(t().get(groupMsgKey, DiscordConnect.botLang())
                 .replace("PH_PLAYER_NAME", p.getName())
                 .replace("PH_GPS_NAME", gpsName)
                 .replace("PH_GPS_POS", targetPos.toString()));
@@ -141,7 +141,7 @@ public class GPSEventUtils {
         } else if (!s.discordGPSIncludeMarkerPosition) {
             globalMsgKey = "TC_DISCORD_GPS_GLOBAL_EVENT_NAME_ONLY";
         }
-        DiscordConnect.sendGlobalGPSEventMessage(t().get(globalMsgKey, p)
+        DiscordConnect.sendGlobalGPSEventMessage(t().get(globalMsgKey, DiscordConnect.botLang())
                 .replace("PH_PLAYER_NAME", p.getName())
                 .replace("PH_GPS_NAME", gpsName)
                 .replace("PH_GPS_POS", targetPos.toString()));
