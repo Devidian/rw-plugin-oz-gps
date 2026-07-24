@@ -2,6 +2,11 @@
 
 <https://www.conventionalcommits.org/en/v1.0.0/>
 
+## [0.7.7] - 2026-07-24 | Marker action icons
+
+- fix: render dedicated edit and delete icons on marker action buttons
+- change: update the shared OZ Tools dependency to version 0.23.7
+
 ## [0.7.5] - 2026-07-21 | Marker dialog stability
 
 - fix: keep Save and Abort separated in marker create and edit dialogs

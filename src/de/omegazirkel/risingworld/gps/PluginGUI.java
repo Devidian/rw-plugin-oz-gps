@@ -75,6 +75,7 @@ public class PluginGUI {
         AssetManager.loadIconFromPlugin(p, "coin-gps-token");
 
         AssetManager.loadIconFromPlugin(p, "gps-marker-delete");
+        AssetManager.loadIconFromPlugin(p, "gps-marker-edit");
 
         // Marker icons
 

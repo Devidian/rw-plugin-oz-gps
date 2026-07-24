@@ -506,8 +506,7 @@ public class GPSGridOverlay extends OZUIElement {
             editButton.style.paddingTop.set(5);
             editButton.style.paddingLeft.set(5);
             editButton.style.paddingRight.set(5);
-            editButton.style.backgroundImage.set(AssetManager.getIcon(player, "rename"));
-            editButton.style.backgroundImageScaleMode.set(ScaleMode.ScaleToFit);
+            editButton.setSurfaceIcon(AssetManager.getIcon(player, "gps-marker-edit"));
             card.addChild(editButton);
         }
         if (onDelete != null) {
@@ -524,8 +523,7 @@ public class GPSGridOverlay extends OZUIElement {
             deleteButton.style.paddingTop.set(5);
             deleteButton.style.paddingLeft.set(5);
             deleteButton.style.paddingRight.set(5);
-            deleteButton.style.backgroundImage.set(AssetManager.getIcon(player, "gps-marker-delete"));
-            deleteButton.style.backgroundImageScaleMode.set(ScaleMode.ScaleToFit);
+            deleteButton.setSurfaceIcon(AssetManager.getIcon(player, "gps-marker-delete"));
             card.addChild(deleteButton);
         }
 
