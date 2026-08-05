@@ -2,7 +2,9 @@
 
 <https://www.conventionalcommits.org/en/v1.0.0/>
 
-## Unreleased
+## [0.7.9] - 2026-08-05 | CI maintenance
+
+- build: maintain the GitHub Actions release workflow.
 
 ## [0.7.8] - 2026-07-24 | Shared runtime bridges
 
