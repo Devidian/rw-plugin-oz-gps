@@ -10,7 +10,7 @@ import net.risingworld.api.utils.Vector3i;
 
 public class GPSEconomy {
     private static final String PLUGIN_IDENTIFIER = "OZ - GPS";
-    private static final int SECTOR_SIZE_CHUNKS = 32;
+    private static final int SECTOR_SIZE_CHUNKS = 256;
     private static GPSEconomy instance;
 
     private final WalletBridge wallet;
@@ -176,21 +176,17 @@ public class GPSEconomy {
             return 0L;
         }
         int baseCost = settings.travelDistanceCostPerBlock;
-        Vector2i sourceSector = player.getSectorPosition();
         Vector3i source = player.getChunkPosition();
         if (source == null) {
             source = ChunkUtils.getChunkPosition(player.getPosition());
         }
-        if (sourceSector == null && source != null) {
-            sourceSector = new Vector2i(sectorCoordinate(source.x), sectorCoordinate(source.z));
-        }
         Vector3i target = ChunkUtils.getChunkPosition(targetPosition);
-        if (sourceSector == null || target == null) {
+        if (source == null || target == null) {
             return 0L;
         }
-        long sectorDistance = Math.abs((long) sourceSector.x - sectorCoordinate(target.x))
-                + Math.abs((long) sourceSector.y - sectorCoordinate(target.z));
-        return baseCost + sectorDistance * baseCost;
+        long chunkDistance = Math.abs((long) source.x - target.x) + Math.abs((long) source.z - target.z);
+        if (chunkDistance == 0L) return 0L;
+        return Math.max(1L, (long) Math.ceil((chunkDistance / (double) SECTOR_SIZE_CHUNKS) * baseCost));
     }
 
     private static int sectorCoordinate(int chunkCoordinate) {

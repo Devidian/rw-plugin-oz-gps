@@ -72,7 +72,7 @@ public class PluginSettings {
 	public Integer useGlobalMarkerCost = 10;
 	public String travelCostMode = "disabled";
 	public String travelCostCurrencyIdentifier = "";
-	public Integer travelDistanceCostPerBlock = 1;
+	public Integer travelDistanceCostPerBlock = 100;
 
 	public boolean enableTeleportTokens = false;
 	public String teleportTokenCurrencyIdentifier = "GPSTP";
@@ -178,7 +178,7 @@ public class PluginSettings {
 			useGlobalMarkerCost = Integer.parseInt(settings.getProperty("useGlobalMarkerCost", "10"));
 			travelCostMode = settings.getProperty("travelCostMode", "disabled").trim().toLowerCase();
 			travelCostCurrencyIdentifier = settings.getProperty("travelCostCurrencyIdentifier", "");
-			travelDistanceCostPerBlock = Integer.parseInt(settings.getProperty("travelDistanceCostPerBlock", "1"));
+			travelDistanceCostPerBlock = Integer.parseInt(settings.getProperty("travelDistanceCostPerBlock", "100"));
 
 			enableTeleportTokens = settings.getProperty("enableTeleportTokens", "false").contentEquals("true");
 			teleportTokenCurrencyIdentifier = settings.getProperty("teleportTokenCurrencyIdentifier", "GPSTP");
@@ -319,7 +319,7 @@ public class PluginSettings {
 						travelCostCurrencyIdentifier, "", AdminSettingsType.STRING),
 				entry("travelDistanceCostPerBlock", "Distance cost base",
 						"Base cost for sector-distance pricing when travelCostMode=distance.",
-						travelDistanceCostPerBlock, "1", AdminSettingsType.INTEGER),
+						travelDistanceCostPerBlock, "100", AdminSettingsType.INTEGER),
 				entry("useStaticMarkerCost", "Static travel cost", "Wallet cost for using static markers.",
 						useStaticMarkerCost, "10", AdminSettingsType.INTEGER),
 				entry("usePrivateMarkerCost", "Private travel cost", "Wallet cost for using private markers.",

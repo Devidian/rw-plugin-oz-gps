@@ -2,6 +2,11 @@
 
 <https://www.conventionalcommits.org/en/v1.0.0/>
 
+## [0.7.10] - 2026-08-06 | Distance travel costs
+
+- fix: calculate distance travel costs from 256-chunk sector distance, with zero cost in the same chunk and rounded pricing otherwise
+- change: raise the default distance-cost base to 100
+
 ## [0.7.9] - 2026-08-05 | CI maintenance
 
 - build: maintain the GitHub Actions release workflow.
