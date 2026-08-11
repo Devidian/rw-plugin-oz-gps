@@ -18,6 +18,7 @@ Main Goal for this plugin is to replace ingame teleport system with a cool gps s
 - Players can choose an icon for a gps marker
 - Players can edit marker names and icons when they are allowed to manage the marker
 - Players can remove gps markers with an optional confirmation dialog
+- Administrators can manage globally visible Warp Marker server pins that transfer players to a configured `IP:Port` target; these pins do not use local coordinates, teleport costs, marker limits, cooldowns, or GPS-area restrictions and offer fifteen dedicated planet/moon icons per theme
 - Players can create custom teleport targets
   - gps can be private, only for the user himself
   - gps can be restricted to group, players in the same group will see and manage it

@@ -15,6 +15,7 @@ public class GPSDatabase {
     private final Connection db;
     static private final String tableName = "marker";
     static private final String gpsAreaTableName = "gps_area";
+    static private final String serverPinTableName = "server_pin";
 
     public record GPSArea(long areaId, int adminId, long createdAt, boolean allowGPS) {
     }
@@ -36,6 +37,10 @@ public class GPSDatabase {
             return null;
         }
         return instance;
+    }
+
+    static GPSDatabase createForTesting(Connection database) {
+        return new GPSDatabase(database);
     }
 
     // --- Query Helpers -----------------------------------------------------
@@ -177,6 +182,47 @@ public class GPSDatabase {
 
     public boolean deleteGPSArea(long areaId) {
         return areaId > 0L && executeUpdate("DELETE FROM " + gpsAreaTableName + " WHERE area_id=" + areaId + ";");
+    }
+
+    public List<ServerPin> getServerPins() {
+        List<ServerPin> pins = new ArrayList<>();
+        try (Statement statement = db.createStatement(); ResultSet result = statement.executeQuery(
+                "SELECT id, creator_id, created_at, name, icon, address, password FROM " + serverPinTableName
+                        + " ORDER BY created_at DESC;")) {
+            while (result.next()) {
+                pins.add(new ServerPin(result.getInt("id"), result.getInt("creator_id"), result.getLong("created_at"),
+                        result.getString("name"), result.getString("icon"), result.getString("address"),
+                        result.getString("password")));
+            }
+        } catch (Exception e) {
+            GPS.logger().error("server pin lookup failed: " + e.getMessage());
+        }
+        return pins;
+    }
+
+    public boolean saveServerPin(ServerPin pin) {
+        if (!ServerPinAddress.isValid(pin.getAddress())) return false;
+        try {
+            if (pin.getId() == null) {
+                if (!executeUpdate("INSERT INTO " + serverPinTableName + " (creator_id, created_at, name, icon, address, password) VALUES ("
+                        + pin.getCreatorId() + ", " + pin.getCreatedAt() + ", " + q(pin.getName()) + ", " + q(pin.getIcon())
+                        + ", " + q(pin.getAddress()) + ", " + q(pin.getPassword()) + ");")) return false;
+                try (Statement statement = db.createStatement(); ResultSet result = statement.executeQuery("SELECT last_insert_rowid();")) {
+                    if (result.next()) pin.setId(result.getInt(1));
+                }
+            } else {
+                if (!executeUpdate("UPDATE " + serverPinTableName + " SET name=" + q(pin.getName()) + ", icon=" + q(pin.getIcon())
+                        + ", address=" + q(pin.getAddress()) + ", password=" + q(pin.getPassword()) + " WHERE id=" + pin.getId() + ";")) return false;
+            }
+            return true;
+        } catch (Exception e) {
+            GPS.logger().error("server pin save failed: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean deleteServerPin(int id) {
+        return id > 0 && executeUpdate("DELETE FROM " + serverPinTableName + " WHERE id=" + id + ";");
     }
 
     private String managementWhereClause(Marker marker, Player player) {
@@ -355,6 +401,15 @@ public class GPSDatabase {
                 + "allow_gps INTEGER NOT NULL DEFAULT 1"
                 + ");");
         execute("CREATE INDEX IF NOT EXISTS idx_gps_area_allow_gps ON " + gpsAreaTableName + " (allow_gps);");
+        execute("CREATE TABLE IF NOT EXISTS " + serverPinTableName + " ("
+                + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + "creator_id INTEGER NOT NULL,"
+                + "created_at BIGINT NOT NULL,"
+                + "name TEXT NOT NULL,"
+                + "icon TEXT NOT NULL,"
+                + "address TEXT NOT NULL,"
+                + "password TEXT"
+                + ");");
     }
 
     private void execute(String sql) {

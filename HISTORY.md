@@ -2,6 +2,11 @@
 
 <https://www.conventionalcommits.org/en/v1.0.0/>
 
+## [0.8.0] - 2026-08-11 | Server Warp
+
+- feat: add administrator-managed Warp Marker server pins with dedicated SQLite persistence and cross-server transfer feedback
+- feat: add modern and classic world-transfer, server-pin, and fifteen planet/moon marker assets
+
 ## [0.7.10] - 2026-08-06 | Distance travel costs
 
 - fix: calculate distance travel costs from 256-chunk sector distance, with zero cost in the same chunk and rounded pricing otherwise

@@ -53,6 +53,11 @@ public class PluginGUI {
             "marker-space-station",
             "marker-factory-train-station");
 
+    public static final List<String> serverPinKeys = Arrays.asList(
+            "marker-server-1", "marker-server-2", "marker-server-3", "marker-server-4", "marker-server-5",
+            "marker-server-6", "marker-server-7", "marker-server-8", "marker-server-9", "marker-server-10",
+            "marker-server-11", "marker-server-12", "marker-server-13", "marker-server-14", "marker-server-15");
+
     private static I18n t() {
         return I18n.getInstance(GPS.name);
     }
@@ -66,6 +71,9 @@ public class PluginGUI {
         AssetManager.loadIconFromPlugin(p, "next-page"); // next page
         AssetManager.loadIconFromPlugin(p, "previous-page"); // previous page
         AssetManager.loadIconFromPlugin(p, "menu-global-marker");
+        AssetManager.loadIconFromPlugin(p, "menu-server-warp");
+        AssetManager.loadIconFromPlugin(p, "gps-server-pin");
+        AssetManager.loadIconFromPlugin(p, "gps-server-pin-create");
         AssetManager.loadIconFromPlugin(p, "menu-marker-group-alt");
         AssetManager.loadIconFromPlugin(p, "menu-marker-group");
         AssetManager.loadIconFromPlugin(p, "oz-gps");
@@ -82,6 +90,7 @@ public class PluginGUI {
         for (String key : markerKeys) {
             AssetManager.loadIconFromPlugin(p, key);
         }
+        for (String key : serverPinKeys) AssetManager.loadIconFromPlugin(p, key);
 
         return getInstance();
     }

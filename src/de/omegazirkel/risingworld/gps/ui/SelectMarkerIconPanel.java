@@ -1,5 +1,7 @@
 package de.omegazirkel.risingworld.gps.ui;
 
+import java.util.List;
+
 import de.omegazirkel.risingworld.GPS;
 import de.omegazirkel.risingworld.gps.PluginGUI;
 import de.omegazirkel.risingworld.tools.I18n;
@@ -37,6 +39,10 @@ public class SelectMarkerIconPanel extends OZUIElement {
     }
 
     public SelectMarkerIconPanel(Player uiPlayer, String selectedKey) {
+        this(uiPlayer, selectedKey, PluginGUI.markerKeys);
+    }
+
+    public SelectMarkerIconPanel(Player uiPlayer, String selectedKey, List<String> keys) {
         super();
         this.setSize(35, 70, true);
         this.setPivot(Pivot.MiddleCenter);
@@ -51,6 +57,7 @@ public class SelectMarkerIconPanel extends OZUIElement {
         this.style.paddingRight.set(5);
         this.uiPlayer = uiPlayer;
         this.selectedKey = selectedKey;
+        this.keys = keys;
 
         this.setupHeaderSection();
         this.setupIconGridSection();
@@ -93,7 +100,7 @@ public class SelectMarkerIconPanel extends OZUIElement {
         iconGrid.style.flexWrap.set(Wrap.Wrap);
         iconGrid.style.justifyContent.set(Justify.FlexStart);
 
-        for (String key : PluginGUI.markerKeys) {
+        for (String key : keys) {
             MarkerIconButton iconBtn = new MarkerIconButton(uiPlayer, key);
 
             if (key.equals(selectedKey)) {
@@ -115,5 +122,7 @@ public class SelectMarkerIconPanel extends OZUIElement {
     public String getSelectedKey() {
         return selectedKey;
     }
+
+    private final List<String> keys;
 
 }

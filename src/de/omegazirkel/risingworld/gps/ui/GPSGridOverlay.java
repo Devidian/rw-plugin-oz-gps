@@ -13,6 +13,8 @@ import de.omegazirkel.risingworld.gps.Marker;
 import de.omegazirkel.risingworld.gps.MarkerPermissions;
 import de.omegazirkel.risingworld.gps.MarkerType;
 import de.omegazirkel.risingworld.gps.PluginSettings;
+import de.omegazirkel.risingworld.gps.ServerPin;
+import de.omegazirkel.risingworld.gps.ServerPinAddress;
 import de.omegazirkel.risingworld.gps.TeleportCooldowns;
 import de.omegazirkel.risingworld.tools.I18n;
 import de.omegazirkel.risingworld.tools.ui.AssetManager;
@@ -62,6 +64,7 @@ public class GPSGridOverlay extends OZUIElement {
     private UILabel markerLimitStatusLabel = null;
     private UIScrollView gridScrollView = null;
     private MarkerType currentMarkerType = MarkerType.PRIVATE;
+    private boolean serverWarpTab;
     private Timer cooldownTimer = null;
     private boolean previousNonStaticAccess;
 
@@ -128,6 +131,7 @@ public class GPSGridOverlay extends OZUIElement {
         // global marker selection
         if (GPSAccessPolicy.canUseNonStatic(player) && s.enableGlobalMarkers)
             tabSelectionHeader.addChild(createTab("TC_MENU_GLOBAL_MARKER", MarkerType.GLOBAL, player));
+        tabSelectionHeader.addChild(createServerWarpTab(player));
         // close button
         tabSelectionHeader.addChild(setupCloseTab(player));
 
@@ -136,15 +140,16 @@ public class GPSGridOverlay extends OZUIElement {
     private OZUIElement createTab(String labelKey, MarkerType type, Player player) {
 
         OZUIElement tab = new OZUIElement();
-        tab.setSize(20, 100, true);
+        tab.setSize(16.66f, 100, true);
         tab.setPivot(Pivot.UpperLeft);
-        if (type == currentMarkerType) {
+        if (!serverWarpTab && type == currentMarkerType) {
             tab.setBackgroundColor(0.2f, 0.6f, 1.0f, 0.8f);
         } else {
             tab.setBackgroundColor(0.1f, 0.1f, 0.1f, 0.6f);
         }
         tab.setClickable(true);
         tab.setClickAction(event -> {
+            serverWarpTab = false;
             currentMarkerType = type;
             refreshHeader(player);
             refreshGrid(player);
@@ -177,6 +182,22 @@ public class GPSGridOverlay extends OZUIElement {
         label.setPivot(Pivot.LowerLeft);
         label.setPosition(0, 100, true);
         label.setTextAlign(TextAnchor.MiddleCenter);
+        tab.addChild(label);
+        return tab;
+    }
+
+    private OZUIElement createServerWarpTab(Player player) {
+        OZUIElement tab = new OZUIElement();
+        tab.setSize(16.66f, 100, true); tab.setPivot(Pivot.UpperLeft);
+        tab.setBackgroundColor(serverWarpTab ? .2f : .1f, serverWarpTab ? .6f : .1f, serverWarpTab ? 1f : .1f, serverWarpTab ? .8f : .6f);
+        tab.setClickable(true);
+        tab.setClickAction(event -> { serverWarpTab = true; refreshHeader(player); refreshGrid(player); refreshCooldownStatus(player); });
+        OZUIElement icon = new OZUIElement();
+        icon.setSize(100, 70, true); icon.setPivot(Pivot.UpperLeft); icon.setPosition(0, 5, true);
+        icon.style.backgroundImage.set(AssetManager.getIcon(player, "menu-server-warp")); icon.style.backgroundImageScaleMode.set(ScaleMode.ScaleToFit);
+        tab.addChild(icon);
+        UILabel label = new UILabel(t().get("TC_MENU_SERVER_WARP", player));
+        label.setSize(100, 25, true); label.setFontSize(14); label.setPivot(Pivot.LowerLeft); label.setPosition(0, 100, true); label.setTextAlign(TextAnchor.MiddleCenter);
         tab.addChild(label);
         return tab;
     }
@@ -226,7 +247,41 @@ public class GPSGridOverlay extends OZUIElement {
     }
 
     private void refreshGrid(Player player) {
+        if (serverWarpTab) { refreshServerPins(player); return; }
         refreshGrid(currentMarkerType, player);
+    }
+
+    private void refreshServerPins(Player player) {
+        gridScrollView.removeAllChilds();
+        UIElement iconGrid = new UIElement();
+        iconGrid.style.width.set(100, Unit.Percent); iconGrid.style.height.set(100, Unit.Percent);
+        iconGrid.style.display.set(DisplayStyle.Flex); iconGrid.style.flexDirection.set(FlexDirection.Row); iconGrid.style.flexWrap.set(Wrap.Wrap); iconGrid.style.justifyContent.set(Justify.FlexStart);
+        gridScrollView.addChild(iconGrid);
+        if (player.isAdmin()) iconGrid.addChild(createAddMarkerCard(player, t().get("TC_MENU_ADD_SERVER_PIN", player), "gps-server-pin-create", ignored -> openServerPinEditor(player, null)));
+        for (ServerPin pin : GPSDatabase.getInstance().getServerPins()) iconGrid.addChild(createServerPinCard(player, pin));
+    }
+
+    private UIElement createServerPinCard(Player player, ServerPin pin) {
+        Callback<Boolean> onEdit = player.isAdmin() ? ignored -> openServerPinEditor(player, pin) : null;
+        Callback<Boolean> onDelete = player.isAdmin() ? ignored -> {
+            if (GPSDatabase.getInstance().deleteServerPin(pin.getId())) { player.sendTextMessage(t().get("TC_GPS_SERVER_PIN_DELETED", player).replace("PH_SERVER_PIN_NAME", pin.getName())); refreshServerPins(player); }
+        } : null;
+        return createMarkerCard(player, pin.getName(), AssetManager.getIcon(player, pin.getIcon()), onDelete, onEdit, ignored -> connectToServer(player, pin));
+    }
+
+    private void openServerPinEditor(Player player, ServerPin pin) {
+        ServerPinOverlay overlay = new ServerPinOverlay(player, pin, saved -> {
+            if (GPSDatabase.getInstance().saveServerPin(saved)) {
+                player.sendTextMessage(t().get(pin == null ? "TC_GPS_SERVER_PIN_CREATED" : "TC_GPS_SERVER_PIN_UPDATED", player).replace("PH_SERVER_PIN_NAME", saved.getName()));
+            } else player.sendTextMessage(t().get("TC_GPS_SERVER_PIN_ADDRESS_INVALID", player));
+            resume(player); CursorManager.show(player); player.addUIElement(this); startCooldownTimer(player); refreshServerPins(player);
+        });
+        player.setAttribute("gps-ui-overlay", overlay); stopCooldownTimer(); player.removeUIElement(this); player.addUIElement(overlay);
+    }
+
+    private void connectToServer(Player player, ServerPin pin) {
+        if (!ServerPinAddress.isValid(pin.getAddress())) { player.sendTextMessage(t().get("TC_GPS_SERVER_PIN_ADDRESS_INVALID", player)); return; }
+        player.connectToOtherServer(pin.getAddress(), pin.getPassword(), success -> player.sendTextMessage(t().get(Boolean.TRUE.equals(success) ? "TC_GPS_SERVER_WARP_SUCCESS" : "TC_GPS_SERVER_WARP_FAILED", player).replace("PH_SERVER_PIN_NAME", pin.getName())));
     }
 
     private void refreshGrid(MarkerType type, Player uiPlayer) {
@@ -624,6 +679,10 @@ public class GPSGridOverlay extends OZUIElement {
     }
 
     private OZUIElement createAddMarkerCard(Player player, String labelText, Callback<Boolean> onCreateNewMarker) {
+        return createAddMarkerCard(player, labelText, "gps-marker-create", onCreateNewMarker);
+    }
+
+    private OZUIElement createAddMarkerCard(Player player, String labelText, String iconKey, Callback<Boolean> onCreateNewMarker) {
         OZUIElement card = new OZUIElement();
         card.setSize(250 * scaleFactor, 300 * scaleFactor, false);
         card.setPivot(Pivot.UpperLeft);
@@ -642,7 +701,7 @@ public class GPSGridOverlay extends OZUIElement {
         addIcon.setSize(240 * scaleFactor, 240 * scaleFactor, false);
         addIcon.setPivot(Pivot.UpperLeft);
         addIcon.setPosition(5 * scaleFactor, 5 * scaleFactor, false);
-        addIcon.style.backgroundImage.set(AssetManager.getIcon(player, "gps-marker-create"));
+        addIcon.style.backgroundImage.set(AssetManager.getIcon(player, iconKey));
         addIcon.setClickable(true);
         addIcon.setClickAction(event -> {
             onCreateNewMarker.onCall(true);
@@ -663,7 +722,7 @@ public class GPSGridOverlay extends OZUIElement {
 
     private UIElement setupCloseTab(Player player) {
         OZUIElement tab = new OZUIElement();
-        tab.setSize(20, 100, true);
+        tab.setSize(16.66f, 100, true);
         tab.setBackgroundColor(0.1f, 0.1f, 0.1f, 0.6f);
         tab.setPivot(Pivot.UpperLeft);
         tab.setClickable(true);
@@ -744,6 +803,7 @@ public class GPSGridOverlay extends OZUIElement {
             return;
         }
 
+        if (serverWarpTab) { cooldownStatusBar.setVisible(false); gridScrollView.setSize(100, 90, true); return; }
         String markerType = t().get(TeleportCooldowns.displayTypeKey(currentMarkerType), player);
         if (!GPSAccessPolicy.canUseNonStatic(player)) {
             cooldownStatusBar.setVisible(true);
