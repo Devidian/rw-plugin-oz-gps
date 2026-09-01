@@ -7,7 +7,6 @@ import de.omegazirkel.risingworld.gps.ServerPinAddress;
 import de.omegazirkel.risingworld.tools.I18n;
 import de.omegazirkel.risingworld.tools.ui.AdvancedButton;
 import de.omegazirkel.risingworld.tools.ui.AdvancedButtonFactory;
-import de.omegazirkel.risingworld.tools.ui.CursorManager;
 import de.omegazirkel.risingworld.tools.ui.OZUIElement;
 import net.risingworld.api.callbacks.Callback;
 import net.risingworld.api.objects.Player;
@@ -58,9 +57,9 @@ public class ServerPinOverlay extends OZUIElement {
         panel.setBorder(1);
         panel.setBorderEdgeRadius(6, false);
         panel.style.paddingBottom.set(5); panel.style.paddingTop.set(5); panel.style.paddingLeft.set(5); panel.style.paddingRight.set(5);
-        addField(panel, player, "TC_LABEL_SERVER_PIN_NAME", existingPin == null ? "" : existingPin.getName(), 7, input -> nameInput = input);
-        addField(panel, player, "TC_LABEL_SERVER_PIN_ADDRESS", existingPin == null ? "" : existingPin.getAddress(), 37, input -> addressInput = input);
-        addField(panel, player, "TC_LABEL_SERVER_PIN_PASSWORD", existingPin == null ? "" : existingPin.getPassword(), 67, input -> passwordInput = input);
+        addField(panel, player, "tc.label.server.pin.name", existingPin == null ? "" : existingPin.getName(), 7, input -> nameInput = input);
+        addField(panel, player, "tc.label.server.pin.address", existingPin == null ? "" : existingPin.getAddress(), 37, input -> addressInput = input);
+        addField(panel, player, "tc.label.server.pin.password", existingPin == null ? "" : existingPin.getPassword(), 67, input -> passwordInput = input);
         return panel;
     }
 
@@ -80,8 +79,8 @@ public class ServerPinOverlay extends OZUIElement {
         panel.setSize(24, 7, true); panel.setPivot(Pivot.UpperCenter); panel.setPosition(68, 55, true);
         panel.setBackgroundColor(0, 0, 0, .86f); panel.setBorderColor(GOLD_R, GOLD_G, GOLD_B, .6f); panel.setBorder(1); panel.setBorderEdgeRadius(6, false);
         panel.style.display.set(DisplayStyle.Flex); panel.style.flexDirection.set(FlexDirection.Row); panel.style.justifyContent.set(Justify.Center); panel.style.alignItems.set(Align.Center);
-        panel.addChild(actionButton(AdvancedButtonFactory.ok(t().get("TC_BTN_SAVE", player), event -> save(player))));
-        panel.addChild(actionButton(AdvancedButtonFactory.cancel(t().get("TC_BTN_CANCEL", player), event -> close(event.getPlayer()))));
+        panel.addChild(actionButton(AdvancedButtonFactory.ok(t().get("tc.btn.save", player), event -> save(player))));
+        panel.addChild(actionButton(AdvancedButtonFactory.cancel(t().get("tc.btn.cancel", player), event -> close(event.getPlayer()))));
         return panel;
     }
 
@@ -95,13 +94,13 @@ public class ServerPinOverlay extends OZUIElement {
     private void save(Player player) {
         nameInput.getCurrentText(player, name -> addressInput.getCurrentText(player, address -> passwordInput.getCurrentText(player, password -> {
             String icon = iconSelection.getSelectedKey();
-            if (name == null || name.isBlank() || icon == null) { player.sendTextMessage(t().get("TC_GPS_SERVER_PIN_INVALID", player)); return; }
-            if (!ServerPinAddress.isValid(address)) { player.sendTextMessage(t().get("TC_GPS_SERVER_PIN_ADDRESS_INVALID", player)); return; }
+            if (name == null || name.isBlank() || icon == null) { player.sendTextMessage(t().get("tc.gps.server.pin.invalid", player)); return; }
+            if (!ServerPinAddress.isValid(address)) { player.sendTextMessage(t().get("tc.gps.server.pin.address.invalid", player)); return; }
             ServerPin pin = existingPin == null ? new ServerPin(player.getDbID(), name.trim(), icon, address.trim(), password) : existingPin;
             if (existingPin != null) { pin.setName(name.trim()); pin.setIcon(icon); pin.setAddress(address.trim()); pin.setPassword(password); }
             close(player); onSaved.onCall(pin);
         })));
     }
 
-    public void close(Player player) { player.removeUIElement(this); player.deleteAttribute("gps-ui-overlay"); CursorManager.hide(player); }
+    public void close(Player player) { player.removeUIElement(this); player.deleteAttribute("gps-ui-overlay"); player.closeAllActiveUIWindows(); }
 }

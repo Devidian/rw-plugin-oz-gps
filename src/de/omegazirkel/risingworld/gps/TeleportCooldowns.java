@@ -98,13 +98,13 @@ public final class TeleportCooldowns {
     public static String displayTypeKey(MarkerType type) {
         switch (type) {
             case STATIC:
-                return "TC_MENU_STATIC_MARKER";
+                return "tc.menu.static.marker";
             case PRIVATE:
-                return "TC_MENU_PRIVATE_MARKER";
+                return "tc.menu.private.marker";
             case GROUP:
-                return "TC_MENU_GROUP_MARKER";
+                return "tc.menu.group.marker";
             case GLOBAL:
-                return "TC_MENU_GLOBAL_MARKER";
+                return "tc.menu.global.marker";
             default:
                 return "";
         }

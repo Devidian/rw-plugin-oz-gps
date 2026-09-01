@@ -37,19 +37,19 @@ public class GPSPlayerPluginSettings extends PlayerPluginSettings {
             protected OZUIElement playerSettingMarkerOrder(Player uiPlayer) {
                 OZUIElement element = defaultSettingsContainer();
                 // label
-                element.addChild(defaultSettingsLabel(t().get("TC_LABEL_MARKER_ORDER", uiPlayer)));
+                element.addChild(defaultSettingsLabel(t().get("tc.label.marker.order", uiPlayer)));
                 // current value
                 String currentValue = GPSPlayerPreferences.markerSortOrder(uiPlayer);
                 element.addChild(switchButtons(uiPlayer, "DESC".equals(currentValue), event -> {
                     GPSPlayerPreferences.setMarkerSortOrder(uiPlayer, "DESC".equals(currentValue) ? "ASC" : "DESC");
                     redrawContent();
-                }, t().get("TC_BTN_ORDER_ASC", uiPlayer), t().get("TC_BTN_ORDER_DESC", uiPlayer)));
+                }, t().get("tc.btn.order.asc", uiPlayer), t().get("tc.btn.order.desc", uiPlayer)));
                 return element;
             }
 
             protected OZUIElement playerSettingConfirmMarkerDelete(Player uiPlayer) {
                 OZUIElement element = defaultSettingsContainer();
-                element.addChild(defaultSettingsLabel(t().get("TC_LABEL_CONFIRM_MARKER_DELETE", uiPlayer)));
+                element.addChild(defaultSettingsLabel(t().get("tc.label.confirm.marker.delete", uiPlayer)));
                 boolean currentValue = GPSPlayerPreferences.confirmMarkerDelete(uiPlayer);
                 element.addChild(switchButtons(uiPlayer, currentValue, event -> {
                     GPSPlayerPreferences.setConfirmMarkerDelete(uiPlayer, !currentValue);
@@ -60,7 +60,7 @@ public class GPSPlayerPluginSettings extends PlayerPluginSettings {
 
             protected OZUIElement playerSettingEntryMode(Player uiPlayer) {
                 OZUIElement element = defaultSettingsContainer();
-                element.addChild(defaultSettingsLabel(t().get("TC_LABEL_ENTRY_MODE", uiPlayer)));
+                element.addChild(defaultSettingsLabel(t().get("tc.label.entry.mode", uiPlayer)));
                 String currentValue = GPSPlayerPreferences.entryMode(uiPlayer);
                 boolean radialMode = GPSPlayerPreferences.ENTRY_MODE_RADIAL.equals(currentValue);
                 element.addChild(switchButtons(uiPlayer, radialMode, event -> {
@@ -68,13 +68,13 @@ public class GPSPlayerPluginSettings extends PlayerPluginSettings {
                             radialMode ? GPSPlayerPreferences.ENTRY_MODE_GRID
                                     : GPSPlayerPreferences.ENTRY_MODE_RADIAL);
                     redrawContent();
-                }, t().get("TC_BTN_ENTRY_GRID", uiPlayer), t().get("TC_BTN_ENTRY_RADIAL", uiPlayer)));
+                }, t().get("tc.btn.entry.grid", uiPlayer), t().get("tc.btn.entry.radial", uiPlayer)));
                 return element;
             }
 
             protected OZUIElement playerSettingAdminOverride(Player uiPlayer) {
                 OZUIElement element = defaultSettingsContainer();
-                element.addChild(defaultSettingsLabel(t().get("TC_LABEL_ADMIN_OVERRIDE", uiPlayer)));
+                element.addChild(defaultSettingsLabel(t().get("tc.label.admin.override", uiPlayer)));
                 boolean currentValue = GPSPlayerPreferences.adminOverride(uiPlayer);
                 element.addChild(switchButtons(uiPlayer, currentValue, event -> {
                     GPSPlayerPreferences.setAdminOverride(uiPlayer, !currentValue);
@@ -85,7 +85,7 @@ public class GPSPlayerPluginSettings extends PlayerPluginSettings {
 
             protected OZUIElement playerSettingShortcut(Player uiPlayer) {
                 OZUIElement element = defaultSettingsContainer();
-                element.addChild(defaultSettingsLabel(t().get("TC_LABEL_GPS_SHORTCUT", uiPlayer)));
+                element.addChild(defaultSettingsLabel(t().get("tc.label.gps.shortcut", uiPlayer)));
                 boolean currentValue = GPSPlayerPreferences.shortcutVisible(uiPlayer);
                 element.addChild(switchButtons(uiPlayer, currentValue, event -> {
                     GPSPlayerPreferences.setShortcutVisible(uiPlayer, !currentValue);

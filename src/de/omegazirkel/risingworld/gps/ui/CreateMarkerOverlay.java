@@ -7,11 +7,11 @@ import de.omegazirkel.risingworld.gps.GPSAccessPolicy;
 import de.omegazirkel.risingworld.tools.I18n;
 import de.omegazirkel.risingworld.tools.ui.AdvancedButton;
 import de.omegazirkel.risingworld.tools.ui.AdvancedButtonFactory;
-import de.omegazirkel.risingworld.tools.ui.CursorManager;
 import de.omegazirkel.risingworld.tools.ui.OZUIElement;
 import net.risingworld.api.callbacks.Callback;
 import net.risingworld.api.objects.Player;
 import net.risingworld.api.ui.UIElement;
+import net.risingworld.api.ui.UITarget;
 import net.risingworld.api.ui.style.Align;
 import net.risingworld.api.ui.style.DisplayStyle;
 import net.risingworld.api.ui.style.FlexDirection;
@@ -105,9 +105,9 @@ public class CreateMarkerOverlay extends OZUIElement {
     }
 
     private UIElement setupCreateButton(Player player) {
-        AdvancedButton createButton = AdvancedButtonFactory.ok(t().get("TC_BTN_SAVE", player), event -> {
+        AdvancedButton createButton = AdvancedButtonFactory.ok(t().get("tc.btn.save", player), event -> {
             if (!GPSAccessPolicy.canUse(player, type)) {
-                player.sendTextMessage(t().get("TC_GPS_PLAYTIME_REQUIRED", player)
+                player.sendTextMessage(t().get("tc.gps.playtime.required", player)
                         .replace("PH_REQUIRED_MINUTES", String.valueOf(GPSAccessPolicy.requiredMinutes()))
                         .replace("PH_REMAINING_MINUTES", String.valueOf(GPSAccessPolicy.remainingMinutes(player))));
                 return;
@@ -144,7 +144,7 @@ public class CreateMarkerOverlay extends OZUIElement {
     }
 
     private UIElement setupCancelButton(Player player) {
-        AdvancedButton cancelButton = AdvancedButtonFactory.cancel(t().get("TC_BTN_CANCEL", player), event -> {
+        AdvancedButton cancelButton = AdvancedButtonFactory.cancel(t().get("tc.btn.cancel", player), event -> {
             close(event.getPlayer());
         });
         return styleActionButton(cancelButton);
@@ -166,7 +166,7 @@ public class CreateMarkerOverlay extends OZUIElement {
     public void close(Player player) {
         player.removeUIElement(this);
         player.deleteAttribute("gps-ui-overlay");
-        CursorManager.hide(player);
+        player.closeAllActiveUIWindows();
     }
 
 }

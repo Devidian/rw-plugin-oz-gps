@@ -1,0 +1,592 @@
+{
+  "gps": {
+    "shop": {
+      "token": {
+        "desc": "Tokenpaket für GPS-Teleportationen.",
+        "title": "GPS-Teleport-Token xPH_AMOUNT"
+      }
+    }
+  },
+  "tc": {
+    "btn": {
+      "cancel": "Abbrechen",
+      "close": "Schliessen",
+      "edit": {
+        "$value": "Bearbeiten",
+        "short": "Edit"
+      },
+      "entry": {
+        "grid": "Raster",
+        "radial": "Radial"
+      },
+      "no": "Nein",
+      "order": {
+        "asc": "Aufsteigend",
+        "desc": "Absteigend"
+      },
+      "remove": "Entfernen",
+      "save": "Speichern",
+      "teleport": {
+        "$value": "Teleportieren",
+        "cooldown": "Cooldown PH_SECONDSs",
+        "locked": "GPS gesperrt"
+      },
+      "yes": {
+        "$value": "Ja",
+        "dont": {
+          "ask": "Ja - nicht wieder fragen"
+        }
+      }
+    },
+    "cmd": {
+      "help": "Hilfe:\nVerfügbare Chat-Kommandos:\n\u003ccolor\u003dred\u003e/PH_PLUGIN_CMD status\u003c/color\u003e oder \u003ccolor\u003dred\u003e/PH_PLUGIN_CMD info\u003c/color\u003e zeigt Plugin-Infos an\n\u003ccolor\u003dred\u003e/PH_PLUGIN_CMD open\u003c/color\u003e öffnet das Pluginmenü\n\u003ccolor\u003dred\u003e/PH_PLUGIN_CMD help\u003c/color\u003e zeigt diese Hilfe an\n\n\u003ccolor\u003dyellow\u003eTipp:\u003c/color\u003e Binde den Befehl \u003ccolor\u003dred\u003e/PH_PLUGIN_CMD open\u003c/color\u003e an eine Taste der Maus oder Tastatur.",
+      "status": "🔎 Plugin Status\n➡️ Plugin version: PH_VERSION\n➡️ Installierte Sprachen: PH_LANG_AVAILABLE\n➡️ Deine Sprache: PH_LANGUAGE\n➡️ Verwendete Sprache: PH_USEDLANG"
+    },
+    "confirm": {
+      "marker": {
+        "delete": {
+          "text": "Marker PH_MARKER_NAME löschen? Dies kann nicht rückgängig gemacht werden.",
+          "title": "Marker löschen?"
+        }
+      }
+    },
+    "data": {
+      "col": {
+        "description": "Beschreibung"
+      },
+      "confirm": {
+        "marker": {
+          "delete": "Löschen von Markern bestätigen"
+        }
+      },
+      "cooldown": {
+        "remaining": "PH_MARKER_TYPE Restabklingzeit in Sekunden"
+      },
+      "entry": {
+        "mode": "Standard-GPS-Einstieg"
+      },
+      "last": {
+        "death": {
+          "position": "Letzte Todesposition"
+        },
+        "teleport": "Letzter PH_MARKER_TYPE Teleport"
+      },
+      "marker": {
+        "sort": {
+          "order": "Marker Sortierreihenfolge"
+        }
+      },
+      "pre": {
+        "port": {
+          "position": "Letzte Position vor Teleport"
+        }
+      }
+    },
+    "discord": {
+      "gps": {
+        "global": {
+          "event": {
+            "$value": "`PH_PLAYER_NAME` hat sich zu globalen GPS-Marker `PH_GPS_NAME` teleportiert, Position `PH_GPS_POS`.",
+            "name": {
+              "only": "`PH_PLAYER_NAME` hat sich zu globalen GPS-Marker `PH_GPS_NAME` teleportiert."
+            },
+            "no": {
+              "details": "`PH_PLAYER_NAME` hat sich zu einem globalen GPS-Marker teleportiert."
+            },
+            "pos": {
+              "only": "`PH_PLAYER_NAME` hat sich zu einem globalen GPS-Marker teleportiert, Position `PH_GPS_POS`."
+            }
+          }
+        },
+        "group": {
+          "event": {
+            "$value": "`PH_PLAYER_NAME` hat sich zu Gruppen-GPS-Marker `PH_GPS_NAME` teleportiert, Position `PH_GPS_POS`.",
+            "name": {
+              "only": "`PH_PLAYER_NAME` hat sich zu Gruppen-GPS-Marker `PH_GPS_NAME` teleportiert."
+            },
+            "no": {
+              "details": "`PH_PLAYER_NAME` hat sich zu einem Gruppen-GPS-Marker teleportiert."
+            },
+            "pos": {
+              "only": "`PH_PLAYER_NAME` hat sich zu einem Gruppen-GPS-Marker teleportiert, Position `PH_GPS_POS`."
+            }
+          }
+        },
+        "private": {
+          "event": {
+            "$value": "`PH_PLAYER_NAME` hat sich zu privatem GPS-Marker `PH_GPS_NAME` teleportiert, Position `PH_GPS_POS`.",
+            "name": {
+              "only": "`PH_PLAYER_NAME` hat sich zu privatem GPS-Marker `PH_GPS_NAME` teleportiert."
+            },
+            "no": {
+              "details": "`PH_PLAYER_NAME` hat sich zu einem privaten GPS-Marker teleportiert."
+            },
+            "pos": {
+              "only": "`PH_PLAYER_NAME` hat sich zu einem privaten GPS-Marker teleportiert, Position `PH_GPS_POS`."
+            }
+          }
+        },
+        "static": {
+          "event": {
+            "$value": "`PH_PLAYER_NAME` hat sich zu statischem GPS-Marker `PH_GPS_NAME` teleportiert, Position `PH_GPS_POS`.",
+            "name": {
+              "only": "`PH_PLAYER_NAME` hat sich zu statischem GPS-Marker `PH_GPS_NAME` teleportiert."
+            },
+            "no": {
+              "details": "`PH_PLAYER_NAME` hat sich zu einem statischen GPS-Marker teleportiert."
+            },
+            "pos": {
+              "only": "`PH_PLAYER_NAME` hat sich zu einem statischen GPS-Marker teleportiert, Position `PH_GPS_POS`."
+            }
+          }
+        }
+      }
+    },
+    "err": {
+      "cmd": {
+        "unknown": "Unbekanntes Kommando tippe \u003ccolor\u003dred\u003e/PH_PLUGIN_CMD help\u003c/color\u003e für Hilfe."
+      }
+    },
+    "gps": {
+      "area": {
+        "manage": "GPS-Zone verwalten",
+        "mark": "PH_AREA_NAME als GPS-Zone markieren",
+        "marked": "Aktuelle Zone als GPS-Zone markiert.",
+        "required": "GPS kann nur in einer erlaubten GPS-Zone verwendet werden.",
+        "unmark": "GPS-Zonen-Markierung von PH_AREA_NAME entfernen",
+        "unmarked": "GPS-Zonen-Markierung von aktueller Zone entfernt."
+      },
+      "canceled": "Teleportieren wurde abgebrochen.",
+      "cant": {
+        "leave": "Du kannst diesen Bereich aktuell nicht verlassen."
+      },
+      "cooldown": {
+        "active": "PH_MARKER_TYPE ist noch PH_SECONDS Sekunden in Abklingzeit.",
+        "disabled": "PH_MARKER_TYPE Abklingzeit ist deaktiviert.",
+        "ready": "PH_MARKER_TYPE ist bereit.",
+        "status": "PH_MARKER_TYPE Abklingzeit: PH_SECONDS Sekunden"
+      },
+      "cost": {
+        "charged": "GPS-Kosten abgebucht: PH_COST",
+        "label": "Kosten: PH_COST"
+      },
+      "deleted": "Der Marker \u003ccolor\u003dyellow\u003ePH_MARKER_NAME\u003c/color\u003e wurde \u003ccolor\u003dred\u003eentfernt\u003c/color\u003e.",
+      "economy": {
+        "failed": "GPS-Zahlung fehlgeschlagen: PH_MESSAGE"
+      },
+      "global": {
+        "$value": "Du wurdest an den Globalen Marker PH_GPS_NAME versetzt.",
+        "created": "Du hast den \u003ccolor\u003dred\u003eglobalen\u003c/color\u003e Marker \u003ccolor\u003dyellow\u003ePH_MARKER_NAME\u003c/color\u003e erstellt von Position \u003ccolor\u003dyellow\u003ePH_MARKER_POS\u003c/color\u003e."
+      },
+      "group": {
+        "$value": "Du wurdest an den Gruppenmarker PH_GPS_NAME versetzt.",
+        "created": "Du hast den \u003ccolor\u003dred\u003egruppen\u003c/color\u003e Marker \u003ccolor\u003dyellow\u003ePH_MARKER_NAME\u003c/color\u003e erstellt von Position \u003ccolor\u003dyellow\u003ePH_MARKER_POS\u003c/color\u003e."
+      },
+      "info": {
+        "panel": {
+          "info": "\u003cb\u003ePH_PLUGIN_NAME\u003c/b\u003e\nVersion: PH_VERSION\nBefehl: /PH_PLUGIN_CMD\n\nGPS verwaltet Spawn-, Tod-, Rückkehr-, private, Gruppen- und öffentliche Marker-Teleports.",
+          "status": "\u003cb\u003eGPS Status\u003c/b\u003e\nBevorzugter Einstieg: PH_ENTRY_MODE\nReisekostenmodus: PH_TRAVEL_COST_MODE\nMarker-Erstellungskosten: PH_MARKER_CREATE_COSTS\nTeleport-Tokens: PH_TELEPORT_TOKENS\nMindestspielzeit: PH_MINIMUM_PLAYTIME Minuten\nNichtstatischer GPS-Zugriff: PH_PLAYTIME_ACCESS\nWallet: PH_WALLET_STATUS\nShop: PH_SHOP_STATUS\nSprache: PH_LANGUAGE\nVerwendete Sprache: PH_USEDLANG\nInstallierte Sprachen: PH_LANG_AVAILABLE"
+        }
+      },
+      "limit": {
+        "label": "Limit: PH_LIMIT",
+        "status": "PH_CURRENT / PH_LIMIT"
+      },
+      "marker": {
+        "limit": {
+          "reached": "GPS-Marker-Limit erreicht. Limit: PH_LIMIT."
+        },
+        "updated": "Der Marker \u003ccolor\u003dyellow\u003ePH_MARKER_NAME\u003c/color\u003e wurde aktualisiert."
+      },
+      "playtime": {
+        "required": "Nichtstatische GPS-Funktionen benötigen PH_REQUIRED_MINUTES Minuten Spielzeit. Noch PH_REMAINING_MINUTES Minuten verbleibend.",
+        "status": "GPS: noch PH_REMAINING_MINUTES Min. (PH_REQUIRED_MINUTES benötigt)"
+      },
+      "private": {
+        "$value": "Du wurdest an deinen Marker PH_GPS_NAME versetzt.",
+        "created": "Du hast den \u003ccolor\u003dred\u003eprivaten\u003c/color\u003e Marker \u003ccolor\u003dyellow\u003ePH_MARKER_NAME\u003c/color\u003e erstellt von Position \u003ccolor\u003dyellow\u003ePH_MARKER_POS\u003c/color\u003e."
+      },
+      "sector": {
+        "hint": "Transport nur im aktuellen Sektor möglich.",
+        "required": "Das Ziel befindet sich nicht im aktuellen Sektor. Transport nicht möglich."
+      },
+      "server": {
+        "pin": {
+          "address": {
+            "invalid": "Bitte eine gültige Adresse im Format Hostname:Port oder IP:Port angeben."
+          },
+          "created": "Der Server-Pin \u003ccolor\u003dyellow\u003ePH_SERVER_PIN_NAME\u003c/color\u003e wurde erstellt.",
+          "deleted": "Der Server-Pin \u003ccolor\u003dyellow\u003ePH_SERVER_PIN_NAME\u003c/color\u003e wurde entfernt.",
+          "invalid": "Bitte Namen und Icon für den Server-Pin auswählen.",
+          "updated": "Der Server-Pin \u003ccolor\u003dyellow\u003ePH_SERVER_PIN_NAME\u003c/color\u003e wurde aktualisiert."
+        },
+        "warp": {
+          "failed": "Verbindung zu \u003ccolor\u003dyellow\u003ePH_SERVER_PIN_NAME\u003c/color\u003e konnte nicht hergestellt werden.",
+          "success": "Verbindung zu \u003ccolor\u003dyellow\u003ePH_SERVER_PIN_NAME\u003c/color\u003e wird hergestellt."
+        }
+      },
+      "static": "Du wurdest an den Statischen Marker PH_GPS_NAME versetzt."
+    },
+    "label": {
+      "admin": {
+        "override": "GPS-Admin-Override"
+      },
+      "confirm": {
+        "marker": {
+          "delete": "Löschen von Markern bestätigen"
+        }
+      },
+      "entry": {
+        "mode": "Standard-GPS-Einstieg"
+      },
+      "gps": {
+        "shortcut": "GPS-Shortcut in /ozt und Inventar anzeigen"
+      },
+      "marker": {
+        "icon": "Bilderauswahl für Markierung",
+        "name": "Markierungsbezeichnung",
+        "order": "Marker Sortierreihenfolge",
+        "title": "Marker: PH_MARKER_NAME"
+      },
+      "server": {
+        "pin": {
+          "address": "IP:Port",
+          "name": "Servername",
+          "password": "Passwort (optional)"
+        }
+      }
+    },
+    "menu": {
+      "add": {
+        "marker": {
+          "global": "Globalen Marker erstellen",
+          "group": "Gruppen Marker erstellen",
+          "private": "Privaten Marker erstellen"
+        },
+        "server": {
+          "pin": "Server-Pin anlegen"
+        }
+      },
+      "global": {
+        "marker": "Globale Marker"
+      },
+      "grid": {
+        "view": "Rasteransicht"
+      },
+      "group": {
+        "marker": "Gruppen Marker"
+      },
+      "info": {
+        "status": "Info / Status"
+      },
+      "next": {
+        "page": "Nächste Seite"
+      },
+      "previous": {
+        "page": "Vorherige Seite"
+      },
+      "private": {
+        "marker": "Private Marker"
+      },
+      "server": {
+        "warp": "Warp Marker"
+      },
+      "static": {
+        "backport": "Letzte Position",
+        "deathport": "Letzte Todesposition",
+        "default": {
+          "spawn": "Standard-Spawn"
+        },
+        "marker": "Statische Marker",
+        "primary": {
+          "spawn": "Primär-Spawn"
+        },
+        "quaternary": {
+          "spawn": "Quartiär-Spawn"
+        },
+        "secondary": {
+          "spawn": "Sekundär-Spawn"
+        },
+        "tertiary": {
+          "spawn": "Tertiär-Spawn"
+        }
+      }
+    },
+    "msg": {
+      "plugin": {
+        "welcome": "➡️ \u003ccolor\u003d#F00000\u003ePH_PLUGIN_NAME\u003c/color\u003e | \u003ccolor\u003d#F0F000\u003evPH_PLUGIN_VERSION\u003c/color\u003e | \u003ccolor\u003d#C0C0C0\u003e/PH_PLUGIN_CMD\u003c/color\u003e | geladen!"
+      },
+      "sort": {
+        "order": {
+          "changed": "Marker Sortierreihenfolge zu \u003ccolor\u003dyellow\u003ePH_SORT_ORDER\u003c/color\u003e geändert."
+        }
+      }
+    },
+    "setting": {
+      "allowadminoverride": {
+        "desc": "Erlaubt Admins, GPS-Kosten, Limits und Mindestspielzeit mit aktiver Spieler-Einstellung zu umgehen.",
+        "label": "Admin-Override erlauben"
+      },
+      "cooldowns": {
+        "desc": "Cooldowns in Sekunden für Marker-Teleporttypen.",
+        "label": "Teleport-Cooldowns"
+      },
+      "creategroupmarkercost": {
+        "desc": "Wallet-Kosten für das Erstellen eines Gruppenmarkers.",
+        "label": "Kosten Gruppenmarker"
+      },
+      "createprivatemarkercost": {
+        "desc": "Wallet-Kosten für das Erstellen eines privaten Markers.",
+        "label": "Kosten privater Marker"
+      },
+      "discordglobalgpschannelid": {
+        "desc": "Discord-Kanal-ID für globale GPS-Ereignisse; 0 verwendet Standardverhalten.",
+        "label": "Globaler GPS-Kanal"
+      },
+      "discordgpsincludemarkername": {
+        "desc": "Fügt Markernamen in Discord-GPS-Ereignismeldungen ein.",
+        "label": "Markername einschließen"
+      },
+      "discordgpsincludemarkerposition": {
+        "desc": "Fügt Markerkoordinaten in Discord-GPS-Ereignismeldungen ein.",
+        "label": "Markerposition einschließen"
+      },
+      "discordgroupgpschannelid": {
+        "desc": "Discord-Kanal-ID für Gruppen-GPS-Ereignisse; 0 verwendet Standardverhalten.",
+        "label": "Gruppen-GPS-Kanal"
+      },
+      "discordprivategpschannelid": {
+        "desc": "Discord-Kanal-ID für private GPS-Ereignisse; 0 verwendet Standardverhalten.",
+        "label": "Privater GPS-Kanal"
+      },
+      "discordstaticgpschannelid": {
+        "desc": "Discord-Kanal-ID für statische GPS-Ereignisse; 0 verwendet Standardverhalten.",
+        "label": "Statischer GPS-Kanal"
+      },
+      "discord": {
+        "desc": "Optionale Discord-Weiterleitung für GPS-Ereignisse.",
+        "label": "Discord-Weiterleitung"
+      },
+      "enablebackport": {
+        "desc": "Aktiviert das Zurückteleportieren zur Position vor dem letzten GPS-Teleport.",
+        "label": "Rückport"
+      },
+      "enabledeathport": {
+        "desc": "Aktiviert das Teleportieren zur letzten bekannten Todesposition.",
+        "label": "Todesport"
+      },
+      "enabledefaultspawn": {
+        "desc": "Aktiviert das Teleportieren zum Standard-Spawn.",
+        "label": "Standard-Spawn"
+      },
+      "enableglobalmarkers": {
+        "desc": "Aktiviert globale Marker-Workflows.",
+        "label": "Globale Marker"
+      },
+      "enablegroupmarkers": {
+        "desc": "Aktiviert Gruppenmarker-Workflows.",
+        "label": "Gruppenmarker"
+      },
+      "enablemarkercreatecosts": {
+        "desc": "Aktiviert Wallet-Kosten für private und Gruppenmarker.",
+        "label": "Marker-Erstellungskosten"
+      },
+      "enableprimaryspawn": {
+        "desc": "Aktiviert das Teleportieren zum primären Spawn.",
+        "label": "Primärer Spawn"
+      },
+      "enableprivatemarkers": {
+        "desc": "Aktiviert private Marker-Workflows.",
+        "label": "Private Marker"
+      },
+      "enablequaternaryspawn": {
+        "desc": "Aktiviert das Teleportieren zum quartären Spawn.",
+        "label": "Quartärer Spawn"
+      },
+      "enablesecondaryspawn": {
+        "desc": "Aktiviert das Teleportieren zum sekundären Spawn.",
+        "label": "Sekundärer Spawn"
+      },
+      "enablestaticmarkers": {
+        "desc": "Aktiviert statische Marker-Workflows.",
+        "label": "Statische Marker"
+      },
+      "enableteleporttokenshopoffers": {
+        "desc": "Registriert GPS-Token-Pakete in OZ - Shop, wenn verfügbar.",
+        "label": "Token-Shop-Angebote"
+      },
+      "enableteleporttokens": {
+        "desc": "Registriert GPS-Teleport-Token in Wallet.",
+        "label": "Teleport-Token"
+      },
+      "enabletertiaryspawn": {
+        "desc": "Aktiviert das Teleportieren zum tertiären Spawn.",
+        "label": "Tertiärer Spawn"
+      },
+      "exposeglobalmarkers": {
+        "desc": "Erlaubt Bridge- und Routen-Layern den Lesezugriff auf globale Marker.",
+        "label": "Globale Marker bereitstellen"
+      },
+      "general": {
+        "desc": "Protokollierung, Reload, Willkommens- und Admin-Override-Verhalten.",
+        "label": "Allgemein"
+      },
+      "gpsareas": {
+        "desc": "Beschränkt GPS-Nutzung und Marker-Erstellung auf von Admins markierte Zonen.",
+        "label": "GPS-Zonen"
+      },
+      "limits": {
+        "desc": "Marker-Limits pro Spieler und pro Gruppe.",
+        "label": "Marker-Limits"
+      },
+      "loglevel": {
+        "desc": "Steuert die GPS-Logging-Ausgabe.",
+        "label": "Log-Level"
+      },
+      "markercreatecostcurrencyidentifier": {
+        "desc": "Wallet-Währung für Marker-Erstellungskosten; leer nutzt die Wallet-Standardwährung.",
+        "label": "Marker-Kosten-Währung"
+      },
+      "markercreatecosts": {
+        "desc": "Wallet-gestützte Kosten für Marker-Erstellung.",
+        "label": "Marker-Erstellungskosten"
+      },
+      "markers": {
+        "desc": "Marker-Kategorien, die in GPS-Abläufen verfügbar sind.",
+        "label": "Marker-Kategorien"
+      },
+      "maxgroupmarkers": {
+        "desc": "Maximale Gruppenmarker pro Gruppe; -1 ist unbegrenzt.",
+        "label": "Max. Gruppenmarker"
+      },
+      "maxprivatemarkers": {
+        "desc": "Maximale private Marker pro Spieler; -1 ist unbegrenzt.",
+        "label": "Max. private Marker"
+      },
+      "minimumplaytimeminutes": {
+        "desc": "Benötigte Gesamtspielzeit in Minuten für nichtstatische GPS-Funktionen; 0 deaktiviert die Sperre.",
+        "label": "Mindestspielzeit"
+      },
+      "reloadonchange": {
+        "desc": "Lädt GPS-Einstellungen neu, wenn sich settings.properties ändert.",
+        "label": "Bei Änderung neu laden"
+      },
+      "requiregpsareaformarkercreation": {
+        "desc": "Erlaubt das Erstellen privater und Gruppenmarker nur innerhalb einer erlaubten GPS-Zone.",
+        "label": "GPS-Zone für Marker-Erstellung erforderlich"
+      },
+      "requiregpsarea": {
+        "desc": "Erlaubt GPS-Teleports nur innerhalb einer erlaubten GPS-Zone.",
+        "label": "GPS-Zone für Teleport erforderlich"
+      },
+      "restrictglobalmarkerstosector": {
+        "desc": "Erlaubt Teleports zu globalen Markern nur im aktuellen Sektor.",
+        "label": "Globale Marker im aktuellen Sektor"
+      },
+      "restrictgroupmarkerstosector": {
+        "desc": "Erlaubt Teleports zu Gruppenmarkern nur im aktuellen Sektor.",
+        "label": "Gruppenmarker im aktuellen Sektor"
+      },
+      "restrictprivatemarkerstosector": {
+        "desc": "Erlaubt Teleports zu privaten Markern nur im aktuellen Sektor.",
+        "label": "Private Marker im aktuellen Sektor"
+      },
+      "sectorteleport": {
+        "desc": "Beschränkt ausgewählte Marker-Teleports auf den aktuellen Sektor des Spielers.",
+        "label": "Sektor-Teleportbeschränkungen"
+      },
+      "sendpluginwelcome": {
+        "desc": "Zeigt beim Betreten eine kurze GPS-Nachricht.",
+        "label": "Willkommensnachricht"
+      },
+      "staticmarkersignoregpsarea": {
+        "desc": "Statische Marker ignorieren die GPS-Zonen-Beschränkung.",
+        "label": "Ausnahme für statische Marker"
+      },
+      "staticteleports": {
+        "desc": "Eingebaute statische Teleportziele.",
+        "label": "Statische Teleports"
+      },
+      "teleporttokencurrencyidentifier": {
+        "desc": "Wallet-Währungskennung für GPS-Token.",
+        "label": "Token-Währung"
+      },
+      "teleporttokencurrencyname": {
+        "desc": "Anzeigename für GPS-Teleporttoken.",
+        "label": "Token-Währungsname"
+      },
+      "teleporttokenicon": {
+        "desc": "Asset-Icon für GPS-Teleporttoken.",
+        "label": "Token-Icon"
+      },
+      "teleporttokenpackage10price": {
+        "desc": "Preis für das GPS-Shop-Paket mit zehn Token.",
+        "label": "Preis für Zehn-Token-Paket"
+      },
+      "teleporttokenpackage1price": {
+        "desc": "Preis für das GPS-Shop-Paket mit einem Token.",
+        "label": "Preis für Ein-Token-Paket"
+      },
+      "teleporttokenpackage50price": {
+        "desc": "Preis für das GPS-Shop-Paket mit fünfzig Token.",
+        "label": "Preis für Fünfzig-Token-Paket"
+      },
+      "teleporttokenshopcurrencyidentifier": {
+        "desc": "Währungskennung für den Kauf von GPS-Tokenpaketen; leer verwendet den Wallet-Standard.",
+        "label": "Token-Shop-Währung"
+      },
+      "teleporttokens": {
+        "desc": "GPS-Teleporttoken-Währung und optionale Shop-Angebotseinstellungen.",
+        "label": "Teleporttoken"
+      },
+      "travelcostcurrencyidentifier": {
+        "desc": "Wallet-Währung für feste oder distanzbasierte Reisekosten; leer nutzt die Wallet-Standardwährung.",
+        "label": "Reisekosten-Währung"
+      },
+      "travelcostmode": {
+        "desc": "disabled, fixed oder distance.",
+        "label": "Reisekostenmodus"
+      },
+      "travelcosts": {
+        "desc": "Wallet-gestützte Reisekosten-Einstellungen.",
+        "label": "Reisekosten"
+      },
+      "traveldistancecostperblock": {
+        "desc": "Basiskosten für Sektor-Distanzpreise bei travelCostMode\u003ddistance. Der Setting-Key behält seinen alten Namen.",
+        "label": "Sektor-Distanz-Basiskosten"
+      },
+      "useglobalmarkercooldownseconds": {
+        "desc": "Cooldown in Sekunden für globale Marker-Teleports.",
+        "label": "Globaler Cooldown"
+      },
+      "useglobalmarkercost": {
+        "desc": "Wallet-Kosten für die Nutzung globaler Marker.",
+        "label": "Kosten globale Marker"
+      },
+      "usegroupmarkercooldownseconds": {
+        "desc": "Cooldown in Sekunden für Gruppenmarker-Teleports.",
+        "label": "Gruppen-Cooldown"
+      },
+      "usegroupmarkercost": {
+        "desc": "Wallet-Kosten für die Nutzung von Gruppenmarkern.",
+        "label": "Kosten Gruppenmarker"
+      },
+      "useprivatemarkercooldownseconds": {
+        "desc": "Cooldown in Sekunden für private Marker-Teleports.",
+        "label": "Privater Cooldown"
+      },
+      "useprivatemarkercost": {
+        "desc": "Wallet-Kosten für die Nutzung privater Marker.",
+        "label": "Kosten private Marker"
+      },
+      "usestaticmarkercooldownseconds": {
+        "desc": "Cooldown in Sekunden für statische Marker-Teleports.",
+        "label": "Statischer Cooldown"
+      },
+      "usestaticmarkercost": {
+        "desc": "Wallet-Kosten für die Nutzung statischer Marker.",
+        "label": "Kosten statische Marker"
+      }
+    }
+  }
+}

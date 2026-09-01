@@ -24,7 +24,7 @@ public class GPSEventUtils {
 			return false;
 		}
         if (!GPSAccessPolicy.canUse(uiPlayer, type)) {
-            uiPlayer.sendTextMessage(t().get("TC_GPS_PLAYTIME_REQUIRED", uiPlayer)
+            uiPlayer.sendTextMessage(t().get("tc.gps.playtime.required", uiPlayer)
                     .replace("PH_REQUIRED_MINUTES", String.valueOf(GPSAccessPolicy.requiredMinutes()))
                     .replace("PH_REMAINING_MINUTES", String.valueOf(GPSAccessPolicy.remainingMinutes(uiPlayer))));
             return false;
@@ -32,12 +32,12 @@ public class GPSEventUtils {
         boolean canLeaveArea = (boolean) uiPlayer.getPermissionValue("area_canleave", true);
 
         if (!canLeaveArea) {
-            uiPlayer.sendTextMessage(t().get("TC_GPS_CANT_LEAVE", uiPlayer));
+            uiPlayer.sendTextMessage(t().get("tc.gps.cant.leave", uiPlayer));
             return false;
         }
         int cooldownRemaining = TeleportCooldowns.remainingSeconds(uiPlayer, type);
         if (cooldownRemaining > 0) {
-            uiPlayer.sendTextMessage(t().get("TC_GPS_COOLDOWN_ACTIVE", uiPlayer)
+            uiPlayer.sendTextMessage(t().get("tc.gps.cooldown.active", uiPlayer)
                     .replace("PH_SECONDS", String.valueOf(cooldownRemaining))
                     .replace("PH_MARKER_TYPE", t().get(TeleportCooldowns.displayTypeKey(type), uiPlayer)));
             return false;
@@ -46,12 +46,12 @@ public class GPSEventUtils {
         if (economy != null) {
             GPSEconomy.EconomyResult charge = economy.chargeTeleport(uiPlayer, pos, type, label);
             if (!charge.success()) {
-                uiPlayer.sendTextMessage(t().get("TC_GPS_ECONOMY_FAILED", uiPlayer)
+                uiPlayer.sendTextMessage(t().get("tc.gps.economy.failed", uiPlayer)
                         .replace("PH_MESSAGE", charge.message()));
                 return false;
             }
             if (!charge.message().isBlank()) {
-                uiPlayer.sendTextMessage(t().get("TC_GPS_COST_CHARGED", uiPlayer)
+                uiPlayer.sendTextMessage(t().get("tc.gps.cost.charged", uiPlayer)
                         .replace("PH_COST", charge.message()));
             }
         }
@@ -80,14 +80,14 @@ public class GPSEventUtils {
     }
 
     public static void onStaticGPSEvent(Player p, String gpsName, Vector3f targetPos) {
-        p.sendTextMessage(t().get("TC_GPS_STATIC", p).replace("PH_GPS_NAME", gpsName));
-        String staticMsgKey = "TC_DISCORD_GPS_STATIC_EVENT";
+        p.sendTextMessage(t().get("tc.gps.static", p).replace("PH_GPS_NAME", gpsName));
+        String staticMsgKey = "tc.discord.gps.static.event";
         if (!s.discordGPSIncludeMarkerName && !s.discordGPSIncludeMarkerPosition) {
-            staticMsgKey = "TC_DISCORD_GPS_STATIC_EVENT_NO_DETAILS";
+            staticMsgKey = "tc.discord.gps.static.event.no.details";
         } else if (!s.discordGPSIncludeMarkerName) {
-            staticMsgKey = "TC_DISCORD_GPS_STATIC_EVENT_POS_ONLY";
+            staticMsgKey = "tc.discord.gps.static.event.pos.only";
         } else if (!s.discordGPSIncludeMarkerPosition) {
-            staticMsgKey = "TC_DISCORD_GPS_STATIC_EVENT_NAME_ONLY";
+            staticMsgKey = "tc.discord.gps.static.event.name.only";
         }
 
         DiscordConnect.sendStaticGPSEventMessage(t().get(staticMsgKey, DiscordConnect.botLang())
@@ -98,14 +98,14 @@ public class GPSEventUtils {
 
     public static void onPrivateGPSEvent(Player p, String gpsName, Vector3f targetPos) {
         p.sendTextMessage(
-                t().get("TC_GPS_PRIVATE", p).replace("PH_GPS_NAME", gpsName));
-        String msgKey = "TC_DISCORD_GPS_PRIVATE_EVENT";
+                t().get("tc.gps.private", p).replace("PH_GPS_NAME", gpsName));
+        String msgKey = "tc.discord.gps.private.event";
         if (!s.discordGPSIncludeMarkerName && !s.discordGPSIncludeMarkerPosition) {
-            msgKey = "TC_DISCORD_GPS_PRIVATE_EVENT_NO_DETAILS";
+            msgKey = "tc.discord.gps.private.event.no.details";
         } else if (!s.discordGPSIncludeMarkerName) {
-            msgKey = "TC_DISCORD_GPS_PRIVATE_EVENT_POS_ONLY";
+            msgKey = "tc.discord.gps.private.event.pos.only";
         } else if (!s.discordGPSIncludeMarkerPosition) {
-            msgKey = "TC_DISCORD_GPS_PRIVATE_EVENT_NAME_ONLY";
+            msgKey = "tc.discord.gps.private.event.name.only";
         }
 
         DiscordConnect.sendPrivateGPSEventMessage(
@@ -116,14 +116,14 @@ public class GPSEventUtils {
     }
 
     public static void onGroupGPSEvent(Player p, String gpsName, Vector3f targetPos) {
-        p.sendTextMessage(t().get("TC_GPS_GROUP", p).replace("PH_GPS_NAME", gpsName));
-        String groupMsgKey = "TC_DISCORD_GPS_GROUP_EVENT";
+        p.sendTextMessage(t().get("tc.gps.group", p).replace("PH_GPS_NAME", gpsName));
+        String groupMsgKey = "tc.discord.gps.group.event";
         if (!s.discordGPSIncludeMarkerName && !s.discordGPSIncludeMarkerPosition) {
-            groupMsgKey = "TC_DISCORD_GPS_GROUP_EVENT_NO_DETAILS";
+            groupMsgKey = "tc.discord.gps.group.event.no.details";
         } else if (!s.discordGPSIncludeMarkerName) {
-            groupMsgKey = "TC_DISCORD_GPS_GROUP_EVENT_POS_ONLY";
+            groupMsgKey = "tc.discord.gps.group.event.pos.only";
         } else if (!s.discordGPSIncludeMarkerPosition) {
-            groupMsgKey = "TC_DISCORD_GPS_GROUP_EVENT_NAME_ONLY";
+            groupMsgKey = "tc.discord.gps.group.event.name.only";
         }
         DiscordConnect.sendGroupGPSEventMessage(t().get(groupMsgKey, DiscordConnect.botLang())
                 .replace("PH_PLAYER_NAME", p.getName())
@@ -132,14 +132,14 @@ public class GPSEventUtils {
     }
 
     public static void onGlobalGPSEvent(Player p, String gpsName, Vector3f targetPos) {
-        p.sendTextMessage(t().get("TC_GPS_GLOBAL", p).replace("PH_GPS_NAME", gpsName));
-        String globalMsgKey = "TC_DISCORD_GPS_GLOBAL_EVENT";
+        p.sendTextMessage(t().get("tc.gps.global", p).replace("PH_GPS_NAME", gpsName));
+        String globalMsgKey = "tc.discord.gps.global.event";
         if (!s.discordGPSIncludeMarkerName && !s.discordGPSIncludeMarkerPosition) {
-            globalMsgKey = "TC_DISCORD_GPS_GLOBAL_EVENT_NO_DETAILS";
+            globalMsgKey = "tc.discord.gps.global.event.no.details";
         } else if (!s.discordGPSIncludeMarkerName) {
-            globalMsgKey = "TC_DISCORD_GPS_GLOBAL_EVENT_POS_ONLY";
+            globalMsgKey = "tc.discord.gps.global.event.pos.only";
         } else if (!s.discordGPSIncludeMarkerPosition) {
-            globalMsgKey = "TC_DISCORD_GPS_GLOBAL_EVENT_NAME_ONLY";
+            globalMsgKey = "tc.discord.gps.global.event.name.only";
         }
         DiscordConnect.sendGlobalGPSEventMessage(t().get(globalMsgKey, DiscordConnect.botLang())
                 .replace("PH_PLAYER_NAME", p.getName())

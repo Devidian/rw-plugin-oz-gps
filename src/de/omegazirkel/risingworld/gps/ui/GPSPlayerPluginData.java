@@ -39,7 +39,7 @@ public class GPSPlayerPluginData extends PlayerPluginData {
 
                 TableScrollView table = new TableScrollView(
                         Arrays.asList(
-                                t().get("TC_DATA_COL_DESCRIPTION", uiPlayer),
+                                t().get("tc.data.col.description", uiPlayer),
                                 "key",
                                 "value"),
                         Arrays.asList(38f, 42f, 20f));
@@ -47,20 +47,20 @@ public class GPSPlayerPluginData extends PlayerPluginData {
                 table.style.width.set(100, Unit.Percent);
                 table.setScrollBodyHeight(400);
 
-                addCooldownRows(table, uiPlayer, MarkerType.STATIC, t().get("TC_MENU_STATIC_MARKER", uiPlayer));
-                addCooldownRows(table, uiPlayer, MarkerType.GROUP, t().get("TC_MENU_GROUP_MARKER", uiPlayer));
-                addCooldownRows(table, uiPlayer, MarkerType.PRIVATE, t().get("TC_MENU_PRIVATE_MARKER", uiPlayer));
-                addCooldownRows(table, uiPlayer, MarkerType.GLOBAL, t().get("TC_MENU_GLOBAL_MARKER", uiPlayer));
-                addRow(table, t().get("TC_DATA_MARKER_SORT_ORDER", uiPlayer), "oz.gps.sort-order",
+                addCooldownRows(table, uiPlayer, MarkerType.STATIC, t().get("tc.menu.static.marker", uiPlayer));
+                addCooldownRows(table, uiPlayer, MarkerType.GROUP, t().get("tc.menu.group.marker", uiPlayer));
+                addCooldownRows(table, uiPlayer, MarkerType.PRIVATE, t().get("tc.menu.private.marker", uiPlayer));
+                addCooldownRows(table, uiPlayer, MarkerType.GLOBAL, t().get("tc.menu.global.marker", uiPlayer));
+                addRow(table, t().get("tc.data.marker.sort.order", uiPlayer), "oz.gps.sort-order",
                         attributeValue(uiPlayer, "oz.gps.sort-order", "-"));
-                addRow(table, t().get("TC_DATA_CONFIRM_MARKER_DELETE", uiPlayer),
+                addRow(table, t().get("tc.data.confirm.marker.delete", uiPlayer),
                         GPSPlayerPreferences.CONFIRM_MARKER_DELETE_KEY,
                         String.valueOf(GPSPlayerPreferences.confirmMarkerDelete(uiPlayer)));
-                addRow(table, t().get("TC_DATA_ENTRY_MODE", uiPlayer), GPSPlayerPreferences.ENTRY_MODE_KEY,
+                addRow(table, t().get("tc.data.entry.mode", uiPlayer), GPSPlayerPreferences.ENTRY_MODE_KEY,
                         GPSPlayerPreferences.entryMode(uiPlayer));
-                addRow(table, t().get("TC_DATA_LAST_DEATH_POSITION", uiPlayer), "death-location",
+                addRow(table, t().get("tc.data.last.death.position", uiPlayer), "death-location",
                         attributeValue(uiPlayer, "death-location", "-"));
-                addRow(table, t().get("TC_DATA_PRE_PORT_POSITION", uiPlayer), "pre-port-location",
+                addRow(table, t().get("tc.data.pre.port.position", uiPlayer), "pre-port-location",
                         attributeValue(uiPlayer, "pre-port-location", "-"));
 
                 flexWrapper.addChild(table.getRoot());
@@ -68,11 +68,11 @@ public class GPSPlayerPluginData extends PlayerPluginData {
 
             private void addCooldownRows(TableScrollView table, Player player, MarkerType type, String markerTypeLabel) {
                 addRow(table,
-                        t().get("TC_DATA_LAST_TELEPORT", player).replace("PH_MARKER_TYPE", markerTypeLabel),
+                        t().get("tc.data.last.teleport", player).replace("PH_MARKER_TYPE", markerTypeLabel),
                         TeleportCooldowns.keyFor(type),
                         TeleportCooldowns.lastUsedIso(player, type).orElse("-"));
                 addRow(table,
-                        t().get("TC_DATA_COOLDOWN_REMAINING", player).replace("PH_MARKER_TYPE", markerTypeLabel),
+                        t().get("tc.data.cooldown.remaining", player).replace("PH_MARKER_TYPE", markerTypeLabel),
                         TeleportCooldowns.keyFor(type) + ".remainingSeconds",
                         String.valueOf(TeleportCooldowns.remainingSeconds(player, type)));
             }

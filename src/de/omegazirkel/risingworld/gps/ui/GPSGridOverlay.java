@@ -20,12 +20,12 @@ import de.omegazirkel.risingworld.tools.I18n;
 import de.omegazirkel.risingworld.tools.ui.AssetManager;
 import de.omegazirkel.risingworld.tools.ui.AdvancedButton;
 import de.omegazirkel.risingworld.tools.ui.AdvancedButtonFactory;
-import de.omegazirkel.risingworld.tools.ui.CursorManager;
 import de.omegazirkel.risingworld.tools.ui.OZUIElement;
 import net.risingworld.api.Timer;
 import net.risingworld.api.assets.TextureAsset;
 import net.risingworld.api.callbacks.Callback;
 import net.risingworld.api.objects.Player;
+import net.risingworld.api.ui.UITarget;
 import net.risingworld.api.objects.Area;
 import net.risingworld.api.ui.UIElement;
 import net.risingworld.api.ui.UILabel;
@@ -121,16 +121,16 @@ public class GPSGridOverlay extends OZUIElement {
 
         // static marker selection
         if (s.enableStaticMarkers)
-            tabSelectionHeader.addChild(createTab("TC_MENU_STATIC_MARKER", MarkerType.STATIC, player));
+            tabSelectionHeader.addChild(createTab("tc.menu.static.marker", MarkerType.STATIC, player));
         // private marker selection
         if (GPSAccessPolicy.canUseNonStatic(player) && s.enablePrivateMarkers)
-            tabSelectionHeader.addChild(createTab("TC_MENU_PRIVATE_MARKER", MarkerType.PRIVATE, player));
+            tabSelectionHeader.addChild(createTab("tc.menu.private.marker", MarkerType.PRIVATE, player));
         // group marker selection
         if (GPSAccessPolicy.canUseNonStatic(player) && s.enableGroupMarkers)
-            tabSelectionHeader.addChild(createTab("TC_MENU_GROUP_MARKER", MarkerType.GROUP, player));
+            tabSelectionHeader.addChild(createTab("tc.menu.group.marker", MarkerType.GROUP, player));
         // global marker selection
         if (GPSAccessPolicy.canUseNonStatic(player) && s.enableGlobalMarkers)
-            tabSelectionHeader.addChild(createTab("TC_MENU_GLOBAL_MARKER", MarkerType.GLOBAL, player));
+            tabSelectionHeader.addChild(createTab("tc.menu.global.marker", MarkerType.GLOBAL, player));
         tabSelectionHeader.addChild(createServerWarpTab(player));
         // close button
         tabSelectionHeader.addChild(setupCloseTab(player));
@@ -196,7 +196,7 @@ public class GPSGridOverlay extends OZUIElement {
         icon.setSize(100, 70, true); icon.setPivot(Pivot.UpperLeft); icon.setPosition(0, 5, true);
         icon.style.backgroundImage.set(AssetManager.getIcon(player, "menu-server-warp")); icon.style.backgroundImageScaleMode.set(ScaleMode.ScaleToFit);
         tab.addChild(icon);
-        UILabel label = new UILabel(t().get("TC_MENU_SERVER_WARP", player));
+        UILabel label = new UILabel(t().get("tc.menu.server.warp", player));
         label.setSize(100, 25, true); label.setFontSize(14); label.setPivot(Pivot.LowerLeft); label.setPosition(0, 100, true); label.setTextAlign(TextAnchor.MiddleCenter);
         tab.addChild(label);
         return tab;
@@ -257,14 +257,14 @@ public class GPSGridOverlay extends OZUIElement {
         iconGrid.style.width.set(100, Unit.Percent); iconGrid.style.height.set(100, Unit.Percent);
         iconGrid.style.display.set(DisplayStyle.Flex); iconGrid.style.flexDirection.set(FlexDirection.Row); iconGrid.style.flexWrap.set(Wrap.Wrap); iconGrid.style.justifyContent.set(Justify.FlexStart);
         gridScrollView.addChild(iconGrid);
-        if (player.isAdmin()) iconGrid.addChild(createAddMarkerCard(player, t().get("TC_MENU_ADD_SERVER_PIN", player), "gps-server-pin-create", ignored -> openServerPinEditor(player, null)));
+        if (player.isAdmin()) iconGrid.addChild(createAddMarkerCard(player, t().get("tc.menu.add.server.pin", player), "gps-server-pin-create", ignored -> openServerPinEditor(player, null)));
         for (ServerPin pin : GPSDatabase.getInstance().getServerPins()) iconGrid.addChild(createServerPinCard(player, pin));
     }
 
     private UIElement createServerPinCard(Player player, ServerPin pin) {
         Callback<Boolean> onEdit = player.isAdmin() ? ignored -> openServerPinEditor(player, pin) : null;
         Callback<Boolean> onDelete = player.isAdmin() ? ignored -> {
-            if (GPSDatabase.getInstance().deleteServerPin(pin.getId())) { player.sendTextMessage(t().get("TC_GPS_SERVER_PIN_DELETED", player).replace("PH_SERVER_PIN_NAME", pin.getName())); refreshServerPins(player); }
+            if (GPSDatabase.getInstance().deleteServerPin(pin.getId())) { player.sendTextMessage(t().get("tc.gps.server.pin.deleted", player).replace("PH_SERVER_PIN_NAME", pin.getName())); refreshServerPins(player); }
         } : null;
         return createMarkerCard(player, pin.getName(), AssetManager.getIcon(player, pin.getIcon()), onDelete, onEdit, ignored -> connectToServer(player, pin));
     }
@@ -272,16 +272,16 @@ public class GPSGridOverlay extends OZUIElement {
     private void openServerPinEditor(Player player, ServerPin pin) {
         ServerPinOverlay overlay = new ServerPinOverlay(player, pin, saved -> {
             if (GPSDatabase.getInstance().saveServerPin(saved)) {
-                player.sendTextMessage(t().get(pin == null ? "TC_GPS_SERVER_PIN_CREATED" : "TC_GPS_SERVER_PIN_UPDATED", player).replace("PH_SERVER_PIN_NAME", saved.getName()));
-            } else player.sendTextMessage(t().get("TC_GPS_SERVER_PIN_ADDRESS_INVALID", player));
-            resume(player); CursorManager.show(player); player.addUIElement(this); startCooldownTimer(player); refreshServerPins(player);
+                player.sendTextMessage(t().get(pin == null ? "tc.gps.server.pin.created" : "tc.gps.server.pin.updated", player).replace("PH_SERVER_PIN_NAME", saved.getName()));
+            } else player.sendTextMessage(t().get("tc.gps.server.pin.address.invalid", player));
+            resume(player); player.addUIElement(this, UITarget.Modal); startCooldownTimer(player); refreshServerPins(player);
         });
-        player.setAttribute("gps-ui-overlay", overlay); stopCooldownTimer(); player.removeUIElement(this); player.addUIElement(overlay);
+        player.setAttribute("gps-ui-overlay", overlay); stopCooldownTimer(); player.removeUIElement(this); player.addUIElement(overlay, UITarget.Modal);
     }
 
     private void connectToServer(Player player, ServerPin pin) {
-        if (!ServerPinAddress.isValid(pin.getAddress())) { player.sendTextMessage(t().get("TC_GPS_SERVER_PIN_ADDRESS_INVALID", player)); return; }
-        player.connectToOtherServer(pin.getAddress(), pin.getPassword(), success -> player.sendTextMessage(t().get(Boolean.TRUE.equals(success) ? "TC_GPS_SERVER_WARP_SUCCESS" : "TC_GPS_SERVER_WARP_FAILED", player).replace("PH_SERVER_PIN_NAME", pin.getName())));
+        if (!ServerPinAddress.isValid(pin.getAddress())) { player.sendTextMessage(t().get("tc.gps.server.pin.address.invalid", player)); return; }
+        player.connectToOtherServer(pin.getAddress(), pin.getPassword(), success -> player.sendTextMessage(t().get(Boolean.TRUE.equals(success) ? "tc.gps.server.warp.success" : "tc.gps.server.warp.failed", player).replace("PH_SERVER_PIN_NAME", pin.getName())));
     }
 
     private void refreshGrid(MarkerType type, Player uiPlayer) {
@@ -326,49 +326,49 @@ public class GPSGridOverlay extends OZUIElement {
                 break;
             case STATIC:
                 if (primarySpawnPos != null)
-                    iconGrid.addChild(createMarkerCard(uiPlayer, costLabel(uiPlayer, t().get("TC_MENU_STATIC_PRIMARY_SPAWN", uiPlayer), primarySpawnPos, MarkerType.STATIC),
+                    iconGrid.addChild(createMarkerCard(uiPlayer, costLabel(uiPlayer, t().get("tc.menu.static.primary.spawn", uiPlayer), primarySpawnPos, MarkerType.STATIC),
                             AssetManager.getIcon(uiPlayer, "marker-sleep-restroom"), null, null, onTeleport -> {
                                 executeGridTeleport(uiPlayer, primarySpawnPos,
-                                        t().get("TC_MENU_STATIC_PRIMARY_SPAWN", uiPlayer), MarkerType.STATIC);
+                                        t().get("tc.menu.static.primary.spawn", uiPlayer), MarkerType.STATIC);
                             }));
                 if (secondarySpawnPos != null)
-                    iconGrid.addChild(createMarkerCard(uiPlayer, costLabel(uiPlayer, t().get("TC_MENU_STATIC_SECONDARY_SPAWN", uiPlayer), secondarySpawnPos, MarkerType.STATIC),
+                    iconGrid.addChild(createMarkerCard(uiPlayer, costLabel(uiPlayer, t().get("tc.menu.static.secondary.spawn", uiPlayer), secondarySpawnPos, MarkerType.STATIC),
                             AssetManager.getIcon(uiPlayer, "marker-sleep-tent"), null, null, onTeleport -> {
                                 executeGridTeleport(uiPlayer, secondarySpawnPos,
-                                        t().get("TC_MENU_STATIC_SECONDARY_SPAWN", uiPlayer), MarkerType.STATIC);
+                                        t().get("tc.menu.static.secondary.spawn", uiPlayer), MarkerType.STATIC);
                             }));
                 if (tertiarySpawnPos != null)
-                    iconGrid.addChild(createMarkerCard(uiPlayer, costLabel(uiPlayer, t().get("TC_MENU_STATIC_TERTIARY_SPAWN", uiPlayer), tertiarySpawnPos, MarkerType.STATIC),
+                    iconGrid.addChild(createMarkerCard(uiPlayer, costLabel(uiPlayer, t().get("tc.menu.static.tertiary.spawn", uiPlayer), tertiarySpawnPos, MarkerType.STATIC),
                             AssetManager.getIcon(uiPlayer, "marker-sleep-king-size-bed"), null, null, onTeleport -> {
                                 executeGridTeleport(uiPlayer, tertiarySpawnPos,
-                                        t().get("TC_MENU_STATIC_TERTIARY_SPAWN", uiPlayer), MarkerType.STATIC);
+                                        t().get("tc.menu.static.tertiary.spawn", uiPlayer), MarkerType.STATIC);
                             }));
                 if (quaternarySpawnPos != null)
-                    iconGrid.addChild(createMarkerCard(uiPlayer, costLabel(uiPlayer, t().get("TC_MENU_STATIC_QUATERNARY_SPAWN", uiPlayer), quaternarySpawnPos, MarkerType.STATIC),
+                    iconGrid.addChild(createMarkerCard(uiPlayer, costLabel(uiPlayer, t().get("tc.menu.static.quaternary.spawn", uiPlayer), quaternarySpawnPos, MarkerType.STATIC),
                             AssetManager.getIcon(uiPlayer, "marker-sleep-sign"), null, null, onTeleport -> {
                                 executeGridTeleport(uiPlayer, quaternarySpawnPos,
-                                        t().get("TC_MENU_STATIC_QUATERNARY_SPAWN", uiPlayer), MarkerType.STATIC);
+                                        t().get("tc.menu.static.quaternary.spawn", uiPlayer), MarkerType.STATIC);
                             }));
                 if (defaultSpawnPos != null)
-                    iconGrid.addChild(createMarkerCard(uiPlayer, costLabel(uiPlayer, t().get("TC_MENU_STATIC_DEFAULT_SPAWN", uiPlayer), defaultSpawnPos, MarkerType.STATIC),
+                    iconGrid.addChild(createMarkerCard(uiPlayer, costLabel(uiPlayer, t().get("tc.menu.static.default.spawn", uiPlayer), defaultSpawnPos, MarkerType.STATIC),
                             AssetManager.getIcon(uiPlayer, "marker-coast-jetty"), null, null, onTeleport -> {
                                 executeGridTeleport(uiPlayer, defaultSpawnPos,
-                                        t().get("TC_MENU_STATIC_DEFAULT_SPAWN", uiPlayer), MarkerType.STATIC);
+                                        t().get("tc.menu.static.default.spawn", uiPlayer), MarkerType.STATIC);
                             }));
                 if (lastDeathPosition != null)
                     iconGrid.addChild(
-                            createMarkerCard(uiPlayer, costLabel(uiPlayer, t().get("TC_MENU_STATIC_DEATHPORT", uiPlayer), lastDeathPosition, MarkerType.STATIC),
+                            createMarkerCard(uiPlayer, costLabel(uiPlayer, t().get("tc.menu.static.deathport", uiPlayer), lastDeathPosition, MarkerType.STATIC),
                                     AssetManager.getIcon(uiPlayer, "icon-ki-death-skull"), null, null, onTeleport -> {
                                         executeGridTeleport(uiPlayer, lastDeathPosition,
-                                                t().get("TC_MENU_STATIC_DEATHPORT", uiPlayer), MarkerType.STATIC,
+                                                t().get("tc.menu.static.deathport", uiPlayer), MarkerType.STATIC,
                                                 false);
                                     }));
                 if (lastPositionBeforePort != null)
                     iconGrid.addChild(createMarkerCard(uiPlayer,
-                            costLabel(uiPlayer, t().get("TC_MENU_STATIC_BACKPORT", uiPlayer), lastPositionBeforePort, MarkerType.STATIC),
+                            costLabel(uiPlayer, t().get("tc.menu.static.backport", uiPlayer), lastPositionBeforePort, MarkerType.STATIC),
                             AssetManager.getIcon(uiPlayer, "marker-special-destination"), null, null, onTeleport -> {
                                 executeGridTeleport(uiPlayer, lastPositionBeforePort,
-                                        t().get("TC_MENU_STATIC_BACKPORT", uiPlayer), MarkerType.STATIC, false);
+                                        t().get("tc.menu.static.backport", uiPlayer), MarkerType.STATIC, false);
                             }));
                 break;
             default:
@@ -378,17 +378,16 @@ public class GPSGridOverlay extends OZUIElement {
         switch (type) {
             case GLOBAL:
                 if (uiPlayer.isAdmin()) {
-                    iconGrid.addChild(createAddMarkerCard(uiPlayer, t().get("TC_MENU_ADD_MARKER_GLOBAL", uiPlayer),
+                    iconGrid.addChild(createAddMarkerCard(uiPlayer, t().get("tc.menu.add.marker.global", uiPlayer),
                             onCreateNewMarker -> {
                                 CreateMarkerOverlay overlay = new CreateMarkerOverlay(uiPlayer, MarkerType.GLOBAL,
                                         createdMarker -> {
                                             GPSDatabase.getInstance().saveMarker(createdMarker);
-                                            uiPlayer.sendTextMessage(t().get("TC_GPS_GLOBAL_CREATED", uiPlayer)
+                                            uiPlayer.sendTextMessage(t().get("tc.gps.global.created", uiPlayer)
                                                     .replace("PH_MARKER_NAME", createdMarker.getName())
                                                     .replace("PH_MARKER_POS", createdMarker.getPosition() + ""));
                                             resume(uiPlayer);
-                                            CursorManager.show(uiPlayer);
-                                            uiPlayer.addUIElement(this);
+                                            uiPlayer.addUIElement(this, UITarget.Modal);
                                             startCooldownTimer(uiPlayer);
                                             refreshGrid(uiPlayer);
                                         });
@@ -396,12 +395,12 @@ public class GPSGridOverlay extends OZUIElement {
                                 uiPlayer.setAttribute("gps-ui-overlay", overlay);
                                 stopCooldownTimer();
                                 uiPlayer.removeUIElement(this);
-                                uiPlayer.addUIElement(overlay);
+                                uiPlayer.addUIElement(overlay, UITarget.Modal);
                             }));
                 }
                 break;
             case GROUP:
-                if (GPSAreaAccessPolicy.markerCreationDenialKey(uiPlayer, MarkerType.GROUP) == null) iconGrid.addChild(createAddMarkerCard(uiPlayer, addMarkerLabel(uiPlayer, t().get("TC_MENU_ADD_MARKER_GROUP", uiPlayer), MarkerType.GROUP),
+                if (GPSAreaAccessPolicy.markerCreationDenialKey(uiPlayer, MarkerType.GROUP) == null) iconGrid.addChild(createAddMarkerCard(uiPlayer, addMarkerLabel(uiPlayer, t().get("tc.menu.add.marker.group", uiPlayer), MarkerType.GROUP),
                         onCreateNewMarker -> {
                             if (!canCreateMarker(uiPlayer, MarkerType.GROUP)) {
                                 return;
@@ -412,8 +411,7 @@ public class GPSGridOverlay extends OZUIElement {
                                             return;
                                         }
                                         resume(uiPlayer);
-                                        CursorManager.show(uiPlayer);
-                                        uiPlayer.addUIElement(this);
+                                        uiPlayer.addUIElement(this, UITarget.Modal);
                                         startCooldownTimer(uiPlayer);
                                         refreshGrid(uiPlayer);
                                     });
@@ -421,11 +419,11 @@ public class GPSGridOverlay extends OZUIElement {
                             uiPlayer.setAttribute("gps-ui-overlay", overlay);
                             stopCooldownTimer();
                             uiPlayer.removeUIElement(this);
-                            uiPlayer.addUIElement(overlay);
+                            uiPlayer.addUIElement(overlay, UITarget.Modal);
                         }));
                 break;
             case PRIVATE:
-                if (GPSAreaAccessPolicy.markerCreationDenialKey(uiPlayer, MarkerType.PRIVATE) == null) iconGrid.addChild(createAddMarkerCard(uiPlayer, addMarkerLabel(uiPlayer, t().get("TC_MENU_ADD_MARKER_PRIVATE", uiPlayer), MarkerType.PRIVATE),
+                if (GPSAreaAccessPolicy.markerCreationDenialKey(uiPlayer, MarkerType.PRIVATE) == null) iconGrid.addChild(createAddMarkerCard(uiPlayer, addMarkerLabel(uiPlayer, t().get("tc.menu.add.marker.private", uiPlayer), MarkerType.PRIVATE),
                         onCreateNewMarker -> {
                             if (!canCreateMarker(uiPlayer, MarkerType.PRIVATE)) {
                                 return;
@@ -436,8 +434,7 @@ public class GPSGridOverlay extends OZUIElement {
                                             return;
                                         }
                                         resume(uiPlayer);
-                                        CursorManager.show(uiPlayer);
-                                        uiPlayer.addUIElement(this);
+                                        uiPlayer.addUIElement(this, UITarget.Modal);
                                         startCooldownTimer(uiPlayer);
                                         refreshGrid(uiPlayer);
                                     });
@@ -445,7 +442,7 @@ public class GPSGridOverlay extends OZUIElement {
                             uiPlayer.setAttribute("gps-ui-overlay", overlay);
                             stopCooldownTimer();
                             uiPlayer.removeUIElement(this);
-                            uiPlayer.addUIElement(overlay);
+                            uiPlayer.addUIElement(overlay, UITarget.Modal);
                         }));
                 break;
             default:
@@ -465,14 +462,14 @@ public class GPSGridOverlay extends OZUIElement {
 			return;
 		}
 		boolean marked = GPSDatabase.getInstance().isGPSAreaAllowed(area.getID());
-		String label = t().get(marked ? "TC_GPS_AREA_UNMARK" : "TC_GPS_AREA_MARK", player)
+		String label = t().get(marked ? "tc.gps.area.unmark" : "tc.gps.area.mark", player)
 				.replace("PH_AREA_NAME", area.getName() == null ? String.valueOf(area.getID()) : area.getName());
 		iconGrid.addChild(createMarkerCard(player, label,
 				AssetManager.getIcon(player, "marker-special-destination"), null, null, ignored -> {
 					boolean updated = marked ? GPSDatabase.getInstance().deleteGPSArea(area.getID())
 							: GPSDatabase.getInstance().saveGPSArea(area.getID(), player.getDbID(), true);
 					if (updated) {
-						player.sendTextMessage(t().get(marked ? "TC_GPS_AREA_UNMARKED" : "TC_GPS_AREA_MARKED", player));
+						player.sendTextMessage(t().get(marked ? "tc.gps.area.unmarked" : "tc.gps.area.marked", player));
 						refreshGrid(player);
 					}
 				}));
@@ -486,12 +483,11 @@ public class GPSGridOverlay extends OZUIElement {
             CreateMarkerOverlay overlay = new CreateMarkerOverlay(player, marker, editedMarker -> {
                 if (GPSDatabase.getInstance().updateMarkerDetails(marker, player, editedMarker.getName(),
                         editedMarker.getIcon())) {
-                    player.sendTextMessage(t().get("TC_GPS_MARKER_UPDATED", player)
+                    player.sendTextMessage(t().get("tc.gps.marker.updated", player)
                             .replace("PH_MARKER_NAME", editedMarker.getName()));
                 }
                 resume(player);
-                CursorManager.show(player);
-                player.addUIElement(this);
+                player.addUIElement(this, UITarget.Modal);
                 startCooldownTimer(player);
                 refreshGrid(player);
             });
@@ -499,7 +495,7 @@ public class GPSGridOverlay extends OZUIElement {
             player.setAttribute("gps-ui-overlay", overlay);
             stopCooldownTimer();
             player.removeUIElement(this);
-            player.addUIElement(overlay);
+            player.addUIElement(overlay, UITarget.Modal);
         };
         if (!MarkerPermissions.canManage(player, marker)) {
             onDeleteCallback = null;
@@ -519,7 +515,7 @@ public class GPSGridOverlay extends OZUIElement {
             Callback<Boolean> onEdit, Callback<Boolean> onTeleport) {
 		boolean staticAreaBlocked = currentMarkerType == MarkerType.STATIC
 				&& GPSAreaAccessPolicy.gpsUseBlocked(player, MarkerType.STATIC);
-		String label = staticAreaBlocked ? name + "\n" + t().get("TC_GPS_AREA_REQUIRED", player) : name;
+		String label = staticAreaBlocked ? name + "\n" + t().get("tc.gps.area.required", player) : name;
 		Callback<Boolean> teleportAction = staticAreaBlocked ? null : onTeleport;
 
         UIElement card = new UIElement();
@@ -600,7 +596,7 @@ public class GPSGridOverlay extends OZUIElement {
             return name;
         }
         long cost = economy.teleportCost(player, position, type);
-        return cost <= 0 ? name : name + "\n" + t().get("TC_GPS_COST_LABEL", player)
+        return cost <= 0 ? name : name + "\n" + t().get("tc.gps.cost.label", player)
                 .replace("PH_COST", economy.costLabel(cost, economy.teleportCurrency(type)));
     }
 
@@ -610,14 +606,14 @@ public class GPSGridOverlay extends OZUIElement {
             return label;
         }
         long cost = economy.markerCreateCost(type);
-        String result = cost <= 0 ? label : label + "\n" + t().get("TC_GPS_COST_LABEL", player)
+        String result = cost <= 0 ? label : label + "\n" + t().get("tc.gps.cost.label", player)
                 .replace("PH_COST", economy.costLabel(cost, s.markerCreateCostCurrencyIdentifier));
         return result;
     }
 
     private boolean canCreateMarker(Player player, MarkerType type) {
         if (!GPSAccessPolicy.canUse(player, type)) {
-            player.sendTextMessage(t().get("TC_GPS_PLAYTIME_REQUIRED", player)
+            player.sendTextMessage(t().get("tc.gps.playtime.required", player)
                     .replace("PH_REQUIRED_MINUTES", String.valueOf(GPSAccessPolicy.requiredMinutes()))
                     .replace("PH_REMAINING_MINUTES", String.valueOf(GPSAccessPolicy.remainingMinutes(player))));
             return false;
@@ -629,7 +625,7 @@ public class GPSGridOverlay extends OZUIElement {
 		}
         GPSEconomy economy = GPSEconomy.getInstance();
         if (economy != null && economy.markerLimitReached(player, type)) {
-            player.sendTextMessage(t().get("TC_GPS_MARKER_LIMIT_REACHED", player)
+            player.sendTextMessage(t().get("tc.gps.marker.limit.reached", player)
                     .replace("PH_LIMIT", String.valueOf(economy.markerLimit(type))));
             return false;
         }
@@ -641,17 +637,17 @@ public class GPSGridOverlay extends OZUIElement {
         if (economy != null) {
             GPSEconomy.EconomyResult charge = economy.chargeMarkerCreation(player, marker.getType());
             if (!charge.success()) {
-                player.sendTextMessage(t().get("TC_GPS_ECONOMY_FAILED", player)
+                player.sendTextMessage(t().get("tc.gps.economy.failed", player)
                         .replace("PH_MESSAGE", charge.message()));
                 return false;
             }
             if (!charge.message().isBlank()) {
-                player.sendTextMessage(t().get("TC_GPS_COST_CHARGED", player)
+                player.sendTextMessage(t().get("tc.gps.cost.charged", player)
                         .replace("PH_COST", charge.message()));
             }
         }
         GPSDatabase.getInstance().saveMarker(marker);
-        String key = marker.getType() == MarkerType.GROUP ? "TC_GPS_GROUP_CREATED" : "TC_GPS_PRIVATE_CREATED";
+        String key = marker.getType() == MarkerType.GROUP ? "tc.gps.group.created" : "tc.gps.private.created";
         player.sendTextMessage(t().get(key, player)
                 .replace("PH_MARKER_NAME", marker.getName())
                 .replace("PH_MARKER_POS", marker.getPosition() + ""));
@@ -668,12 +664,12 @@ public class GPSGridOverlay extends OZUIElement {
                 dontAskAgain -> performDelete(player, marker, onDeleted),
                 ignored -> {
                 });
-        player.addUIElement(confirmOverlay);
+        player.addUIElement(confirmOverlay, UITarget.Modal);
     }
 
     private void performDelete(Player player, Marker marker, Callback<Boolean> onDeleted) {
         if (GPSDatabase.getInstance().deleteMarker(marker, player)) {
-            player.sendTextMessage(t().get("TC_GPS_DELETED", player).replace("PH_MARKER_NAME", marker.getName()));
+            player.sendTextMessage(t().get("tc.gps.deleted", player).replace("PH_MARKER_NAME", marker.getName()));
             onDeleted.onCall(true);
         }
     }
@@ -738,7 +734,7 @@ public class GPSGridOverlay extends OZUIElement {
         icon.style.backgroundImageScaleMode.set(ScaleMode.ScaleToFit);
         tab.addChild(icon);
         // label
-        UILabel label = new UILabel(t().get("TC_BTN_CLOSE", player));
+        UILabel label = new UILabel(t().get("tc.btn.close", player));
         label.setSize(100, 25, true);
         label.setFontSize(14);
         label.setPivot(Pivot.LowerLeft);
@@ -791,7 +787,7 @@ public class GPSGridOverlay extends OZUIElement {
         stopCooldownTimer();
         player.removeUIElement(this);
         player.deleteAttribute("gps-ui-overlay");
-        CursorManager.hide(player);
+        player.closeAllActiveUIWindows();
     }
 
     private void resume(Player player) {
@@ -809,7 +805,7 @@ public class GPSGridOverlay extends OZUIElement {
             cooldownStatusBar.setVisible(true);
             gridScrollView.setSize(100, 84, true);
             cooldownStatusLabel.style.width.set(96, Unit.Percent);
-            cooldownStatusLabel.setText(t().get("TC_GPS_PLAYTIME_STATUS", player)
+            cooldownStatusLabel.setText(t().get("tc.gps.playtime.status", player)
                     .replace("PH_REQUIRED_MINUTES", String.valueOf(GPSAccessPolicy.requiredMinutes()))
                     .replace("PH_REMAINING_MINUTES", String.valueOf(GPSAccessPolicy.remainingMinutes(player))));
             markerLimitStatusLabel.setText("");
@@ -819,7 +815,7 @@ public class GPSGridOverlay extends OZUIElement {
 			cooldownStatusBar.setVisible(true);
 			gridScrollView.setSize(100, 84, true);
 			cooldownStatusLabel.style.width.set(96, Unit.Percent);
-			cooldownStatusLabel.setText(t().get("TC_GPS_AREA_REQUIRED", player));
+			cooldownStatusLabel.setText(t().get("tc.gps.area.required", player));
 			markerLimitStatusLabel.setText("");
 			return;
 		}
@@ -845,15 +841,15 @@ public class GPSGridOverlay extends OZUIElement {
 
         int remainingSeconds = TeleportCooldowns.remainingSeconds(player, currentMarkerType);
         if (remainingSeconds > 0) {
-            cooldownStatusLabel.setText(t().get("TC_GPS_COOLDOWN_STATUS", player)
+            cooldownStatusLabel.setText(t().get("tc.gps.cooldown.status", player)
                     .replace("PH_MARKER_TYPE", markerType)
                     .replace("PH_SECONDS", String.valueOf(remainingSeconds)));
             return;
         }
 
-        String ready = t().get("TC_GPS_COOLDOWN_READY", player).replace("PH_MARKER_TYPE", markerType);
+        String ready = t().get("tc.gps.cooldown.ready", player).replace("PH_MARKER_TYPE", markerType);
 		if (GPSAreaAccessPolicy.sectorRestrictionEnabled(currentMarkerType)) {
-			ready += "\n" + t().get("TC_GPS_SECTOR_HINT", player);
+			ready += "\n" + t().get("tc.gps.sector.hint", player);
 		}
         cooldownStatusLabel.setText(ready);
     }
@@ -868,7 +864,7 @@ public class GPSGridOverlay extends OZUIElement {
             return "";
         }
         int current = economy.markerCount(player, currentMarkerType);
-        return t().get("TC_GPS_LIMIT_STATUS", player)
+        return t().get("tc.gps.limit.status", player)
                 .replace("PH_CURRENT", String.valueOf(current))
                 .replace("PH_LIMIT", String.valueOf(limit));
     }

@@ -29,10 +29,10 @@ public final class GPSAreaAccessPolicy {
         }
         if (settings.requireGPSArea && !(type == MarkerType.STATIC && settings.staticMarkersIgnoreGPSArea)
                 && !isCurrentAreaAllowed(player)) {
-            return "TC_GPS_AREA_REQUIRED";
+            return "tc.gps.area.required";
         }
         if (restrictedToCurrentSector(type) && !isSameSector(player, target)) {
-            return "TC_GPS_SECTOR_REQUIRED";
+            return "tc.gps.sector.required";
         }
         return null;
     }
@@ -42,7 +42,7 @@ public final class GPSAreaAccessPolicy {
                 || (type != MarkerType.PRIVATE && type != MarkerType.GROUP)) {
             return null;
         }
-        return isCurrentAreaAllowed(player) ? null : "TC_GPS_AREA_REQUIRED";
+        return isCurrentAreaAllowed(player) ? null : "tc.gps.area.required";
     }
 
     public static boolean areaFeaturesEnabled() {

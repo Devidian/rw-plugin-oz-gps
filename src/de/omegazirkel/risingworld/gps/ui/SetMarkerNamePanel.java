@@ -48,7 +48,7 @@ public class SetMarkerNamePanel extends OZUIElement {
     }
 
     private void setupTitle() {
-        UILabel title = new UILabel(t().get("TC_LABEL_MARKER_NAME", uiPlayer));
+        UILabel title = new UILabel(t().get("tc.label.marker.name", uiPlayer));
         title.setSize(90, 10, true);
         title.setFontSize(17);
         title.setTextAlign(TextAnchor.MiddleCenter);

@@ -48,7 +48,7 @@ public class ConfirmMarkerDeleteOverlay extends OZUIElement {
         panel.setBorderEdgeRadius(6, false);
         addChild(panel);
 
-        UILabel title = new UILabel(t().get("TC_CONFIRM_MARKER_DELETE_TITLE", player));
+        UILabel title = new UILabel(t().get("tc.confirm.marker.delete.title", player));
         title.setSize(90, 18, true);
         title.setPivot(Pivot.UpperLeft);
         title.setPosition(5, 7, true);
@@ -57,7 +57,7 @@ public class ConfirmMarkerDeleteOverlay extends OZUIElement {
         title.setTextAlign(TextAnchor.MiddleCenter);
         panel.addChild(title);
 
-        UILabel message = new UILabel(t().get("TC_CONFIRM_MARKER_DELETE_TEXT", player)
+        UILabel message = new UILabel(t().get("tc.confirm.marker.delete.text", player)
                 .replace("PH_MARKER_NAME", marker.getName()));
         message.setSize(90, 34, true);
         message.setPivot(Pivot.UpperLeft);
@@ -78,15 +78,15 @@ public class ConfirmMarkerDeleteOverlay extends OZUIElement {
         footer.style.alignItems.set(Align.Center);
         panel.addChild(footer);
 
-        footer.addChild(button(AdvancedButtonFactory.cancel(t().get("TC_BTN_NO", player), event -> {
+        footer.addChild(button(AdvancedButtonFactory.cancel(t().get("tc.btn.no", player), event -> {
             close(event.getPlayer());
             onCancel.onCall(true);
         }), 26));
-        footer.addChild(button(AdvancedButtonFactory.danger(t().get("TC_BTN_YES", player), event -> {
+        footer.addChild(button(AdvancedButtonFactory.danger(t().get("tc.btn.yes", player), event -> {
             close(event.getPlayer());
             onDelete.onCall(false);
         }), 22));
-        footer.addChild(button(AdvancedButtonFactory.danger(t().get("TC_BTN_YES_DONT_ASK", player), event -> {
+        footer.addChild(button(AdvancedButtonFactory.danger(t().get("tc.btn.yes.dont.ask", player), event -> {
             GPSPlayerPreferences.setConfirmMarkerDelete(event.getPlayer(), false);
             close(event.getPlayer());
             onDelete.onCall(true);

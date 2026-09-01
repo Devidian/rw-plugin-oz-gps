@@ -1,0 +1,71 @@
+{
+  "general": {
+    "logLevel": "ALL",
+    "reloadOnChange": true,
+    "sendPluginWelcome": false,
+    "minimumPlaytimeMinutes": 15,
+    "maxPrivateMarkers": -1,
+    "maxGroupMarkers": -1,
+    "travelCostMode": "disabled",
+    "travelCostCurrencyIdentifier": "",
+    "travelDistanceCostPerBlock": 1,
+    "createPrivateMarkerCost": 25,
+    "createGroupMarkerCost": 75,
+    "markerCreateCostCurrencyIdentifier": "",
+    "allowAdminOverride": false,
+    "requireGPSArea": false,
+    "requireGPSAreaForMarkerCreation": false,
+    "staticMarkersIgnoreGPSArea": true
+  },
+  "feature": {
+    "privateMarkers": true,
+    "groupMarkers": true,
+    "globalMarkers": true,
+    "staticMarkers": true,
+    "backport": true,
+    "deathport": true,
+    "defaultSpawn": true,
+    "primarySpawn": true,
+    "secondarySpawn": true,
+    "tertiarySpawn": true,
+    "quaternarySpawn": true,
+    "markerCreateCosts": false,
+    "teleportTokens": false,
+    "teleportTokenShopOffers": false
+  },
+  "expose": {
+    "globalMarkers": true
+  },
+  "discord": {
+    "staticGPSChannelId": 0,
+    "privateGPSChannelId": 0,
+    "groupGPSChannelId": 0,
+    "globalGPSChannelId": 0,
+    "gPSIncludeMarkerPosition": true,
+    "gPSIncludeMarkerName": true
+  },
+  "useMarker": {
+    "staticMarkerCooldownSeconds": 10,
+    "privateMarkerCooldownSeconds": 60,
+    "groupMarkerCooldownSeconds": 30,
+    "globalMarkerCooldownSeconds": 300,
+    "staticMarkerCost": 10,
+    "privateMarkerCost": 10,
+    "groupMarkerCost": 10,
+    "globalMarkerCost": 10
+  },
+  "teleportToken": {
+    "currencyIdentifier": "GPSTP",
+    "currencyName": "GPS Teleport Token",
+    "icon": "coin-gps-token",
+    "shopCurrencyIdentifier": "",
+    "package1Price": 25,
+    "package10Price": 200,
+    "package50Price": 900
+  },
+  "restrictToSector": {
+    "privateMarkers": false,
+    "groupMarkers": false,
+    "globalMarkers": false
+  }
+}

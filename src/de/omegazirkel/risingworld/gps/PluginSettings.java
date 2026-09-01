@@ -13,6 +13,7 @@ import de.omegazirkel.risingworld.GPS;
 import de.omegazirkel.risingworld.tools.OZLogger;
 import de.omegazirkel.risingworld.tools.settings.AdminSettingsEntry;
 import de.omegazirkel.risingworld.tools.settings.AdminSettingsType;
+import de.omegazirkel.risingworld.tools.settings.JsonSettingsFile;
 import de.omegazirkel.risingworld.tools.settings.SettingsFileEditor;
 
 public class PluginSettings {
@@ -25,8 +26,6 @@ public class PluginSettings {
 	}
 
 	// Settings
-	public String logLevel = "ALL";
-	public boolean reloadOnChange = true;
 	public boolean enableWelcomeMessage = false;
 	public Integer minimumPlaytimeMinutes = 15;
 
@@ -111,32 +110,26 @@ public class PluginSettings {
 	}
 
 	public void initSettings() {
-		initSettings((plugin.getPath() != null ? plugin.getPath() : ".") + "/settings.properties");
+		initSettings(JsonSettingsFile.worldSettingsFile(plugin.getPath() != null ? plugin.getPath() : ".").toString());
 	}
 
 	public void initSettings(String filePath) {
 		Path settingsFile = Paths.get(filePath);
-		Path defaultSettingsFile = settingsFile.resolveSibling("settings.default.properties");
+		Path defaultSettingsFile = settingsFile.resolveSibling("settings.default.json");
+		Path legacySettingsFile = settingsFile.resolveSibling("settings.properties");
 
 		try {
-			if (Files.notExists(settingsFile) && Files.exists(defaultSettingsFile)) {
-				logger().info("settings.properties not found, copying from settings.default.properties...");
-				Files.copy(defaultSettingsFile, settingsFile);
-			}
+			if (JsonSettingsFile.migrateLegacyProperties(legacySettingsFile, settingsFile))
+				logger().info("Migrated legacy settings.properties to " + settingsFile.getFileName());
+			if (Files.notExists(settingsFile) && Files.exists(defaultSettingsFile))
+				JsonSettingsFile.writeFlatAtomically(settingsFile, JsonSettingsFile.loadFlat(defaultSettingsFile));
+			JsonSettingsFile.normalizePaths(settingsFile);
 
-			Properties settings = new Properties();
-			if (Files.exists(settingsFile)) {
-				try (FileInputStream in = new FileInputStream(settingsFile.toFile())) {
-					settings.load(new InputStreamReader(in, "UTF8"));
-				}
-			} else {
+			Properties settings = loadSettings(settingsFile);
+			if (settings.isEmpty()) {
 				logger().warn(
 						"⚠️ Neither settings.properties nor settings.default.properties found. Using default values.");
 			}
-			// fill global values
-			logLevel = settings.getProperty("logLevel", "ALL");
-			reloadOnChange = settings.getProperty("reloadOnChange", "true").contentEquals("true");
-
 			// motd settings
 			enableWelcomeMessage = settings.getProperty("sendPluginWelcome", "false").contentEquals("true");
 			minimumPlaytimeMinutes = Integer.parseInt(settings.getProperty("minimumPlaytimeMinutes", "15"));
@@ -216,8 +209,6 @@ public class PluginSettings {
 
 			logger().info((plugin == null ? "OZGPS" : plugin.getName()) + " Plugin settings loaded");
 			logger().info("Sending welcome message on login is: " + String.valueOf(enableWelcomeMessage));
-			logger().info("Loglevel is set to " + logLevel);
-			logger().setLevel(logLevel);
 
 		} catch (IOException ex) {
 			logger().error("IOException on initSettings: " + ex.getMessage());
@@ -230,12 +221,7 @@ public class PluginSettings {
 
 	public java.util.List<AdminSettingsEntry> adminSettingsEntries() {
 		return java.util.List.of(
-				AdminSettingsEntry.group("general", "General", "Logging, reload, welcome, and admin override behavior."),
-				entry("logLevel", "Log level", "Controls GPS logging verbosity.", logLevel, "ALL",
-						AdminSettingsType.STRING),
-				entry("reloadOnChange", "Reload on change",
-						"Documents that GPS settings reload when settings.properties changes.", reloadOnChange, "true",
-						AdminSettingsType.BOOLEAN),
+				AdminSettingsEntry.group("general", "General", "Welcome and admin override behavior."),
 				entry("sendPluginWelcome", "Welcome message", "Shows a short GPS message when a player joins.",
 						enableWelcomeMessage, "false", AdminSettingsType.BOOLEAN),
 				entry("allowAdminOverride", "Allow admin override",
@@ -396,7 +382,7 @@ public class PluginSettings {
 				defaultValue,
 				type,
 				false,
-				newValue -> SettingsFileEditor.writeValue(settingsPath(), key, newValue));
+				newValue -> SettingsFileEditor.writeValue(settingsPath(), JsonSettingsFile.canonicalPath(key), newValue));
 	}
 
 	private AdminSettingsEntry readOnlyEntry(String key, String label, String description, Object value,
@@ -422,11 +408,24 @@ public class PluginSettings {
 				defaultValue,
 				AdminSettingsType.SELECT,
 				false,
-				newValue -> SettingsFileEditor.writeValue(settingsPath(), key, newValue),
+				newValue -> SettingsFileEditor.writeValue(settingsPath(), JsonSettingsFile.canonicalPath(key), newValue),
 				options);
 	}
 
 	private Path settingsPath() {
-		return Paths.get((plugin.getPath() != null ? plugin.getPath() : ".") + "/settings.properties");
+		return JsonSettingsFile.worldSettingsFile(plugin.getPath() != null ? plugin.getPath() : ".");
+	}
+
+	private Properties loadSettings(Path file) throws IOException {
+		if (!file.getFileName().toString().endsWith(".properties")) {
+			Properties properties = JsonSettingsFile.loadProperties(file);
+			JsonSettingsFile.addCompatibilityAliases(properties);
+			return properties;
+		}
+		Properties properties = new Properties();
+		if (Files.exists(file)) try (FileInputStream input = new FileInputStream(file.toFile())) {
+			properties.load(new InputStreamReader(input, "UTF8"));
+		}
+		return properties;
 	}
 }

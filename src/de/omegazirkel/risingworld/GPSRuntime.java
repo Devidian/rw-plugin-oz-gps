@@ -96,7 +96,6 @@ class GPSRuntime extends Plugin {
 
 	public void onSettingsChanged(Path settingsPath) {
 		s.initSettings(settingsPath.toString());
-		logger().setLevel(s.logLevel);
 		if (GPSEconomy.getInstance() != null) {
 			GPSEconomy.getInstance().updateSettings(s);
 		}
@@ -123,7 +122,7 @@ class GPSRuntime extends Plugin {
 					PluginInfoStatusProviders.show(player, name);
 					break;
 				case "help":
-					String helpMessage = t.get("TC_CMD_HELP", player).replaceAll("PH_PLUGIN_CMD", pluginCMD);
+					String helpMessage = t.get("tc.cmd.help", player).replaceAll("PH_PLUGIN_CMD", pluginCMD);
 					player.sendTextMessage(c.okay + this.getName() + ":> " + c.endTag + helpMessage);
 					break;
 				case "open":
@@ -135,15 +134,15 @@ class GPSRuntime extends Plugin {
 				case "sortasc":
 					GPSPlayerPreferences.setMarkerSortOrder(player, "ASC");
 					player.sendTextMessage(
-							t.get("TC_MSG_SORT_ORDER_CHANGED", player).replace("PH_SORT_ORDER", "ASC"));
+							t.get("tc.msg.sort.order.changed", player).replace("PH_SORT_ORDER", "ASC"));
 					break;
 				case "sortdesc":
 					GPSPlayerPreferences.setMarkerSortOrder(player, "DESC");
 					player.sendTextMessage(
-							t.get("TC_MSG_SORT_ORDER_CHANGED", player).replace("PH_SORT_ORDER", "DESC"));
+							t.get("tc.msg.sort.order.changed", player).replace("PH_SORT_ORDER", "DESC"));
 					break;
 				default:
-					player.sendTextMessage(t.get("TC_ERR_CMD_UNKNOWN").replace("PH_PLUGIN_CMD", pluginCMD));
+					player.sendTextMessage(t.get("tc.err.cmd.unknown").replace("PH_PLUGIN_CMD", pluginCMD));
 					break;
 			}
 		}
@@ -157,7 +156,7 @@ class GPSRuntime extends Plugin {
 		if (s.enableWelcomeMessage) {
 			// Player player = event.getPlayer();
 			String lang = de.omegazirkel.risingworld.OZTools.getPlayerLanguage(player);
-			player.sendTextMessage(t.get("TC_MSG_PLUGIN_WELCOME", lang)
+			player.sendTextMessage(t.get("tc.msg.plugin.welcome", lang)
 					.replace("PH_PLUGIN_NAME", getDescription("name"))
 					.replace("PH_PLUGIN_CMD", pluginCMD)
 					.replace("PH_PLUGIN_VERSION", getDescription("version")));

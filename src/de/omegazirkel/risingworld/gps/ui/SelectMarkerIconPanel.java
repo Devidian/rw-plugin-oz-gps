@@ -69,7 +69,7 @@ public class SelectMarkerIconPanel extends OZUIElement {
         headerSection.style.height.set(10, Unit.Percent);
         this.addChild(headerSection);
 
-        UILabel title = new UILabel(t().get("TC_LABEL_MARKER_ICON", uiPlayer));
+        UILabel title = new UILabel(t().get("tc.label.marker.icon", uiPlayer));
         title.setSize(100, 10, true);
         title.setFontSize(17);
         title.setTextAlign(TextAnchor.MiddleCenter);

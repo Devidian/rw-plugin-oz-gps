@@ -12,7 +12,6 @@ import de.omegazirkel.risingworld.gps.ui.GPSGridOverlay;
 import de.omegazirkel.risingworld.gps.ui.TeleportOverlay;
 import de.omegazirkel.risingworld.tools.I18n;
 import de.omegazirkel.risingworld.tools.ui.AssetManager;
-import de.omegazirkel.risingworld.tools.ui.CursorManager;
 import de.omegazirkel.risingworld.tools.ui.MenuItem;
 import de.omegazirkel.risingworld.tools.ui.OZUIElement;
 import de.omegazirkel.risingworld.tools.ui.PluginInfoStatusProviders;
@@ -20,6 +19,7 @@ import de.omegazirkel.risingworld.tools.ui.PluginMenuManager;
 import net.risingworld.api.Plugin;
 import net.risingworld.api.callbacks.Callback;
 import net.risingworld.api.objects.Player;
+import net.risingworld.api.ui.UITarget;
 import net.risingworld.api.utils.SpawnPointType;
 import net.risingworld.api.utils.Vector3f;
 
@@ -115,7 +115,7 @@ public class PluginGUI {
                     }
                     TeleportOverlay to = new TeleportOverlay(p, marker, b -> {
                         if (!b) {
-                            p.sendTextMessage(t().get("TC_GPS_CANCELED", p));
+                            p.sendTextMessage(t().get("tc.gps.canceled", p));
                             onTeleportAborted.onCall(true);
                             return;
                         }
@@ -126,8 +126,7 @@ public class PluginGUI {
                     p.setAttribute("gps-ui-overlay", to);
 
                     p.hideRadialMenu(true);
-                    CursorManager.show(p);
-                    p.addUIElement(to);
+                    p.addUIElement(to, UITarget.Modal);
                 });
     }
 
@@ -139,26 +138,26 @@ public class PluginGUI {
         if (nonStaticAccess && s.enablePrivateMarkers)
             menuItems.add(
                     new MenuItem("menu-marker-private",
-                            t().get("TC_MENU_PRIVATE_MARKER", uiPlayer),
+                            t().get("tc.menu.private.marker", uiPlayer),
                             (Player p) -> openPrivateTeleportMenu(p, 0, onBackReopen)));
         if (nonStaticAccess && s.enableGroupMarkers)
             menuItems
                     .add(new MenuItem("menu-marker-group-alt",
-                            t().get("TC_MENU_GROUP_MARKER", uiPlayer),
+                            t().get("tc.menu.group.marker", uiPlayer),
                             (Player p) -> openGroupTeleportMenu(p, 0, onBackReopen)));
         if (nonStaticAccess && s.enableGlobalMarkers)
             menuItems.add(
-                    new MenuItem("menu-global-marker", t().get("TC_MENU_GLOBAL_MARKER", uiPlayer),
+                    new MenuItem("menu-global-marker", t().get("tc.menu.global.marker", uiPlayer),
                             (Player p) -> openGlobalTeleportMenu(p, 0, onBackReopen)));
         if (s.enableStaticMarkers)
             menuItems.add(
-                    new MenuItem("menu-marker-static", t().get("TC_MENU_STATIC_MARKER", uiPlayer),
+                    new MenuItem("menu-marker-static", t().get("tc.menu.static.marker", uiPlayer),
                             (Player p) -> openStaticTeleportMenu(p, onBackReopen)));
 		if (uiPlayer.isAdmin() && GPSAreaAccessPolicy.areaFeaturesEnabled() && uiPlayer.getCurrentArea() != null)
-			menuItems.add(new MenuItem("marker-special-destination", t().get("TC_GPS_AREA_MANAGE", uiPlayer),
+			menuItems.add(new MenuItem("marker-special-destination", t().get("tc.gps.area.manage", uiPlayer),
 					(Player p) -> openGPSAreaManagement(p)));
 
-        menuItems.add(PluginInfoStatusProviders.menuItem(t().get("TC_MENU_INFO_STATUS", uiPlayer), GPS.name));
+        menuItems.add(PluginInfoStatusProviders.menuItem(t().get("tc.menu.info.status", uiPlayer), GPS.name));
         menuItems.add(MenuItem.closeMenu(uiPlayer));
         PluginMenuManager.showMenu(uiPlayer, menuItems);
     }
@@ -181,8 +180,7 @@ public class PluginGUI {
         uiPlayer.setAttribute("gps-ui-overlay", overlay);
 
         uiPlayer.hideRadialMenu(true);
-        CursorManager.show(uiPlayer);
-        uiPlayer.addUIElement(overlay);
+        uiPlayer.addUIElement(overlay, UITarget.Modal);
     }
 
 	private void openGPSAreaManagement(Player player) {
@@ -194,7 +192,7 @@ public class PluginGUI {
 		boolean updated = marked ? GPSDatabase.getInstance().deleteGPSArea(areaId)
 				: GPSDatabase.getInstance().saveGPSArea(areaId, player.getDbID(), true);
 		if (updated) {
-			player.sendTextMessage(t().get(marked ? "TC_GPS_AREA_UNMARKED" : "TC_GPS_AREA_MARKED", player));
+			player.sendTextMessage(t().get(marked ? "tc.gps.area.unmarked" : "tc.gps.area.marked", player));
 		}
 		openGridView(player);
 	}
@@ -219,7 +217,7 @@ public class PluginGUI {
         // Add marker menu item
         if (GPSAreaAccessPolicy.markerCreationDenialKey(uiPlayer, MarkerType.PRIVATE) == null) menuItems.add(
                 new MenuItem("gps-marker-create",
-                        t().get("TC_MENU_ADD_MARKER_PRIVATE", uiPlayer),
+                        t().get("tc.menu.add.marker.private", uiPlayer),
                         (Player p) -> {
                             if (!canCreateMarker(p, MarkerType.PRIVATE)) {
                                 openPrivateTeleportMenu(p, level, onBack);
@@ -242,8 +240,7 @@ public class PluginGUI {
                             p.setAttribute("gps-ui-overlay", overlay);
 
                             p.hideRadialMenu(true);
-                            CursorManager.show(p);
-                            p.addUIElement(overlay);
+                            p.addUIElement(overlay, UITarget.Modal);
 
                         }));
 
@@ -258,7 +255,7 @@ public class PluginGUI {
 
         if (markers.size() >= markersPerPage)
             menuItems.add(
-                    new MenuItem("next-page", t().get("TC_MENU_NEXT_PAGE", uiPlayer),
+                    new MenuItem("next-page", t().get("tc.menu.next.page", uiPlayer),
                             (Player p) -> openPrivateTeleportMenu(p, level + 1, onBackReopen)));
 
         PluginMenuManager.showMenu(uiPlayer, menuItems);
@@ -289,45 +286,45 @@ public class PluginGUI {
 
         if (primarySpawnPos != null)
             menuItems.add(new MenuItem("marker-sleep-restroom",
-                    t().get("TC_MENU_STATIC_PRIMARY_SPAWN", uiPlayer),
-                    teleportAction.apply(primarySpawnPos, t().get("TC_MENU_STATIC_PRIMARY_SPAWN", uiPlayer))));
+                    t().get("tc.menu.static.primary.spawn", uiPlayer),
+                    teleportAction.apply(primarySpawnPos, t().get("tc.menu.static.primary.spawn", uiPlayer))));
         if (secondarySpawnPos != null)
             menuItems.add(
                     new MenuItem("marker-sleep-tent",
-                            t().get("TC_MENU_STATIC_SECONDARY_SPAWN", uiPlayer),
+                            t().get("tc.menu.static.secondary.spawn", uiPlayer),
                             teleportAction.apply(secondarySpawnPos,
-                                    t().get("TC_MENU_STATIC_SECONDARY_SPAWN", uiPlayer))));
+                                    t().get("tc.menu.static.secondary.spawn", uiPlayer))));
         if (tertiarySpawnPos != null)
             menuItems.add(new MenuItem("marker-sleep-king-size-bed",
-                    t().get("TC_MENU_STATIC_TERTIARY_SPAWN", uiPlayer),
-                    teleportAction.apply(tertiarySpawnPos, t().get("TC_MENU_STATIC_TERTIARY_SPAWN", uiPlayer))));
+                    t().get("tc.menu.static.tertiary.spawn", uiPlayer),
+                    teleportAction.apply(tertiarySpawnPos, t().get("tc.menu.static.tertiary.spawn", uiPlayer))));
         if (quaternarySpawnPos != null)
             menuItems.add(
                     new MenuItem("marker-sleep-sign",
-                            t().get("TC_MENU_STATIC_QUATERNARY_SPAWN", uiPlayer),
+                            t().get("tc.menu.static.quaternary.spawn", uiPlayer),
                             teleportAction.apply(quaternarySpawnPos,
-                                    t().get("TC_MENU_STATIC_QUATERNARY_SPAWN", uiPlayer))));
+                                    t().get("tc.menu.static.quaternary.spawn", uiPlayer))));
         if (defaultSpawnPos != null)
             menuItems.add(new MenuItem("marker-coast-jetty",
-                    t().get("TC_MENU_STATIC_DEFAULT_SPAWN", uiPlayer),
-                    teleportAction.apply(defaultSpawnPos, t().get("TC_MENU_STATIC_DEFAULT_SPAWN", uiPlayer))));
+                    t().get("tc.menu.static.default.spawn", uiPlayer),
+                    teleportAction.apply(defaultSpawnPos, t().get("tc.menu.static.default.spawn", uiPlayer))));
         if (lastPositionBeforePort != null)
             menuItems.add(
                     new MenuItem("marker-special-destination",
-                            t().get("TC_MENU_STATIC_BACKPORT", uiPlayer),
+                            t().get("tc.menu.static.backport", uiPlayer),
                             (Player p) -> {
                                 if (GPSEventUtils.executeTeleport(uiPlayer, lastPositionBeforePort,
-                                        t().get("TC_MENU_STATIC_BACKPORT", uiPlayer), MarkerType.STATIC, false)) {
+                                        t().get("tc.menu.static.backport", uiPlayer), MarkerType.STATIC, false)) {
                                     p.hideRadialMenu(false);
                                 }
                             }));
         if (lastDeathPosition != null)
             menuItems.add(
                     new MenuItem("marker-sleep-rip",
-                            t().get("TC_MENU_STATIC_DEATHPORT", uiPlayer),
+                            t().get("tc.menu.static.deathport", uiPlayer),
                             (Player p) -> {
                                 if (GPSEventUtils.executeTeleport(uiPlayer, lastDeathPosition,
-                                        t().get("TC_MENU_STATIC_DEATHPORT", uiPlayer), MarkerType.STATIC, false)) {
+                                        t().get("tc.menu.static.deathport", uiPlayer), MarkerType.STATIC, false)) {
                                     p.hideRadialMenu(false);
                                 }
                             }));
@@ -357,7 +354,7 @@ public class PluginGUI {
         // Add marker menu item
         if (GPSAreaAccessPolicy.markerCreationDenialKey(uiPlayer, MarkerType.GROUP) == null) menuItems
                 .add(new MenuItem("gps-marker-create",
-                        t().get("TC_MENU_ADD_MARKER_GROUP", uiPlayer),
+                        t().get("tc.menu.add.marker.group", uiPlayer),
                         (Player p) -> {
                             if (!canCreateMarker(p, MarkerType.GROUP)) {
                                 openGroupTeleportMenu(p, level, onBack);
@@ -380,8 +377,7 @@ public class PluginGUI {
                             p.setAttribute("gps-ui-overlay", overlay);
 
                             p.hideRadialMenu(true);
-                            CursorManager.show(p);
-                            p.addUIElement(overlay);
+                            p.addUIElement(overlay, UITarget.Modal);
                         }));
         menuItems.add(MenuItem.closeMenu(uiPlayer));
         menuItems.add(MenuItem.backMenu(uiPlayer, onBack));
@@ -394,7 +390,7 @@ public class PluginGUI {
 
         if (markers.size() >= markersPerPage)
             menuItems.add(
-                    new MenuItem("next-page", t().get("TC_MENU_NEXT_PAGE", uiPlayer),
+                    new MenuItem("next-page", t().get("tc.menu.next.page", uiPlayer),
                             (Player p) -> openGroupTeleportMenu(p, level + 1, onBackReopen)));
 
         PluginMenuManager.showMenu(uiPlayer, menuItems);
@@ -420,7 +416,7 @@ public class PluginGUI {
         if (uiPlayer.isAdmin())
             menuItems.add(
                     new MenuItem("gps-marker-create",
-                            t().get("TC_MENU_ADD_MARKER_GLOBAL", uiPlayer),
+                            t().get("tc.menu.add.marker.global", uiPlayer),
                             (Player p) -> {
                                 if (!canCreateMarker(p, MarkerType.GLOBAL)) {
                                     openGlobalTeleportMenu(p, level, onBack);
@@ -436,7 +432,7 @@ public class PluginGUI {
 
                                     GPSDatabase.getInstance().saveMarker(marker);
                                     openGlobalTeleportMenu(p, level, onBack);
-                                    p.sendTextMessage(t().get("TC_GPS_GLOBAL_CREATED", p)
+                                    p.sendTextMessage(t().get("tc.gps.global.created", p)
                                             .replace("PH_MARKER_NAME", marker.getName())
                                             .replace("PH_MARKER_POS", marker.getPosition() + ""));
 
@@ -444,8 +440,7 @@ public class PluginGUI {
                                 p.setAttribute("gps-ui-overlay", overlay);
 
                                 p.hideRadialMenu(true);
-                                CursorManager.show(p);
-                                p.addUIElement(overlay);
+                                p.addUIElement(overlay, UITarget.Modal);
                             }));
         menuItems.add(MenuItem.closeMenu(uiPlayer));
         menuItems.add(MenuItem.backMenu(uiPlayer, onBack));
@@ -458,7 +453,7 @@ public class PluginGUI {
 
         if (markers.size() >= markersPerPage)
             menuItems.add(
-                    new MenuItem("next-page", t().get("TC_MENU_NEXT_PAGE", uiPlayer),
+                    new MenuItem("next-page", t().get("tc.menu.next.page", uiPlayer),
                             (Player p) -> openGlobalTeleportMenu(p, level + 1, onBackReopen)));
 
         PluginMenuManager.showMenu(uiPlayer, menuItems);
@@ -475,7 +470,7 @@ public class PluginGUI {
 		}
         GPSEconomy economy = GPSEconomy.getInstance();
         if (economy != null && economy.markerLimitReached(player, type)) {
-            player.sendTextMessage(t().get("TC_GPS_MARKER_LIMIT_REACHED", player)
+            player.sendTextMessage(t().get("tc.gps.marker.limit.reached", player)
                     .replace("PH_LIMIT", String.valueOf(economy.markerLimit(type))));
             return false;
         }
@@ -490,7 +485,7 @@ public class PluginGUI {
         if (GPSAccessPolicy.canUse(player, type)) {
             return true;
         }
-        player.sendTextMessage(t().get("TC_GPS_PLAYTIME_REQUIRED", player)
+        player.sendTextMessage(t().get("tc.gps.playtime.required", player)
                 .replace("PH_REQUIRED_MINUTES", String.valueOf(GPSAccessPolicy.requiredMinutes()))
                 .replace("PH_REMAINING_MINUTES", String.valueOf(GPSAccessPolicy.remainingMinutes(player))));
         return false;
@@ -501,17 +496,17 @@ public class PluginGUI {
         if (economy != null) {
             EconomyResult charge = economy.chargeMarkerCreation(player, marker.getType());
             if (!charge.success()) {
-                player.sendTextMessage(t().get("TC_GPS_ECONOMY_FAILED", player)
+                player.sendTextMessage(t().get("tc.gps.economy.failed", player)
                         .replace("PH_MESSAGE", charge.message()));
                 return false;
             }
             if (!charge.message().isBlank()) {
-                player.sendTextMessage(t().get("TC_GPS_COST_CHARGED", player)
+                player.sendTextMessage(t().get("tc.gps.cost.charged", player)
                         .replace("PH_COST", charge.message()));
             }
         }
         GPSDatabase.getInstance().saveMarker(marker);
-        String key = marker.getType() == MarkerType.GROUP ? "TC_GPS_GROUP_CREATED" : "TC_GPS_PRIVATE_CREATED";
+        String key = marker.getType() == MarkerType.GROUP ? "tc.gps.group.created" : "tc.gps.private.created";
         player.sendTextMessage(t().get(key, player)
                 .replace("PH_MARKER_NAME", marker.getName())
                 .replace("PH_MARKER_POS", marker.getPosition() + ""));

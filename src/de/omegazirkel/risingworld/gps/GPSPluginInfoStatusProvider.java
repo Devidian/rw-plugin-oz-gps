@@ -23,7 +23,7 @@ public class GPSPluginInfoStatusProvider implements PluginInfoStatusProvider {
 
     @Override
     public String getInfo(Player player) {
-        return t().get("TC_GPS_INFO_PANEL_INFO", player)
+        return t().get("tc.gps.info.panel.info", player)
                 .replace("PH_PLUGIN_NAME", pluginName)
                 .replace("PH_VERSION", version)
                 .replace("PH_PLUGIN_CMD", "gps");
@@ -33,7 +33,7 @@ public class GPSPluginInfoStatusProvider implements PluginInfoStatusProvider {
     public String getStatus(Player player) {
         PluginSettings settings = PluginSettings.getInstance();
         GPSEconomy economy = GPSEconomy.getInstance();
-        return t().get("TC_GPS_INFO_PANEL_STATUS", player)
+        return t().get("tc.gps.info.panel.status", player)
                 .replace("PH_ENTRY_MODE", GPSPlayerPreferences.entryMode(player))
                 .replace("PH_TRAVEL_COST_MODE", settings.travelCostMode)
                 .replace("PH_MARKER_CREATE_COSTS", String.valueOf(settings.enableMarkerCreateCosts))
