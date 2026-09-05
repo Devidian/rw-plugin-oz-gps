@@ -3,6 +3,7 @@
 ## [0.9.0] - 2026-09-05 | Native global-marker route
 
 - feat: expose global GPS markers through the native PluginAPI webserver route.
+- change: migrate GPS settings and translations to JSON and align marker interfaces with the current PluginAPI runtime.
 
 <https://www.conventionalcommits.org/en/v1.0.0/>
 
