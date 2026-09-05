@@ -11,6 +11,8 @@ import de.omegazirkel.risingworld.gps.GPSPluginInfoStatusProvider;
 import de.omegazirkel.risingworld.gps.GPSPlayerPreferences;
 import de.omegazirkel.risingworld.gps.PluginGUI;
 import de.omegazirkel.risingworld.gps.PluginSettings;
+import de.omegazirkel.risingworld.gps.exports.GpsMarkerExportService;
+import de.omegazirkel.risingworld.gps.web.GpsGlobalMarkerRoute;
 import de.omegazirkel.risingworld.gps.ui.GPSPlayerPluginData;
 import de.omegazirkel.risingworld.gps.ui.GPSPlayerPluginSettings;
 import de.omegazirkel.risingworld.tools.Colors;
@@ -40,6 +42,8 @@ class GPSRuntime extends Plugin {
 	public static String name;
 	public static Connection db;
 	public static PlayerSettings ps;
+	private static final String WEBSERVER_MARKER_ROUTE = "marker";
+	private GpsGlobalMarkerRoute webserverMarkerRoute;
 
 	public static OZLogger logger() {
 		return OZLogger.getInstance("OZ.GPS");
@@ -54,6 +58,7 @@ class GPSRuntime extends Plugin {
 		db = SQLiteConnectionFactory.open(this);
 		ps = new PlayerSettings(db);
 		GPSDatabase.getInstance(db);
+		registerWebserverMarkerRoute();
 		gui = PluginGUI.getInstance(this);
 		// Load Plugin Menu into Main Plugin Menu
 		PluginMenuManager
@@ -81,6 +86,10 @@ class GPSRuntime extends Plugin {
 
 	@Override
 	public void onDisable() {
+		if (webserverMarkerRoute != null) {
+			unregisterWebserverHandler(WEBSERVER_MARKER_ROUTE);
+			webserverMarkerRoute = null;
+		}
 		if (name != null) {
 			PluginShortcutVisibility.unregister(name);
 			PluginInfoStatusProviders.unregisterProvider(name);
@@ -92,6 +101,18 @@ class GPSRuntime extends Plugin {
 				logger().error("Failed to close GPS database connection: " + ex.getMessage());
 			}
 		}
+	}
+
+	private void registerWebserverMarkerRoute() {
+		webserverMarkerRoute = new GpsGlobalMarkerRoute(() -> s.exposeGlobalMarkers, lastChange -> {
+			try {
+				return new GpsMarkerExportService(db).exportGlobalMarkers(lastChange);
+			} catch (SQLException ex) {
+				throw new IllegalStateException(ex);
+			}
+		});
+		registerWebserverHandler(WEBSERVER_MARKER_ROUTE, webserverMarkerRoute);
+		logger().info("Native GPS global-marker route registered at /" + WEBSERVER_MARKER_ROUTE);
 	}
 
 	public void onSettingsChanged(Path settingsPath) {

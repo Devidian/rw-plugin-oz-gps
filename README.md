@@ -106,9 +106,10 @@ Other icons (`icon-gpt-*`) made by chat-gpt
 
 ## Future export route preparation
 
-GPS contains route-ready export DTOs/services for future native plugin routes.
-The prepared global marker export matches the transitional bridge contract and
-supports `lastChange` cursor filtering over marker `created_at` values.
+GPS exposes its global marker export through the native game route
+`/plugins/oz---gps/marker?type=global`. The existing `exposeGlobalMarkers`
+flag controls access. Private, group, static, and server-warp markers are never
+included. `lastChange` retains cursor filtering over marker `created_at` values.
 `exposeGlobalMarkers=true` controls whether the future native global-marker
 route should be exposed.
 

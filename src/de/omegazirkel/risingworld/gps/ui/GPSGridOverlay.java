@@ -131,7 +131,12 @@ public class GPSGridOverlay extends OZUIElement {
         // global marker selection
         if (GPSAccessPolicy.canUseNonStatic(player) && s.enableGlobalMarkers)
             tabSelectionHeader.addChild(createTab("tc.menu.global.marker", MarkerType.GLOBAL, player));
-        tabSelectionHeader.addChild(createServerWarpTab(player));
+        boolean showServerWarp = player.isAdmin() || !GPSDatabase.getInstance().getServerPins().isEmpty();
+        if (showServerWarp) {
+            tabSelectionHeader.addChild(createServerWarpTab(player));
+        } else {
+            serverWarpTab = false;
+        }
         // close button
         tabSelectionHeader.addChild(setupCloseTab(player));
 

@@ -31,12 +31,14 @@ Add an administrator-managed `Warp Marker` GridView tab after global markers. Pl
 - [x] Run tests, package, API and entry-point checks, then Dev-upload GPS only.
 - [x] Verify reload/startup logs; keep manual transfer acceptance separate.
 
-## Manual in-game acceptance still required
+## In-game acceptance
 
-- [ ] Confirm `Warp Marker` follows `Globale Marker` in GridView with both icon themes.
-- [ ] As an administrator, create, edit, and delete a server pin.
-- [ ] Select a pin with a valid target and verify the connection hand-off.
-- [ ] Verify malformed targets are rejected and an unavailable target returns the localized failure message.
+- [x] Confirm `Warp Marker` follows `Globale Marker` in GridView with both icon themes.
+- [x] As an administrator, create, edit, and delete a server pin.
+- [x] Select a pin with a valid target and verify the connection hand-off.
+- [x] Verify malformed targets are rejected and an unavailable target returns the localized failure message.
+
+Production acceptance across multiple servers was confirmed on 2026-09-04.
 
 ## Affected repositories
 
