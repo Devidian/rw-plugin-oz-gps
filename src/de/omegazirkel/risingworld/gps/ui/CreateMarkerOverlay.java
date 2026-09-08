@@ -134,7 +134,9 @@ public class CreateMarkerOverlay extends OZUIElement {
                     marker.setName(selectedMarkerName);
                     marker.setIcon(selectedMarkerKey);
                 }
-                close(player);
+				// The caller restores the GPS overlay immediately after saving. Do not close
+				// all active UI windows here, or that deferred close also dismisses it.
+				close(player, false);
                 this.onMarkerCreated.onCall(marker);
             });
 
@@ -164,9 +166,15 @@ public class CreateMarkerOverlay extends OZUIElement {
     }
 
     public void close(Player player) {
+		close(player, true);
+	}
+
+	private void close(Player player, boolean closeActiveUIWindows) {
         player.removeUIElement(this);
         player.deleteAttribute("gps-ui-overlay");
-        player.closeAllActiveUIWindows();
+		if (closeActiveUIWindows) {
+			player.closeAllActiveUIWindows();
+		}
     }
 
 }

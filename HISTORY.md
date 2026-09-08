@@ -1,5 +1,9 @@
 # History / Changelog / Commitlog
 
+## [0.9.1] - 2026-09-08 | Marker overlay return
+
+- fix: keep the GPS overview open after saving a created or edited marker.
+
 ## [0.9.0] - 2026-09-05 | Native global-marker route
 
 - feat: expose global GPS markers through the native PluginAPI webserver route.
