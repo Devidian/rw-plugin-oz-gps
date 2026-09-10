@@ -148,6 +148,9 @@
       }
     },
     "gps": {
+      "warp": {
+        "announcement": "PH_PLAYER_NAME teleported to PH_GPS_NAME."
+      },
       "area": {
         "manage": "Manage GPS area",
         "mark": "Mark PH_AREA_NAME as GPS area",

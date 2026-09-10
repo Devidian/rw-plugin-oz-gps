@@ -148,6 +148,9 @@
       }
     },
     "gps": {
+      "warp": {
+        "announcement": "PH_PLAYER_NAME hat sich zu PH_GPS_NAME teleportiert."
+      },
       "area": {
         "manage": "GPS-Zone verwalten",
         "mark": "PH_AREA_NAME als GPS-Zone markieren",

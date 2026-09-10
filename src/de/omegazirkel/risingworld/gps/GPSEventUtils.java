@@ -3,6 +3,7 @@ package de.omegazirkel.risingworld.gps;
 import de.omegazirkel.risingworld.GPS;
 import de.omegazirkel.risingworld.tools.I18n;
 import net.risingworld.api.objects.Player;
+import net.risingworld.api.Server;
 import net.risingworld.api.utils.Vector3f;
 
 public class GPSEventUtils {
@@ -59,6 +60,8 @@ public class GPSEventUtils {
             uiPlayer.setAttribute("pre-port-location", uiPlayer.getPosition());
         uiPlayer.setPosition(pos);
         TeleportCooldowns.recordUse(uiPlayer, type);
+        Server.broadcastTextMessage(t().get("tc.gps.warp.announcement", uiPlayer)
+                .replace("PH_PLAYER_NAME", uiPlayer.getName()).replace("PH_GPS_NAME", label));
 
         switch (type) {
             case GLOBAL:
