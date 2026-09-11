@@ -1,5 +1,10 @@
 # History / Changelog / Commitlog
 
+## [0.10.0] - 2026-09-11 | Marker privacy preferences
+
+- change: keep regular marker movement private and announce only completed server warps to the affected player.
+- feat: add opt-in administrator preferences for viewing private, group, and global marker details.
+
 ## [0.9.2] - 2026-09-10 | Warp announcements
 
 - feat: announce successful GPS marker warps globally with the player's name and destination marker.
