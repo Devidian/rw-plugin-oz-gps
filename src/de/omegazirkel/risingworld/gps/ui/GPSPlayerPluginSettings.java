@@ -2,6 +2,7 @@ package de.omegazirkel.risingworld.gps.ui;
 
 import de.omegazirkel.risingworld.GPS;
 import de.omegazirkel.risingworld.gps.GPSPlayerPreferences;
+import de.omegazirkel.risingworld.gps.MarkerType;
 import de.omegazirkel.risingworld.tools.I18n;
 import de.omegazirkel.risingworld.tools.ui.BasePlayerPluginSettingsPanel;
 import de.omegazirkel.risingworld.tools.ui.OZUIElement;
@@ -31,6 +32,12 @@ public class GPSPlayerPluginSettings extends PlayerPluginSettings {
                 flexWrapper.addChild(playerSettingConfirmMarkerDelete(uiPlayer));
                 if (uiPlayer.isAdmin()) {
                     flexWrapper.addChild(playerSettingAdminOverride(uiPlayer));
+                    flexWrapper.addChild(playerSettingTeleportObserver(uiPlayer, MarkerType.PRIVATE,
+                            "tc.label.observe.private.teleports"));
+                    flexWrapper.addChild(playerSettingTeleportObserver(uiPlayer, MarkerType.GROUP,
+                            "tc.label.observe.group.teleports"));
+                    flexWrapper.addChild(playerSettingTeleportObserver(uiPlayer, MarkerType.GLOBAL,
+                            "tc.label.observe.global.teleports"));
                 }
             }
 
@@ -78,6 +85,17 @@ public class GPSPlayerPluginSettings extends PlayerPluginSettings {
                 boolean currentValue = GPSPlayerPreferences.adminOverride(uiPlayer);
                 element.addChild(switchButtons(uiPlayer, currentValue, event -> {
                     GPSPlayerPreferences.setAdminOverride(uiPlayer, !currentValue);
+                    redrawContent();
+                }));
+                return element;
+            }
+
+            protected OZUIElement playerSettingTeleportObserver(Player uiPlayer, MarkerType type, String labelKey) {
+                OZUIElement element = defaultSettingsContainer();
+                element.addChild(defaultSettingsLabel(t().get(labelKey, uiPlayer)));
+                boolean currentValue = GPSPlayerPreferences.observesTeleports(uiPlayer, type);
+                element.addChild(switchButtons(uiPlayer, currentValue, event -> {
+                    GPSPlayerPreferences.setObservesTeleports(uiPlayer, type, !currentValue);
                     redrawContent();
                 }));
                 return element;

@@ -22,6 +22,7 @@ import de.omegazirkel.risingworld.tools.ui.AdvancedButton;
 import de.omegazirkel.risingworld.tools.ui.AdvancedButtonFactory;
 import de.omegazirkel.risingworld.tools.ui.OZUIElement;
 import net.risingworld.api.Timer;
+import net.risingworld.api.Server;
 import net.risingworld.api.assets.TextureAsset;
 import net.risingworld.api.callbacks.Callback;
 import net.risingworld.api.objects.Player;
@@ -286,7 +287,20 @@ public class GPSGridOverlay extends OZUIElement {
 
     private void connectToServer(Player player, ServerPin pin) {
         if (!ServerPinAddress.isValid(pin.getAddress())) { player.sendTextMessage(t().get("tc.gps.server.pin.address.invalid", player)); return; }
-        player.connectToOtherServer(pin.getAddress(), pin.getPassword(), success -> player.sendTextMessage(t().get(Boolean.TRUE.equals(success) ? "tc.gps.server.warp.success" : "tc.gps.server.warp.failed", player).replace("PH_SERVER_PIN_NAME", pin.getName())));
+        player.connectToOtherServer(pin.getAddress(), pin.getPassword(), success -> {
+            boolean connected = Boolean.TRUE.equals(success);
+            player.sendTextMessage(t().get(connected ? "tc.gps.server.warp.success" : "tc.gps.server.warp.failed", player)
+                    .replace("PH_SERVER_PIN_NAME", pin.getName()));
+            if (connected) announceServerWarp(player, pin);
+        });
+    }
+
+    private void announceServerWarp(Player warpingPlayer, ServerPin pin) {
+        for (Player recipient : Server.getAllPlayers()) {
+            if (recipient == null || !recipient.isConnected()) continue;
+            recipient.sendTextMessage(t().get("tc.gps.warp.announcement", recipient)
+                    .replace("PH_PLAYER_NAME", warpingPlayer.getName()).replace("PH_GPS_NAME", pin.getName()));
+        }
     }
 
     private void refreshGrid(MarkerType type, Player uiPlayer) {

@@ -2,8 +2,8 @@ package de.omegazirkel.risingworld.gps;
 
 import de.omegazirkel.risingworld.GPS;
 import de.omegazirkel.risingworld.tools.I18n;
-import net.risingworld.api.objects.Player;
 import net.risingworld.api.Server;
+import net.risingworld.api.objects.Player;
 import net.risingworld.api.utils.Vector3f;
 
 public class GPSEventUtils {
@@ -60,9 +60,6 @@ public class GPSEventUtils {
             uiPlayer.setAttribute("pre-port-location", uiPlayer.getPosition());
         uiPlayer.setPosition(pos);
         TeleportCooldowns.recordUse(uiPlayer, type);
-        Server.broadcastTextMessage(t().get("tc.gps.warp.announcement", uiPlayer)
-                .replace("PH_PLAYER_NAME", uiPlayer.getName()).replace("PH_GPS_NAME", label));
-
         switch (type) {
             case GLOBAL:
                 GPSEventUtils.onGlobalGPSEvent(uiPlayer, label, pos);
@@ -102,6 +99,7 @@ public class GPSEventUtils {
     public static void onPrivateGPSEvent(Player p, String gpsName, Vector3f targetPos) {
         p.sendTextMessage(
                 t().get("tc.gps.private", p).replace("PH_GPS_NAME", gpsName));
+        notifyTeleportObservers(p, MarkerType.PRIVATE);
         String msgKey = "tc.discord.gps.private.event";
         if (!s.discordGPSIncludeMarkerName && !s.discordGPSIncludeMarkerPosition) {
             msgKey = "tc.discord.gps.private.event.no.details";
@@ -120,6 +118,7 @@ public class GPSEventUtils {
 
     public static void onGroupGPSEvent(Player p, String gpsName, Vector3f targetPos) {
         p.sendTextMessage(t().get("tc.gps.group", p).replace("PH_GPS_NAME", gpsName));
+        notifyTeleportObservers(p, MarkerType.GROUP);
         String groupMsgKey = "tc.discord.gps.group.event";
         if (!s.discordGPSIncludeMarkerName && !s.discordGPSIncludeMarkerPosition) {
             groupMsgKey = "tc.discord.gps.group.event.no.details";
@@ -136,6 +135,7 @@ public class GPSEventUtils {
 
     public static void onGlobalGPSEvent(Player p, String gpsName, Vector3f targetPos) {
         p.sendTextMessage(t().get("tc.gps.global", p).replace("PH_GPS_NAME", gpsName));
+        notifyTeleportObservers(p, MarkerType.GLOBAL);
         String globalMsgKey = "tc.discord.gps.global.event";
         if (!s.discordGPSIncludeMarkerName && !s.discordGPSIncludeMarkerPosition) {
             globalMsgKey = "tc.discord.gps.global.event.no.details";
@@ -148,5 +148,15 @@ public class GPSEventUtils {
                 .replace("PH_PLAYER_NAME", p.getName())
                 .replace("PH_GPS_NAME", gpsName)
                 .replace("PH_GPS_POS", targetPos.toString()));
+    }
+
+    private static void notifyTeleportObservers(Player teleporter, MarkerType type) {
+        for (Player observer : Server.getAllPlayers()) {
+            if (observer == null || !observer.isConnected() || observer.getDbID() == teleporter.getDbID()
+                    || !observer.isAdmin() || !GPSPlayerPreferences.observesTeleports(observer, type)) continue;
+            observer.sendTextMessage(t().get("tc.gps.teleport.observed", observer)
+                    .replace("PH_PLAYER_NAME", teleporter.getName())
+                    .replace("PH_MARKER_TYPE", t().get(TeleportCooldowns.displayTypeKey(type), observer)));
+        }
     }
 }

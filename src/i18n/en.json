@@ -147,8 +147,11 @@
         "unknown": "Unknown command. Type \u003ccolor\u003dred\u003e/PH_PLUGIN_CMD help\u003c/color\u003e for help."
       }
     },
-    "gps": {
-      "warp": {
+      "gps": {
+        "teleport": {
+          "observed": "PH_PLAYER_NAME performed a PH_MARKER_TYPE teleport."
+        },
+        "warp": {
         "announcement": "PH_PLAYER_NAME teleported to PH_GPS_NAME."
       },
       "area": {
@@ -244,6 +247,17 @@
       },
       "gps": {
         "shortcut": "Show GPS shortcut in /ozt and inventory"
+      },
+      "observe": {
+        "private": {
+          "teleports": "Show other players' private teleports"
+        },
+        "group": {
+          "teleports": "Show other players' group teleports"
+        },
+        "global": {
+          "teleports": "Show other players' global teleports"
+        }
       },
       "marker": {
         "icon": "Select Marker Icon",
