@@ -1,8 +1,9 @@
 # History / Changelog / Commitlog
 
-## [0.10.2] - 2026-09-19 | Release CI correction
+## [0.10.3] - 2026-09-19 | Release CI correction
 
 - fix: install the matching Rising World PluginAPI version in GitHub Actions release jobs.
+- change: include the bundled Rising World PluginAPI 0.9.3.2 update.
 
 ## [0.10.1] - 2026-09-19 | Permanent server warp markers
 
