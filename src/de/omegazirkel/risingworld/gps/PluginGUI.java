@@ -56,7 +56,8 @@ public class PluginGUI {
     public static final List<String> serverPinKeys = Arrays.asList(
             "marker-server-1", "marker-server-2", "marker-server-3", "marker-server-4", "marker-server-5",
             "marker-server-6", "marker-server-7", "marker-server-8", "marker-server-9", "marker-server-10",
-            "marker-server-11", "marker-server-12", "marker-server-13", "marker-server-14", "marker-server-15");
+            "marker-server-11", "marker-server-12", "marker-server-13", "marker-server-14", "marker-server-15",
+            "marker-server-16", "marker-server-17", "marker-server-18", "marker-server-19");
 
     private static I18n t() {
         return I18n.getInstance(GPS.name);

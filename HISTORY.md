@@ -1,5 +1,10 @@
 # History / Changelog / Commitlog
 
+## [0.10.1] - 2026-09-19 | Permanent server warp markers
+
+- change: add four dedicated permanent-server planet icons for Warp Marker pins.
+- fix: after saving a server Warp Marker, return to the active Warp Marker GridView tab.
+
 ## [0.10.0] - 2026-09-11 | Marker privacy preferences
 
 - change: keep regular marker movement private and announce only completed server warps to the affected player.

@@ -98,8 +98,15 @@ public class ServerPinOverlay extends OZUIElement {
             if (!ServerPinAddress.isValid(address)) { player.sendTextMessage(t().get("tc.gps.server.pin.address.invalid", player)); return; }
             ServerPin pin = existingPin == null ? new ServerPin(player.getDbID(), name.trim(), icon, address.trim(), password) : existingPin;
             if (existingPin != null) { pin.setName(name.trim()); pin.setIcon(icon); pin.setAddress(address.trim()); pin.setPassword(password); }
-            close(player); onSaved.onCall(pin);
+            closeAfterSave(player);
+            onSaved.onCall(pin);
         })));
+    }
+
+    /** Keeps the parent GridView alive so its active Warp Marker tab can resume after saving. */
+    private void closeAfterSave(Player player) {
+        player.removeUIElement(this);
+        player.deleteAttribute("gps-ui-overlay");
     }
 
     public void close(Player player) { player.removeUIElement(this); player.deleteAttribute("gps-ui-overlay"); player.closeAllActiveUIWindows(); }
