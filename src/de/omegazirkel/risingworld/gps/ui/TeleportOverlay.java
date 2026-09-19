@@ -66,9 +66,11 @@ public class TeleportOverlay extends OZUIElement {
 
     private void setupActions(Player player) {
         boolean canManageMarker = MarkerPermissions.canManage(player, marker);
+        boolean canDeleteMarker = MarkerPermissions.canDelete(player, marker);
+        boolean hasMarkerActions = canManageMarker || canDeleteMarker;
 
         OZUIElement actionsPanel = new OZUIElement();
-        actionsPanel.setSize(canManageMarker ? 28 : 25, canManageMarker ? 32 : 25, true);
+        actionsPanel.setSize(hasMarkerActions ? 28 : 25, hasMarkerActions ? 32 : 25, true);
         actionsPanel.setPivot(Pivot.MiddleCenter);
         actionsPanel.setPosition(50, 50, true);
         actionsPanel.setBackgroundColor(0, 0, 0, 0.86f);
@@ -91,7 +93,7 @@ public class TeleportOverlay extends OZUIElement {
         actionsPanel.addChild(title);
 
         UIElement body = new UIElement();
-        body.setSize(90, canManageMarker ? 42 : 50, true);
+        body.setSize(90, hasMarkerActions ? 42 : 50, true);
         body.setPivot(Pivot.UpperLeft);
         body.setPosition(5, 24, true);
         body.setBackgroundColor(0.08f, 0.08f, 0.08f, 0.55f);
@@ -133,7 +135,7 @@ public class TeleportOverlay extends OZUIElement {
         // footer
 
         OZUIElement panelFooter = new OZUIElement();
-        panelFooter.setSize(100, canManageMarker ? 34 : 25, true);
+        panelFooter.setSize(100, hasMarkerActions ? 34 : 25, true);
         panelFooter.setPivot(Pivot.LowerCenter);
         panelFooter.setPosition(50, 100, true);
         panelFooter.setMargin(10);
@@ -144,12 +146,14 @@ public class TeleportOverlay extends OZUIElement {
         panelFooter.style.alignItems.set(Align.Center);
         actionsPanel.addChild(panelFooter);
 
-        panelFooter.addChild(setupCancelButton(player, canManageMarker));
+        panelFooter.addChild(setupCancelButton(player, hasMarkerActions));
         if (canManageMarker) {
             panelFooter.addChild(setupEditButton(player));
+        }
+        if (canDeleteMarker) {
             panelFooter.addChild(setupRemoveButton(player));
         }
-        panelFooter.addChild(setupTeleportButton(player, canManageMarker));
+        panelFooter.addChild(setupTeleportButton(player, hasMarkerActions));
         refreshCooldownState(player);
         startCooldownTimer(player);
     }

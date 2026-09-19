@@ -1,5 +1,10 @@
 # History / Changelog / Commitlog
 
+## [0.11.0] - 2026-09-19 | Marker catalog and group-marker protection
+
+- feat: add fifteen selectable Stargate, settlement, trade, and work-location marker icons in both icon themes.
+- fix: restrict group-marker deletion to its creator or an administrator.
+
 ## [0.10.3] - 2026-09-19 | Release CI correction
 
 - fix: install the matching Rising World PluginAPI version in GitHub Actions release jobs.

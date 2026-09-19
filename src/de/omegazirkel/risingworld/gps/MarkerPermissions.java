@@ -29,6 +29,27 @@ public final class MarkerPermissions {
         }
     }
 
+    public static boolean canDelete(Player player, Marker marker) {
+        if (player == null || marker == null || !GPSAccessPolicy.canUse(player, marker.getType())) {
+            return false;
+        }
+
+        switch (marker.getType()) {
+            case GROUP:
+                return s.enableGroupMarkers && canDeleteGroupMarker(player.isAdmin(), player.getDbID(), marker.getPlayerId());
+            case PRIVATE:
+            case GLOBAL:
+                return canManage(player, marker);
+            case STATIC:
+            default:
+                return false;
+        }
+    }
+
+    static boolean canDeleteGroupMarker(boolean administrator, int playerId, int markerCreatorId) {
+        return administrator || playerId == markerCreatorId;
+    }
+
     private static boolean sameGroup(Player player, Marker marker) {
         String playerGroup = player.getPermissionGroup();
         String markerGroup = marker.getGroup();

@@ -133,13 +133,13 @@ public class GPSDatabase {
     }
 
     public boolean deleteMarker(Marker marker, Player player) {
-        if (!MarkerPermissions.canManage(player, marker)) {
+        if (!MarkerPermissions.canDelete(player, marker)) {
             return false;
         }
 
         try {
             execute("DELETE FROM " + tableName
-                    + " WHERE " + managementWhereClause(marker, player) + ";");
+                    + " WHERE " + deletionWhereClause(marker, player) + ";");
             return true;
         } catch (Exception e) {
             GPS.logger().error("deleteMarker failed: " + e.getMessage());
@@ -242,6 +242,15 @@ public class GPSDatabase {
             default:
                 return "id=-1";
         }
+    }
+
+    private String deletionWhereClause(Marker marker, Player player) {
+        if (marker.getType() == MarkerType.GROUP) {
+            return "id=" + marker.getId()
+                    + " AND type=" + q(MarkerType.GROUP.toString())
+                    + (player.isAdmin() ? "" : " AND player_id=" + player.getDbID());
+        }
+        return managementWhereClause(marker, player);
     }
 
     // --- List Queries ------------------------------------------------------

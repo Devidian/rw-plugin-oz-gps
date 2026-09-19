@@ -517,9 +517,9 @@ public class GPSGridOverlay extends OZUIElement {
             player.addUIElement(overlay, UITarget.Modal);
         };
         if (!MarkerPermissions.canManage(player, marker)) {
-            onDeleteCallback = null;
             onEditCallback = null;
         }
+        if (!MarkerPermissions.canDelete(player, marker)) onDeleteCallback = null;
         String restriction = GPSAreaAccessPolicy.teleportDenialKey(player, marker.getPosition(), marker.getType());
         if (restriction != null) {
             return createMarkerCard(player, marker.getName() + "\n" + t().get(restriction, player),
