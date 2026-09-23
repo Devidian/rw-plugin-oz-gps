@@ -14,8 +14,10 @@ public class GpsRouteExposureTest {
 
     @Test
     public void loadsGlobalMarkerExposureFlagFromSettings() throws Exception {
-        Path settings = Files.createTempFile("oz-gps-settings-", ".properties");
-        Files.writeString(settings, "exposeGlobalMarkers=false\n");
+        Path directory = Files.createTempDirectory("oz-gps-settings-");
+        Path settings = directory.resolve("settings.world.json");
+        Files.writeString(directory.resolve("settings.default.json"), "{\"exposeGlobalMarkers\":true}");
+        Files.writeString(settings, "{\"exposeGlobalMarkers\":false}");
 
         PluginSettings pluginSettings = PluginSettings.getInstance();
         pluginSettings.initSettings(settings.toString());

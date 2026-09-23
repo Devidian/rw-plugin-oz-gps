@@ -1,5 +1,9 @@
 # History / Changelog / Commitlog
 
+## [0.12.0] - 2026-09-23 | JSON-only settings runtime
+
+- change: use JSON-only world settings and require manual transfer of legacy Properties values.
+
 ## [0.11.0] - 2026-09-19 | Marker catalog and group-marker protection
 
 - feat: add fifteen selectable Stargate, settlement, trade, and work-location marker icons in both icon themes.
