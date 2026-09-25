@@ -562,15 +562,28 @@
       },
       "travelcostmode": {
         "desc": "disabled, fixed oder distance.",
-        "label": "Reisekostenmodus"
+        "label": "Reisekostenmodus",
+        "option": {"disabled": "Deaktiviert", "fixed": "Festpreis", "distance": "Entfernung"}
       },
       "travelcosts": {
         "desc": "Wallet-gestützte Reisekosten-Einstellungen.",
         "label": "Reisekosten"
       },
-      "traveldistancecostperblock": {
-        "desc": "Basiskosten für Sektor-Distanzpreise bei travelCostMode\u003ddistance. Der Setting-Key behält seinen alten Namen.",
-        "label": "Sektor-Distanz-Basiskosten"
+      "traveldistancebasecoststatic": {
+        "desc": "Basiskosten je Sektor für Reisen zu statischen Markern.",
+        "label": "Sektor-Distanz-Basiskosten: statisch"
+      },
+      "traveldistancebasecostprivate": {
+        "desc": "Basiskosten je Sektor für Reisen zu privaten Markern.",
+        "label": "Sektor-Distanz-Basiskosten: privat"
+      },
+      "traveldistancebasecostgroup": {
+        "desc": "Basiskosten je Sektor für Reisen zu Gruppenmarkern.",
+        "label": "Sektor-Distanz-Basiskosten: Gruppe"
+      },
+      "traveldistancebasecostglobal": {
+        "desc": "Basiskosten je Sektor für Reisen zu globalen Markern.",
+        "label": "Sektor-Distanz-Basiskosten: global"
       },
       "useglobalmarkercooldownseconds": {
         "desc": "Cooldown in Sekunden für globale Marker-Teleports.",

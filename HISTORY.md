@@ -1,5 +1,13 @@
 # History / Changelog / Commitlog
 
+## Unreleased
+
+## [0.12.1] - 2026-09-25 | Marker travel settings and RIP icon
+
+- change: configure sector-distance base costs separately for static, private, group, and global markers, each defaulting to 100.
+- fix: use the existing RIP icon for the last death position card.
+- change: show localized travel-cost mode choices in the admin selection grid.
+
 ## [0.12.0] - 2026-09-23 | JSON-only settings runtime
 
 - change: use JSON-only world settings and require manual transfer of legacy Properties values.

@@ -71,7 +71,10 @@ public class PluginSettings {
 	public Integer useGlobalMarkerCost = 10;
 	public String travelCostMode = "disabled";
 	public String travelCostCurrencyIdentifier = "";
-	public Integer travelDistanceCostPerBlock = 100;
+	public Integer travelDistanceBaseCostStatic = 100;
+	public Integer travelDistanceBaseCostPrivate = 100;
+	public Integer travelDistanceBaseCostGroup = 100;
+	public Integer travelDistanceBaseCostGlobal = 100;
 
 	public boolean enableTeleportTokens = false;
 	public String teleportTokenCurrencyIdentifier = "GPSTP";
@@ -165,7 +168,12 @@ public class PluginSettings {
 			useGlobalMarkerCost = Integer.parseInt(settings.getProperty("useGlobalMarkerCost", "10"));
 			travelCostMode = settings.getProperty("travelCostMode", "disabled").trim().toLowerCase();
 			travelCostCurrencyIdentifier = settings.getProperty("travelCostCurrencyIdentifier", "");
-			travelDistanceCostPerBlock = Integer.parseInt(settings.getProperty("travelDistanceCostPerBlock", "100"));
+			String legacyDistanceBase = settings.getProperty("travelDistanceCostPerBlock", "1");
+			String distanceBaseDefault = legacyDistanceBase.equals("1") ? "100" : legacyDistanceBase;
+			travelDistanceBaseCostStatic = Integer.parseInt(settings.getProperty("travelDistanceBaseCostStatic", distanceBaseDefault));
+			travelDistanceBaseCostPrivate = Integer.parseInt(settings.getProperty("travelDistanceBaseCostPrivate", distanceBaseDefault));
+			travelDistanceBaseCostGroup = Integer.parseInt(settings.getProperty("travelDistanceBaseCostGroup", distanceBaseDefault));
+			travelDistanceBaseCostGlobal = Integer.parseInt(settings.getProperty("travelDistanceBaseCostGlobal", distanceBaseDefault));
 
 			enableTeleportTokens = settings.getProperty("enableTeleportTokens", "false").contentEquals("true");
 			teleportTokenCurrencyIdentifier = settings.getProperty("teleportTokenCurrencyIdentifier", "GPSTP");
@@ -297,9 +305,18 @@ public class PluginSettings {
 				entry("travelCostCurrencyIdentifier", "Travel cost currency",
 						"Wallet currency identifier for fixed and distance travel costs; empty uses Wallet default.",
 						travelCostCurrencyIdentifier, "", AdminSettingsType.STRING),
-				entry("travelDistanceCostPerBlock", "Distance cost base",
-						"Base cost for sector-distance pricing when travelCostMode=distance.",
-						travelDistanceCostPerBlock, "100", AdminSettingsType.INTEGER),
+				entry("travelDistanceBaseCostStatic", "Static sector-distance base cost",
+						"Base cost per sector of travel to a static marker.",
+						travelDistanceBaseCostStatic, "100", AdminSettingsType.INTEGER),
+				entry("travelDistanceBaseCostPrivate", "Private sector-distance base cost",
+						"Base cost per sector of travel to a private marker.",
+						travelDistanceBaseCostPrivate, "100", AdminSettingsType.INTEGER),
+				entry("travelDistanceBaseCostGroup", "Group sector-distance base cost",
+						"Base cost per sector of travel to a group marker.",
+						travelDistanceBaseCostGroup, "100", AdminSettingsType.INTEGER),
+				entry("travelDistanceBaseCostGlobal", "Global sector-distance base cost",
+						"Base cost per sector of travel to a global marker.",
+						travelDistanceBaseCostGlobal, "100", AdminSettingsType.INTEGER),
 				entry("useStaticMarkerCost", "Static travel cost", "Wallet cost for using static markers.",
 						useStaticMarkerCost, "10", AdminSettingsType.INTEGER),
 				entry("usePrivateMarkerCost", "Private travel cost", "Wallet cost for using private markers.",

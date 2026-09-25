@@ -6,6 +6,7 @@ Main Goal for this plugin is to replace ingame teleport system with a cool gps s
 
 - Players can teleport to their spawn (fixed location)
 - Players can teleport to their last death (fixed location)
+- The last death position uses the packaged RIP icon in the teleport grid.
 - Players can teleport back to the last position where they teleported from (fixed location)
 - Admins can configure per-type teleport cooldowns for static, private, group, and global markers
 - Admins can optionally require Wallet costs for teleports and marker creation
@@ -46,7 +47,10 @@ Optional Wallet-backed settings:
 ```properties
 travelCostMode=disabled
 travelCostCurrencyIdentifier=
-travelDistanceCostPerBlock=1
+travelDistanceBaseCostStatic=100
+travelDistanceBaseCostPrivate=100
+travelDistanceBaseCostGroup=100
+travelDistanceBaseCostGlobal=100
 useStaticMarkerCost=10
 usePrivateMarkerCost=10
 useGroupMarkerCost=10
@@ -69,7 +73,7 @@ minimumPlaytimeMinutes=15
 ```
 
 `travelCostMode` supports `disabled`, `fixed`, and `distance`.
-`distance` uses sector-distance pricing: `base + (abs(sectorDistanceX) + abs(sectorDistanceZ)) * base`. The setting key `travelDistanceCostPerBlock` keeps its legacy name for compatibility, but the value is now the sector-distance base cost.
+`distance` uses the base cost for the destination marker type. Cost is `ceil((Manhattan distance in chunks / 256) * base cost)`, with a minimum of 1 for different chunks and 0 within the same chunk. An old `travelDistanceCostPerBlock` value other than the former packaged default `1` is used as the initial value for any of the four new settings that are absent. The former default `1` becomes `100`; explicitly configured `1` must be set again on the new settings.
 `fixed` uses the per-marker-type `use*MarkerCost` settings.
 Marker limits use `maxPrivateMarkers` and `maxGroupMarkers`; `-1` means unlimited.
 

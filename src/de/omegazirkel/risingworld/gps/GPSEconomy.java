@@ -72,7 +72,7 @@ public class GPSEconomy {
             return fixedUseCost(type);
         }
         if (settings.travelCostMode.equalsIgnoreCase("distance")) {
-            return distanceCost(player, targetPosition);
+            return distanceCost(player, targetPosition, type);
         }
         return 0L;
     }
@@ -171,11 +171,16 @@ public class GPSEconomy {
         };
     }
 
-    private long distanceCost(Player player, Vector3f targetPosition) {
-        if (player == null || targetPosition == null || settings.travelDistanceCostPerBlock <= 0) {
+    private long distanceCost(Player player, Vector3f targetPosition, MarkerType type) {
+        int baseCost = switch (type) {
+            case STATIC -> settings.travelDistanceBaseCostStatic;
+            case PRIVATE -> settings.travelDistanceBaseCostPrivate;
+            case GROUP -> settings.travelDistanceBaseCostGroup;
+            case GLOBAL -> settings.travelDistanceBaseCostGlobal;
+        };
+        if (player == null || targetPosition == null || baseCost <= 0) {
             return 0L;
         }
-        int baseCost = settings.travelDistanceCostPerBlock;
         Vector3i source = player.getChunkPosition();
         if (source == null) {
             source = ChunkUtils.getChunkPosition(player.getPosition());

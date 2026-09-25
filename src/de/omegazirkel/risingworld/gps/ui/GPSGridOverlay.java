@@ -377,7 +377,7 @@ public class GPSGridOverlay extends OZUIElement {
                 if (lastDeathPosition != null)
                     iconGrid.addChild(
                             createMarkerCard(uiPlayer, costLabel(uiPlayer, t().get("tc.menu.static.deathport", uiPlayer), lastDeathPosition, MarkerType.STATIC),
-                                    AssetManager.getIcon(uiPlayer, "icon-ki-death-skull"), null, null, onTeleport -> {
+                                    AssetManager.getIcon(uiPlayer, "marker-sleep-rip"), null, null, onTeleport -> {
                                         executeGridTeleport(uiPlayer, lastDeathPosition,
                                                 t().get("tc.menu.static.deathport", uiPlayer), MarkerType.STATIC,
                                                 false);

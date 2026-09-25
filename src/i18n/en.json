@@ -562,15 +562,28 @@
       },
       "travelcostmode": {
         "desc": "disabled, fixed, or distance.",
-        "label": "Travel cost mode"
+        "label": "Travel cost mode",
+        "option": {"disabled": "Disabled", "fixed": "Fixed price", "distance": "Distance"}
       },
       "travelcosts": {
         "desc": "Wallet-backed travel cost settings.",
         "label": "Travel costs"
       },
-      "traveldistancecostperblock": {
-        "desc": "Base cost for sector-distance pricing when travelCostMode\u003ddistance. The setting key keeps its legacy name.",
-        "label": "Sector distance base cost"
+      "traveldistancebasecoststatic": {
+        "desc": "Base cost per sector for travel to static markers.",
+        "label": "Sector distance base cost: static"
+      },
+      "traveldistancebasecostprivate": {
+        "desc": "Base cost per sector for travel to private markers.",
+        "label": "Sector distance base cost: private"
+      },
+      "traveldistancebasecostgroup": {
+        "desc": "Base cost per sector for travel to group markers.",
+        "label": "Sector distance base cost: group"
+      },
+      "traveldistancebasecostglobal": {
+        "desc": "Base cost per sector for travel to global markers.",
+        "label": "Sector distance base cost: global"
       },
       "useglobalmarkercooldownseconds": {
         "desc": "Cooldown in seconds for global marker teleports.",
