@@ -1,5 +1,7 @@
 # OmegaZirkel GPS Plugin for Rising World
 
+**Build baseline:** JDK 25 (`--release 25`) and the bundled Rising World PluginAPI 0.9.3.2 JAR.
+
 Main Goal for this plugin is to replace ingame teleport system with a cool gps system, were you have to visit a location atleast once before you can teleport to it.
 
 ## Features included
