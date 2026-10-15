@@ -340,6 +340,10 @@
       }
     },
     "setting": {
+      "discordstaticgpsthreadtopic": {"label": "Statische GPS-Ereignisse-Thread", "desc": "Leer verwendet den Plugin-Namen. Gleicher Kanal und Thread-Titel nutzen denselben Thread."},
+      "discordprivategpsthreadtopic": {"label": "Private GPS-Ereignisse-Thread", "desc": "Leer verwendet den Plugin-Namen. Gleicher Kanal und Thread-Titel nutzen denselben Thread."},
+      "discordgroupgpsthreadtopic": {"label": "Gruppen-GPS-Ereignisse-Thread", "desc": "Leer verwendet den Plugin-Namen. Gleicher Kanal und Thread-Titel nutzen denselben Thread."},
+      "discordglobalgpsthreadtopic": {"label": "Globale GPS-Ereignisse-Thread", "desc": "Leer verwendet den Plugin-Namen. Gleicher Kanal und Thread-Titel nutzen denselben Thread."},
       "allowadminoverride": {
         "desc": "Erlaubt Admins, GPS-Kosten, Limits und Mindestspielzeit mit aktiver Spieler-Einstellung zu umgehen.",
         "label": "Admin-Override erlauben"

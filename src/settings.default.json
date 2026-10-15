@@ -42,6 +42,10 @@
     "privateGPSChannelId": 0,
     "groupGPSChannelId": 0,
     "globalGPSChannelId": 0,
+    "staticGPSThreadTopic": "",
+    "privateGPSThreadTopic": "",
+    "groupGPSThreadTopic": "",
+    "globalGPSThreadTopic": "",
     "gPSIncludeMarkerPosition": true,
     "gPSIncludeMarkerName": true
   },

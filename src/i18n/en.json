@@ -340,6 +340,10 @@
       }
     },
     "setting": {
+      "discordstaticgpsthreadtopic": {"label": "Static GPS events thread", "desc": "Blank uses the plugin display name. The same channel and thread name reuse one thread."},
+      "discordprivategpsthreadtopic": {"label": "Private GPS events thread", "desc": "Blank uses the plugin display name. The same channel and thread name reuse one thread."},
+      "discordgroupgpsthreadtopic": {"label": "Group GPS events thread", "desc": "Blank uses the plugin display name. The same channel and thread name reuse one thread."},
+      "discordglobalgpsthreadtopic": {"label": "Global GPS events thread", "desc": "Blank uses the plugin display name. The same channel and thread name reuse one thread."},
       "allowadminoverride": {
         "desc": "Allows admins to bypass GPS costs, limits, and minimum playtime when their player setting is enabled.",
         "label": "Allow admin override"

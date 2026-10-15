@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## [0.12.2] - 2026-10-15 | Discord event threads
+
+- feat: Route each GPS Discord event category into a configurable thread.
+
 ## [0.12.1] - 2026-09-25 | Marker travel settings and RIP icon
 
 - change: configure sector-distance base costs separately for static, private, group, and global markers, each defaulting to 100.

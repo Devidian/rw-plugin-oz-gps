@@ -8,6 +8,7 @@ public class DiscordConnect extends DiscordBridge {
 
     private static DiscordConnect bridge;
     private static final PluginSettings s = PluginSettings.getInstance();
+    private static String displayName = "OZ - GPS";
 
     private DiscordConnect(Plugin owner) {
         super(owner);
@@ -18,6 +19,7 @@ public class DiscordConnect extends DiscordBridge {
     }
 
     public static void init(Plugin plugin) {
+        displayName = plugin.getDescription("name");
         bridge = new DiscordConnect(plugin);
         if (bridge.isAvailable())
             GPS.logger().info("✅ OZ - Discord Connect found!");
@@ -33,24 +35,29 @@ public class DiscordConnect extends DiscordBridge {
         if (bridge != null) bridge.sendTextMessage(message, channelId, image);
     }
 
+    private static void sendEvent(String message, long channelId, String override) {
+        if (bridge != null) bridge.sendTextMessage(message, channelId, null,
+                override == null || override.isBlank() ? displayName : override.trim());
+    }
+
     public static void sendStaticGPSEventMessage(String message) {
         if (s.discordStaticGPSChannelId > 0)
-            sendDiscordMessage(message, s.discordStaticGPSChannelId);
+            sendEvent(message, s.discordStaticGPSChannelId, s.discordStaticGPSThreadTopic);
     }
 
     public static void sendPrivateGPSEventMessage(String message) {
         if (s.discordPrivateGPSChannelId > 0)
-            sendDiscordMessage(message, s.discordPrivateGPSChannelId);
+            sendEvent(message, s.discordPrivateGPSChannelId, s.discordPrivateGPSThreadTopic);
     }
 
     public static void sendGroupGPSEventMessage(String message) {
         if (s.discordGroupGPSChannelId > 0)
-            sendDiscordMessage(message, s.discordGroupGPSChannelId);
+            sendEvent(message, s.discordGroupGPSChannelId, s.discordGroupGPSThreadTopic);
     }
 
     public static void sendGlobalGPSEventMessage(String message) {
         if (s.discordGlobalGPSChannelId > 0)
-            sendDiscordMessage(message, s.discordGlobalGPSChannelId);
+            sendEvent(message, s.discordGlobalGPSChannelId, s.discordGlobalGPSThreadTopic);
     }
 
 }

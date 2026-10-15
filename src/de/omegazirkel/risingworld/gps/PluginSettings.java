@@ -48,6 +48,10 @@ public class PluginSettings {
 	public long discordPrivateGPSChannelId = 0;
 	public long discordGroupGPSChannelId = 0;
 	public long discordGlobalGPSChannelId = 0;
+	public String discordStaticGPSThreadTopic = "";
+	public String discordPrivateGPSThreadTopic = "";
+	public String discordGroupGPSThreadTopic = "";
+	public String discordGlobalGPSThreadTopic = "";
 	public boolean discordGPSIncludeMarkerPosition = false;
 	public boolean discordGPSIncludeMarkerName = false;
 
@@ -204,6 +208,10 @@ public class PluginSettings {
 			discordPrivateGPSChannelId = Long.parseLong(settings.getProperty("discordPrivateGPSChannelId", "0"));
 			discordGroupGPSChannelId = Long.parseLong(settings.getProperty("discordGroupGPSChannelId", "0"));
 			discordGlobalGPSChannelId = Long.parseLong(settings.getProperty("discordGlobalGPSChannelId", "0"));
+			discordStaticGPSThreadTopic = settings.getProperty("discordStaticGPSThreadTopic", "");
+			discordPrivateGPSThreadTopic = settings.getProperty("discordPrivateGPSThreadTopic", "");
+			discordGroupGPSThreadTopic = settings.getProperty("discordGroupGPSThreadTopic", "");
+			discordGlobalGPSThreadTopic = settings.getProperty("discordGlobalGPSThreadTopic", "");
 			discordGPSIncludeMarkerPosition = settings.getProperty("discordGPSIncludeMarkerPosition", "true")
 					.contentEquals("true");
 			discordGPSIncludeMarkerName = settings.getProperty("discordGPSIncludeMarkerName", "true")
@@ -375,6 +383,14 @@ public class PluginSettings {
 				entry("discordGlobalGPSChannelId", "Global GPS channel",
 						"Discord channel id for global GPS events; 0 uses default behavior.",
 						discordGlobalGPSChannelId, "0", AdminSettingsType.STRING),
+				entry("discordStaticGPSThreadTopic", "Static GPS thread", "Blank uses the plugin display name.",
+						discordStaticGPSThreadTopic, "", AdminSettingsType.STRING),
+				entry("discordPrivateGPSThreadTopic", "Private GPS thread", "Blank uses the plugin display name.",
+						discordPrivateGPSThreadTopic, "", AdminSettingsType.STRING),
+				entry("discordGroupGPSThreadTopic", "Group GPS thread", "Blank uses the plugin display name.",
+						discordGroupGPSThreadTopic, "", AdminSettingsType.STRING),
+				entry("discordGlobalGPSThreadTopic", "Global GPS thread", "Blank uses the plugin display name.",
+						discordGlobalGPSThreadTopic, "", AdminSettingsType.STRING),
 				entry("discordGPSIncludeMarkerPosition", "Include marker position",
 						"Includes marker coordinates in Discord GPS event messages.",
 						discordGPSIncludeMarkerPosition, "true", AdminSettingsType.BOOLEAN),
