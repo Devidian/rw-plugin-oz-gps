@@ -140,3 +140,7 @@ package; ZIP assembly also excludes stale legacy settings and translations.
 ## Discord event threads
 
 Existing Discord event channel IDs remain in effect. Each route also accepts an optional thread topic: `discordStaticGPSThreadTopic`, `discordPrivateGPSThreadTopic`, `discordGroupGPSThreadTopic`, and `discordGlobalGPSThreadTopic` for the corresponding GPS routes. Leave a topic blank to use the plugin display name from `plugin.yml`. Matching topics in the same parent channel share one thread. Topic routing requires compatible OZ Tools and Discord Connect with the bot enabled; an older Discord Connect logs a failure and does not send the event to the parent channel. Install OZ Tools, then Discord Connect, then this plugin.
+
+## Backlog update (2026-10-15)
+
+Twelve new location marker motifs are available in modern and classic themes for private, group, and global markers. Their 512×512 transparent PNG assets follow the shared `docs/icons/icon-styles.md` GPS marker substyles; semantic definitions are recorded in `docs/icons/definitions.yaml` at the workspace root.

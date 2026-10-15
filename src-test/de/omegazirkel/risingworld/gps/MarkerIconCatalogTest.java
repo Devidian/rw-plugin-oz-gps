@@ -12,7 +12,11 @@ public class MarkerIconCatalogTest {
             "marker-stargate-desert", "marker-stargate-forest", "marker-stargate-arctic", "marker-stargate-meadow", "marker-stargate-inferno",
             "marker-mountain-tavern", "marker-coast-town", "marker-desert-town", "marker-arctic-town",
             "marker-mountain-mine", "marker-cave-mineshaft", "marker-village-trading-post", "marker-village-blacksmith",
-            "marker-coast-fisherman", "marker-village-weekly-market" };
+            "marker-coast-fisherman", "marker-village-weekly-market",
+            "marker-bunker-hatch", "marker-bunker-door", "marker-bunker-fort",
+            "marker-city-skyline", "marker-city-harbor", "marker-city-towers",
+            "marker-scifi-domes", "marker-scifi-spires", "marker-ancient-temple",
+            "marker-ancient-walls", "marker-bandit-camp", "marker-ancient-ruin" };
 
     @Test
     public void exposesRequestedMarkerIconsInBothThemes() {

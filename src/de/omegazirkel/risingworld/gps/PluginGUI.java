@@ -55,7 +55,12 @@ public class PluginGUI {
             "marker-farm-default",
             "marker-factory-old",
             "marker-space-station",
-            "marker-factory-train-station");
+            "marker-factory-train-station",
+            "marker-bunker-hatch", "marker-bunker-door", "marker-bunker-fort",
+            "marker-city-skyline", "marker-city-harbor", "marker-city-towers",
+            "marker-scifi-domes", "marker-scifi-spires",
+            "marker-ancient-temple", "marker-ancient-walls",
+            "marker-bandit-camp", "marker-ancient-ruin");
 
     public static final List<String> serverPinKeys = Arrays.asList(
             "marker-server-1", "marker-server-2", "marker-server-3", "marker-server-4", "marker-server-5",

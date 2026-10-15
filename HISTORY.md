@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## [0.13.0] - 2026-10-15 | New destination marker motifs
+
+- Twelve new location marker motifs are available in modern and classic themes for private, group, and global markers.
+
 ## [0.12.2] - 2026-10-15 | Discord event threads
 
 - feat: Route each GPS Discord event category into a configurable thread.
