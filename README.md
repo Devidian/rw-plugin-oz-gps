@@ -2,6 +2,8 @@
 
 **Build baseline:** JDK 25 (`--release 25`) and the bundled Rising World PluginAPI 0.9.3.2 JAR.
 
+The local `erasePlayerData(int playerDbId)` API removes private markers and anonymizes the creator ID of retained group/global markers, GPS areas, and shared server pins. It is intended for the coordinated player-erasure workflow and is not exposed as an independent player action.
+
 Main Goal for this plugin is to replace ingame teleport system with a cool gps system, were you have to visit a location atleast once before you can teleport to it.
 
 ## Features included

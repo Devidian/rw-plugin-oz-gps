@@ -27,6 +27,7 @@ import de.omegazirkel.risingworld.tools.ui.PlayerPluginSettingsOverlay;
 import de.omegazirkel.risingworld.tools.ui.PluginInfoStatusProviders;
 import de.omegazirkel.risingworld.tools.ui.PluginMenuManager;
 import de.omegazirkel.risingworld.tools.ui.PluginShortcutVisibility;
+import de.omegazirkel.risingworld.tools.privacy.PlayerErasureService;
 import net.risingworld.api.Plugin;
 import net.risingworld.api.events.player.PlayerCommandEvent;
 import net.risingworld.api.events.player.PlayerDeathEvent;
@@ -34,6 +35,7 @@ import net.risingworld.api.events.player.PlayerSpawnEvent;
 import net.risingworld.api.objects.Player;
 
 class GPSRuntime extends Plugin {
+    private PlayerErasureService.Registration erasureRegistration;
 	static final String pluginCMD = "gps";
 	static final Colors c = Colors.getInstance();
 	private static I18n t = null;
@@ -49,8 +51,17 @@ class GPSRuntime extends Plugin {
 		return OZLogger.getInstance("OZ.GPS");
 	}
 
+	/** Called by the local player-erasure coordinator before shared settings are removed. */
+	public boolean erasePlayerData(int playerDbId) {
+		GPSDatabase database = GPSDatabase.getInstance();
+		if (database == null || ps == null || !database.erasePlayerData(playerDbId)) return false;
+		ps.erasePlayer(playerDbId);
+		return true;
+	}
+
 	@Override
 	public void onEnable() {
+        erasureRegistration = PlayerErasureService.register("gps", request -> erasePlayerData(request.playerDbId()));
 		name = this.getDescription("name");
 			s = PluginSettings.getInstance((GPS) this);
 		t = I18n.getInstance(this);
@@ -86,6 +97,7 @@ class GPSRuntime extends Plugin {
 
 	@Override
 	public void onDisable() {
+        if (erasureRegistration != null) erasureRegistration.close();
 		if (webserverMarkerRoute != null) {
 			unregisterWebserverHandler(WEBSERVER_MARKER_ROUTE);
 			webserverMarkerRoute = null;

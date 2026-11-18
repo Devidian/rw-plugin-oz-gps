@@ -2,6 +2,8 @@ package de.omegazirkel.risingworld.gps;
 
 import java.sql.ResultSet;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -223,6 +225,42 @@ public class GPSDatabase {
 
     public boolean deleteServerPin(int id) {
         return id > 0 && executeUpdate("DELETE FROM " + serverPinTableName + " WHERE id=" + id + ";");
+    }
+
+    /** Removes private GPS data and detaches the creator from shared markers and pins. */
+    public synchronized boolean erasePlayerData(int playerId) {
+        if (playerId <= 0) return false;
+        try {
+            if (!db.getAutoCommit()) {
+                GPS.logger().error("GPS player erasure requires an idle database connection");
+                return false;
+            }
+            db.setAutoCommit(false);
+            try {
+                updatePlayerRows("DELETE FROM marker WHERE player_id=? AND type='PRIVATE'", playerId);
+                updatePlayerRows("UPDATE marker SET player_id=0 WHERE player_id=?", playerId);
+                updatePlayerRows("UPDATE gps_area SET admin_id=0 WHERE admin_id=?", playerId);
+                updatePlayerRows("UPDATE server_pin SET creator_id=0 WHERE creator_id=?", playerId);
+                db.commit();
+                return true;
+            } catch (SQLException ex) {
+                db.rollback();
+                GPS.logger().error("GPS player erasure failed: " + ex.getMessage());
+                return false;
+            } finally {
+                db.setAutoCommit(true);
+            }
+        } catch (SQLException ex) {
+            GPS.logger().error("GPS player erasure failed: " + ex.getMessage());
+            return false;
+        }
+    }
+
+    private void updatePlayerRows(String sql, int playerId) throws SQLException {
+        try (PreparedStatement statement = db.prepareStatement(sql)) {
+            statement.setInt(1, playerId);
+            statement.executeUpdate();
+        }
     }
 
     private String managementWhereClause(Marker marker, Player player) {
