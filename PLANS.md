@@ -9,6 +9,13 @@ Planning is stored in repository-local docs.
 
 Every implementation plan must include objective, ownership, dependencies, risks, validation strategy, affected repositories/plugins, rollback considerations, and a markdown checkbox checklist.
 
+## Player erasure
+
+- [x] Provide a transactional, repeatable local erasure API for GPS-owned player data.
+- [ ] Connect the API to the shared erasure coordinator and validate it in the game runtime.
+
+Shared markers, GPS areas, and server pins retain their behavior with creator ID `0`; private markers are removed. A database backup is required before the coordinated erasure because it cannot be undone by the plugin. The local SQLite test covers retained objects and repeatability; runtime acceptance is still pending.
+
 Discord event thread routing is implemented locally; Development Discord validation and the separately authorized release remain open. Configuration is documented in README.md.
 
 ## Backlog validation (2026-10-15)
