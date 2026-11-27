@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+- Report failed marker saves instead of claiming that a marker was created, and avoid assigning a previous marker's ID after an insert error. Marker edit and delete now require an affected row.
+
 - Add a player-erasure API that deletes private markers and anonymizes the creator of shared markers, GPS areas, and server pins.
 
 ## [0.13.0] - 2026-10-15 | New destination marker motifs

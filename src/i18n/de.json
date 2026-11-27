@@ -199,6 +199,8 @@
         "status": "PH_CURRENT / PH_LIMIT"
       },
       "marker": {
+        "save_refunded": "Der Marker konnte nicht gespeichert werden. Die Erstellungsgebühr wurde erstattet.",
+        "save_failed": "Die Marker-Erstellung konnte nicht bestätigt werden. Wenn dir Kosten berechnet wurden, kontaktiere vor einem erneuten Versuch einen Administrator.",
         "limit": {
           "reached": "GPS-Marker-Limit erreicht. Limit: PH_LIMIT."
         },

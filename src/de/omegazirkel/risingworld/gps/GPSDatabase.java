@@ -58,57 +58,141 @@ public class GPSDatabase {
     // --- Save Queries ------------------------------------------------------
 
     public void saveMarker(Marker marker) {
-        try {
-            if (marker.getId() == null) {
-                // --- INSERT ----------------------------------------------------
-                String query = "INSERT INTO " + tableName + " ("
-                        + "player_id, type, group_name, created_at, "
-                        + "pos_x, pos_y, pos_z, "
-                        + "name, icon, color, cost"
-                        + ") VALUES ("
-                        + marker.getPlayerId() + ", "
-                        + q(marker.getType().toString()) + ", "
-                        + (marker.getGroup() == null ? "NULL" : q(marker.getGroup())) + ", "
-                        + marker.getCreatedAt() + ", "
-                        + marker.getPosition().x + ", "
-                        + marker.getPosition().y + ", "
-                        + marker.getPosition().z + ", "
-                        + q(marker.getName()) + ", "
-                        + q(marker.getIcon()) + ", "
-                        + marker.getColor() + ", "
-                        + marker.getCost()
-                        + ");";
+        saveMarkerResult(marker);
+    }
 
-                execute(query);
+    public boolean saveMarkerResult(Marker marker) {
+        synchronized (db) {
+            try {
+                if (marker.getId() == null) {
+                    // --- INSERT ----------------------------------------------------
+                    String query = "INSERT INTO " + tableName + " ("
+                            + "player_id, type, group_name, created_at, "
+                            + "pos_x, pos_y, pos_z, "
+                            + "name, icon, color, cost"
+                            + ") VALUES ("
+                            + marker.getPlayerId() + ", "
+                            + q(marker.getType().toString()) + ", "
+                            + (marker.getGroup() == null ? "NULL" : q(marker.getGroup())) + ", "
+                            + marker.getCreatedAt() + ", "
+                            + marker.getPosition().x + ", "
+                            + marker.getPosition().y + ", "
+                            + marker.getPosition().z + ", "
+                            + q(marker.getName()) + ", "
+                            + q(marker.getIcon()) + ", "
+                            + marker.getColor() + ", "
+                            + marker.getCost()
+                            + ");";
 
-                try (Statement statement = db.createStatement();
-                        ResultSet rs = statement.executeQuery("SELECT last_insert_rowid();")) {
-                    if (rs.next()) {
-                        int id = rs.getInt(1);
-                        marker.setId(id);
+                    try (Statement statement = db.createStatement()) {
+                        if (statement.executeUpdate(query) != 1) return false;
+                    }
+
+                    try (Statement statement = db.createStatement();
+                            ResultSet rs = statement.executeQuery("SELECT last_insert_rowid();")) {
+                        if (rs.next()) {
+                            int id = rs.getInt(1);
+                            marker.setId(id);
+                            return true;
+                        }
+                    }
+                    return false;
+
+                } else {
+                    // --- UPDATE ----------------------------------------------------
+                    String query = "UPDATE " + tableName + " SET "
+                            + "type=" + q(marker.getType().toString()) + ", "
+                            + "group_name=" + (marker.getGroup() == null ? "NULL" : q(marker.getGroup())) + ", "
+                            + "pos_x=" + marker.getPosition().x + ", "
+                            + "pos_y=" + marker.getPosition().y + ", "
+                            + "pos_z=" + marker.getPosition().z + ", "
+                            + "name=" + q(marker.getName()) + ", "
+                            + "icon=" + q(marker.getIcon()) + ", "
+                            + "color=" + marker.getColor() + ", "
+                            + "cost=" + marker.getCost()
+                            + " WHERE id=" + marker.getId() + ";";
+
+                    try (Statement statement = db.createStatement()) {
+                        return statement.executeUpdate(query) == 1;
                     }
                 }
 
-            } else {
-                // --- UPDATE ----------------------------------------------------
-                String query = "UPDATE " + tableName + " SET "
-                        + "type=" + q(marker.getType().toString()) + ", "
-                        + "group_name=" + (marker.getGroup() == null ? "NULL" : q(marker.getGroup())) + ", "
-                        + "pos_x=" + marker.getPosition().x + ", "
-                        + "pos_y=" + marker.getPosition().y + ", "
-                        + "pos_z=" + marker.getPosition().z + ", "
-                        + "name=" + q(marker.getName()) + ", "
-                        + "icon=" + q(marker.getIcon()) + ", "
-                        + "color=" + marker.getColor() + ", "
-                        + "cost=" + marker.getCost()
-                        + " WHERE id=" + marker.getId() + ";";
-
-                execute(query);
+            } catch (Exception e) {
+                GPS.logger().error("saveMarker failed: " + e.getMessage());
+                return false;
             }
+        }
+    }
 
-        } catch (Exception e) {
-            GPS.logger().error("saveMarker failed: " + e.getMessage());
-            e.printStackTrace();
+    boolean beginMarkerPurchase(String operation, Marker marker, long amount, String currency) throws SQLException {
+        synchronized (db) {
+            if (!db.getAutoCommit() || marker.getId() != null) return false;
+            try (var statement = db.prepareStatement("""
+                    INSERT INTO gps_marker_purchase(operation_id, player_id, amount, currency, marker_name,
+                        marker_type, marker_position, stage)
+                    SELECT ?, ?, ?, ?, ?, ?, ?, 'DEBIT_ATTEMPTED'
+                    WHERE NOT EXISTS (SELECT 1 FROM gps_marker_purchase WHERE player_id = ?)
+                    """)) {
+                statement.setString(1, operation);
+                statement.setInt(2, marker.getPlayerId());
+                statement.setLong(3, amount);
+                statement.setString(4, currency);
+                statement.setString(5, marker.getName());
+                statement.setString(6, marker.getType().name());
+                statement.setString(7, marker.getPosition().toString());
+                statement.setInt(8, marker.getPlayerId());
+                return statement.executeUpdate() == 1;
+            }
+        }
+    }
+
+    void recordMarkerPurchaseStage(String operation, String stage) throws SQLException {
+        synchronized (db) {
+            try (var statement = db.prepareStatement("UPDATE gps_marker_purchase SET stage = ? WHERE operation_id = ?")) {
+                statement.setString(1, stage);
+                statement.setString(2, operation);
+                if (statement.executeUpdate() != 1) throw new SQLException("Missing marker purchase " + operation);
+            }
+        }
+    }
+
+    void finishMarkerPurchase(String operation) throws SQLException {
+        synchronized (db) {
+            try (var statement = db.prepareStatement("DELETE FROM gps_marker_purchase WHERE operation_id = ?")) {
+                statement.setString(1, operation);
+                if (statement.executeUpdate() != 1) throw new SQLException("Missing marker purchase " + operation);
+            }
+        }
+    }
+
+    boolean commitPurchasedMarker(String operation, Marker marker) throws SQLException {
+        synchronized (db) {
+            if (!db.getAutoCommit()) throw new SQLException("Marker DB already in a transaction");
+            db.setAutoCommit(false);
+            boolean transactionFinished = false;
+            try {
+                if (!saveMarkerResult(marker)) {
+                    db.rollback();
+                    transactionFinished = true;
+                    marker.setId(null);
+                    return false;
+                }
+                finishMarkerPurchase(operation);
+                db.commit();
+                transactionFinished = true;
+                return true;
+            } catch (SQLException | RuntimeException ex) {
+                try {
+                    db.rollback();
+                    transactionFinished = true;
+                    marker.setId(null);
+                } catch (SQLException rollbackFailure) {
+                    ex.addSuppressed(rollbackFailure);
+                }
+                throw ex;
+            } finally {
+                if (transactionFinished) db.setAutoCommit(true);
+            }
         }
     }
 
@@ -120,10 +204,13 @@ public class GPSDatabase {
         }
 
         try {
-            execute("UPDATE " + tableName
+            String query = "UPDATE " + tableName
                     + " SET name=" + q(name)
                     + ", icon=" + q(icon)
-                    + " WHERE " + managementWhereClause(marker, player) + ";");
+                    + " WHERE " + managementWhereClause(marker, player) + ";";
+            try (Statement statement = db.createStatement()) {
+                if (statement.executeUpdate(query) != 1) return false;
+            }
             marker.setName(name);
             marker.setIcon(icon);
             return true;
@@ -140,9 +227,11 @@ public class GPSDatabase {
         }
 
         try {
-            execute("DELETE FROM " + tableName
-                    + " WHERE " + deletionWhereClause(marker, player) + ";");
-            return true;
+            String query = "DELETE FROM " + tableName
+                    + " WHERE " + deletionWhereClause(marker, player) + ";";
+            try (Statement statement = db.createStatement()) {
+                return statement.executeUpdate(query) == 1;
+            }
         } catch (Exception e) {
             GPS.logger().error("deleteMarker failed: " + e.getMessage());
             e.printStackTrace();
@@ -425,6 +514,14 @@ public class GPSDatabase {
     }
 
     private void initialize() {
+        execute("""
+                CREATE TABLE IF NOT EXISTS gps_marker_purchase (
+                    operation_id TEXT PRIMARY KEY, player_id INTEGER NOT NULL, amount INTEGER NOT NULL,
+                    currency TEXT NOT NULL, marker_name TEXT NOT NULL, marker_type TEXT NOT NULL,
+                    marker_position TEXT NOT NULL, stage TEXT NOT NULL
+                );
+                """);
+
         // create table
         execute(
                 "CREATE TABLE IF NOT EXISTS " + tableName + " ("

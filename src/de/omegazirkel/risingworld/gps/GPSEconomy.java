@@ -1,6 +1,7 @@
 package de.omegazirkel.risingworld.gps;
 
 import de.omegazirkel.risingworld.GPS;
+import de.omegazirkel.risingworld.tools.I18n;
 import net.risingworld.api.Plugin;
 import net.risingworld.api.objects.Player;
 import net.risingworld.api.utils.Utils.ChunkUtils;
@@ -118,6 +119,32 @@ public class GPSEconomy {
                 "GPS marker creation: " + type, settings.markerCreateCostCurrencyIdentifier, PLUGIN_IDENTIFIER);
         return result.success() ? EconomyResult.ok(costLabel(cost, settings.markerCreateCostCurrencyIdentifier))
                 : EconomyResult.fail(result.message());
+    }
+
+    /** Saves a marker through the same path for both player-facing overlays. */
+    public EconomyResult createMarker(Player player, Marker marker) {
+        GPSDatabase database = GPSDatabase.getInstance();
+        long cost = markerCreateCost(marker.getType());
+        if (cost <= 0 || hasAdminOverride(player)) {
+            return database.saveMarkerResult(marker) ? EconomyResult.ok("")
+                    : EconomyResult.fail(I18n.getInstance(GPS.name).get("tc.gps.marker.save_failed", player));
+        }
+        if (!wallet.isAvailable()) return EconomyResult.fail("OZ - Wallet is required for GPS marker creation costs.");
+        String configuredCurrency = settings.markerCreateCostCurrencyIdentifier;
+        String currency = configuredCurrency == null || configuredCurrency.isBlank()
+                ? wallet.defaultCurrencyIdentifier() : configuredCurrency;
+        if (currency == null || currency.isBlank()) return EconomyResult.fail("GPS marker currency is unavailable.");
+        MarkerPurchase.Result result = MarkerPurchase.create(database, marker, cost, currency,
+                id -> wallet.withdraw(player.getDbID(), cost, "GPS marker creation: " + marker.getType() + " [" + id + "]",
+                        currency, PLUGIN_IDENTIFIER),
+                id -> wallet.deposit(player.getDbID(), cost, "GPS marker creation refund [" + id + "]",
+                        currency, PLUGIN_IDENTIFIER));
+        return switch (result.status()) {
+            case CREATED -> EconomyResult.ok(costLabel(cost, currency));
+            case DEBIT_REJECTED -> EconomyResult.fail(result.message());
+            case SAVE_REFUNDED -> EconomyResult.fail(I18n.getInstance(GPS.name).get("tc.gps.marker.save_refunded", player));
+            case REVIEW_REQUIRED -> EconomyResult.fail(I18n.getInstance(GPS.name).get("tc.gps.marker.save_failed", player));
+        };
     }
 
     public int markerLimit(MarkerType type) {

@@ -440,11 +440,15 @@ public class PluginGUI {
                                 }
                                 overlay = new CreateMarkerOverlay(p, marker -> {
 
-                                    GPSDatabase.getInstance().saveMarker(marker);
+                                    boolean saved = GPSDatabase.getInstance().saveMarkerResult(marker);
                                     openGlobalTeleportMenu(p, level, onBack);
-                                    p.sendTextMessage(t().get("tc.gps.global.created", p)
-                                            .replace("PH_MARKER_NAME", marker.getName())
-                                            .replace("PH_MARKER_POS", marker.getPosition() + ""));
+                                    if (saved) {
+                                        p.sendTextMessage(t().get("tc.gps.global.created", p)
+                                                .replace("PH_MARKER_NAME", marker.getName())
+                                                .replace("PH_MARKER_POS", marker.getPosition() + ""));
+                                    } else {
+                                        p.sendTextMessage(t().get("tc.gps.marker.save_failed", p));
+                                    }
 
                                 });
                                 p.setAttribute("gps-ui-overlay", overlay);
@@ -503,19 +507,23 @@ public class PluginGUI {
 
     private boolean saveMarkerWithEconomy(Player player, Marker marker) {
         GPSEconomy economy = GPSEconomy.getInstance();
-        if (economy != null) {
-            EconomyResult charge = economy.chargeMarkerCreation(player, marker.getType());
-            if (!charge.success()) {
-                player.sendTextMessage(t().get("tc.gps.economy.failed", player)
-                        .replace("PH_MESSAGE", charge.message()));
+        if (economy == null) {
+            if (!GPSDatabase.getInstance().saveMarkerResult(marker)) {
+                player.sendTextMessage(t().get("tc.gps.marker.save_failed", player));
                 return false;
             }
-            if (!charge.message().isBlank()) {
+        } else {
+            GPSEconomy.EconomyResult creation = economy.createMarker(player, marker);
+            if (!creation.success()) {
+                player.sendTextMessage(t().get("tc.gps.economy.failed", player)
+                        .replace("PH_MESSAGE", creation.message()));
+                return false;
+            }
+            if (!creation.message().isBlank()) {
                 player.sendTextMessage(t().get("tc.gps.cost.charged", player)
-                        .replace("PH_COST", charge.message()));
+                        .replace("PH_COST", creation.message()));
             }
         }
-        GPSDatabase.getInstance().saveMarker(marker);
         String key = marker.getType() == MarkerType.GROUP ? "tc.gps.group.created" : "tc.gps.private.created";
         player.sendTextMessage(t().get(key, player)
                 .replace("PH_MARKER_NAME", marker.getName())

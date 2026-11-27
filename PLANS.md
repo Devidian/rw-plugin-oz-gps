@@ -1,5 +1,7 @@
 # PLANS.md
 
+- [ ] Complete durable recovery for paid marker creation across Wallet and GPS database failures, and validate the flow on Development.
+
 Planning is stored in repository-local docs.
 
 - Active implementation tasks: [docs/active/](docs/active/)

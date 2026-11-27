@@ -14,6 +14,7 @@ Main Goal for this plugin is to replace ingame teleport system with a cool gps s
 - Players can teleport back to the last position where they teleported from (fixed location)
 - Admins can configure per-type teleport cooldowns for static, private, group, and global markers
 - Admins can optionally require Wallet costs for teleports and marker creation
+- If a marker save cannot be confirmed after a charge, the player is asked to contact an administrator before retrying. Durable payment recovery remains an open implementation task.
 - Admins can optionally register GPS teleport-token currency and Shop token packages
 - Admins can enforce private and group marker limits with a two-step admin override
 - Admins can require total playtime before non-static GPS features become available
