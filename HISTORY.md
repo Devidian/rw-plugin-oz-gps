@@ -2,11 +2,11 @@
 
 ## Unreleased
 
-- Refresh the marker-limit display at most every five seconds while a tab is idle. Recheck immediately after local marker changes and tab changes.
+## [0.13.2] - 2026-11-27 | OZ GPS marker purchase recovery
 
-- Report failed marker saves instead of claiming that a marker was created, and avoid assigning a previous marker's ID after an insert error. Marker edit and delete now require an affected row.
-
-- Add a player-erasure API that deletes private markers and anonymizes the creator of shared markers, GPS areas, and server pins.
+- Paid marker creation records each purchase before contacting Wallet. A confirmed failed marker write reverses the confirmed charge. Uncertain charges and refunds stay available for review.
+- Edit and delete failures report the actual outcome. The marker-limit display refreshes less often while idle, and new markers still check the current limit.
+- Preserve unresolved purchases and matching Wallet entries through rollback.
 
 ## [0.13.0] - 2026-10-15 | New destination marker motifs
 
