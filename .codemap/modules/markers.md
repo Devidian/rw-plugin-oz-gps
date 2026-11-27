@@ -9,6 +9,7 @@ Marker access, persistence and map export. GPS owns marker records and authoriza
 
 - [Paid marker creation](../../src/de/omegazirkel/risingworld/gps/MarkerPurchase.java) journals Wallet intent. [Recovery tests](../../src-test/de/omegazirkel/risingworld/gps/MarkerPurchaseTest.java) cover restart, failed writes and compensation.
 - [`GPSRuntime`](../../src/de/omegazirkel/risingworld/GPSRuntime.java)
+- [`MarkerLimitDisplayCount`](../../src/de/omegazirkel/risingworld/gps/ui/MarkerLimitDisplayCount.java) bounds display-only SQL counts. GPS checks creation against current storage.
 - [`GPSDatabase`](../../src/de/omegazirkel/risingworld/gps/GPSDatabase.java)
 - [`MarkerPermissions`](../../src/de/omegazirkel/risingworld/gps/MarkerPermissions.java)
 - [`GpsMarkerExportService`](../../src/de/omegazirkel/risingworld/gps/exports/GpsMarkerExportService.java)

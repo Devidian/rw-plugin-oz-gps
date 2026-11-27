@@ -63,6 +63,7 @@ public class GPSGridOverlay extends OZUIElement {
     private UIElement cooldownStatusBar = null;
     private UILabel cooldownStatusLabel = null;
     private UILabel markerLimitStatusLabel = null;
+    private final MarkerLimitDisplayCount markerLimitDisplayCount = new MarkerLimitDisplayCount();
     private UIScrollView gridScrollView = null;
     private MarkerType currentMarkerType = MarkerType.PRIVATE;
     private boolean serverWarpTab;
@@ -253,6 +254,7 @@ public class GPSGridOverlay extends OZUIElement {
     }
 
     private void refreshGrid(Player player) {
+        markerLimitDisplayCount.invalidate();
         if (serverWarpTab) { refreshServerPins(player); return; }
         refreshGrid(currentMarkerType, player);
     }
@@ -401,10 +403,13 @@ public class GPSGridOverlay extends OZUIElement {
                             onCreateNewMarker -> {
                                 CreateMarkerOverlay overlay = new CreateMarkerOverlay(uiPlayer, MarkerType.GLOBAL,
                                         createdMarker -> {
-                                            GPSDatabase.getInstance().saveMarker(createdMarker);
-                                            uiPlayer.sendTextMessage(t().get("tc.gps.global.created", uiPlayer)
-                                                    .replace("PH_MARKER_NAME", createdMarker.getName())
-                                                    .replace("PH_MARKER_POS", createdMarker.getPosition() + ""));
+                                            if (GPSDatabase.getInstance().saveMarkerResult(createdMarker)) {
+                                                uiPlayer.sendTextMessage(t().get("tc.gps.global.created", uiPlayer)
+                                                        .replace("PH_MARKER_NAME", createdMarker.getName())
+                                                        .replace("PH_MARKER_POS", createdMarker.getPosition() + ""));
+                                            } else {
+                                                uiPlayer.sendTextMessage(t().get("tc.gps.marker.save_failed", uiPlayer));
+                                            }
                                             resume(uiPlayer);
                                             uiPlayer.addUIElement(this, UITarget.Modal);
                                             startCooldownTimer(uiPlayer);
@@ -653,19 +658,23 @@ public class GPSGridOverlay extends OZUIElement {
 
     private boolean saveMarkerWithEconomy(Player player, Marker marker) {
         GPSEconomy economy = GPSEconomy.getInstance();
-        if (economy != null) {
-            GPSEconomy.EconomyResult charge = economy.chargeMarkerCreation(player, marker.getType());
-            if (!charge.success()) {
-                player.sendTextMessage(t().get("tc.gps.economy.failed", player)
-                        .replace("PH_MESSAGE", charge.message()));
+        if (economy == null) {
+            if (!GPSDatabase.getInstance().saveMarkerResult(marker)) {
+                player.sendTextMessage(t().get("tc.gps.marker.save_failed", player));
                 return false;
             }
-            if (!charge.message().isBlank()) {
+        } else {
+            GPSEconomy.EconomyResult creation = economy.createMarker(player, marker);
+            if (!creation.success()) {
+                player.sendTextMessage(t().get("tc.gps.economy.failed", player)
+                        .replace("PH_MESSAGE", creation.message()));
+                return false;
+            }
+            if (!creation.message().isBlank()) {
                 player.sendTextMessage(t().get("tc.gps.cost.charged", player)
-                        .replace("PH_COST", charge.message()));
+                        .replace("PH_COST", creation.message()));
             }
         }
-        GPSDatabase.getInstance().saveMarker(marker);
         String key = marker.getType() == MarkerType.GROUP ? "tc.gps.group.created" : "tc.gps.private.created";
         player.sendTextMessage(t().get(key, player)
                 .replace("PH_MARKER_NAME", marker.getName())
@@ -882,7 +891,10 @@ public class GPSGridOverlay extends OZUIElement {
         if (limit < 0) {
             return "";
         }
-        int current = economy.markerCount(player, currentMarkerType);
+        MarkerType type = currentMarkerType;
+        String group = type == MarkerType.GROUP ? player.getPermissionGroup() : null;
+        int current = markerLimitDisplayCount.read(type, group, System.nanoTime(),
+                () -> economy.markerCount(player, type));
         return t().get("tc.gps.limit.status", player)
                 .replace("PH_CURRENT", String.valueOf(current))
                 .replace("PH_LIMIT", String.valueOf(limit));

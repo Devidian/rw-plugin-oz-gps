@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Refresh the marker-limit display at most every five seconds while a tab is idle. Recheck immediately after local marker changes and tab changes.
 
 - Report failed marker saves instead of claiming that a marker was created, and avoid assigning a previous marker's ID after an insert error. Marker edit and delete now require an affected row.
 
